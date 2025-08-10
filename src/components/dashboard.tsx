@@ -152,52 +152,43 @@ export function Dashboard() {
   }, [transactions]);
   
   return (
-    <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
-      <div className="lg:col-span-4">
+    <div className="flex flex-col gap-8">
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
         <OverviewCard totalIncome={totalIncome} totalExpenses={totalExpenses} balance={balance} />
       </div>
 
-      <div className="lg:col-span-2">
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
         <RecentTransactionsCard transactions={transactions} />
-      </div>
-
-      <div className="lg:col-span-2">
         <SpendingChartCard transactions={transactions} />
       </div>
 
-      <div className="lg:col-span-1">
-        <div className="space-y-8">
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <div className="lg:col-span-1 grid gap-8">
             <AddTransactionCard
                 categories={categories}
                 onAddTransaction={(t) => setTransactions((prev) => [...prev, t])}
                 onAddCategory={(c) => setCategories((prev) => [...prev, c])}
             />
+            <BudgetCard budget={budget} totalExpenses={totalExpenses} onSetBudget={setBudget} />
+        </div>
+        <div className="md:col-span-1 lg:col-span-2">
+            <SavingsGoalsCard goals={goals} onAddGoal={(g) => setGoals(prev => [...prev, g])} currentSavings={balance} />
         </div>
       </div>
-      
-      <div className="lg:col-span-1">
-        <BudgetCard budget={budget} totalExpenses={totalExpenses} onSetBudget={setBudget} />
-      </div>
 
-      <div className="lg:col-span-2">
-        <SavingsGoalsCard goals={goals} onAddGoal={(g) => setGoals(prev => [...prev, g])} currentSavings={balance} />
-      </div>
-
-      <div className="lg:col-span-4">
-        <FinancialAdviceCard
-          transactions={transactions}
-          goals={goals}
-          budget={budget}
-          totalIncome={totalIncome}
-        />
-      </div>
-    </div>
+      <FinancialAdviceCard
+        transactions={transactions}
+        goals={goals}
+        budget={budget}
+        totalIncome={totalIncome}
+      />
+  </div>
   );
 }
 
 function OverviewCard({ totalIncome, totalExpenses, balance }: { totalIncome: number; totalExpenses: number; balance: number }) {
   return (
-    <div className="grid gap-4 md:grid-cols-3">
+    <>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Balance</CardTitle>
@@ -228,7 +219,7 @@ function OverviewCard({ totalIncome, totalExpenses, balance }: { totalIncome: nu
             <p className="text-xs text-muted-foreground">Total spending this period</p>
           </CardContent>
         </Card>
-    </div>
+    </>
   );
 }
 
@@ -547,7 +538,7 @@ function SavingsGoalsCard({ goals, onAddGoal, currentSavings }: { goals: Savings
   };
   
   return (
-    <Card className="flex flex-col">
+    <Card className="flex flex-col h-full">
       <CardHeader>
         <CardTitle className="flex items-center gap-2"><Target /> Savings Goals</CardTitle>
         <CardDescription>Track progress towards your financial targets.</CardDescription>
@@ -787,3 +778,4 @@ function AddCategoryDialog({ onAddCategory, type, children }: { onAddCategory: (
 
     
 
+    

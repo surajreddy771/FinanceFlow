@@ -152,8 +152,8 @@ export function Dashboard() {
   }, [transactions]);
   
   return (
-    <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-      <div className="lg:col-span-3">
+    <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
+      <div className="lg:col-span-4">
         <OverviewCard totalIncome={totalIncome} totalExpenses={totalExpenses} balance={balance} />
       </div>
 
@@ -161,26 +161,29 @@ export function Dashboard() {
         <RecentTransactionsCard transactions={transactions} />
       </div>
 
-      <div className="lg:col-span-1">
-        <div className="space-y-8">
-          <AddTransactionCard
-            categories={categories}
-            onAddTransaction={(t) => setTransactions((prev) => [...prev, t])}
-            onAddCategory={(c) => setCategories((prev) => [...prev, c])}
-          />
-          <BudgetCard budget={budget} totalExpenses={totalExpenses} onSetBudget={setBudget} />
-        </div>
-      </div>
-      
       <div className="lg:col-span-2">
         <SpendingChartCard transactions={transactions} />
       </div>
 
       <div className="lg:col-span-1">
+        <div className="space-y-8">
+            <AddTransactionCard
+                categories={categories}
+                onAddTransaction={(t) => setTransactions((prev) => [...prev, t])}
+                onAddCategory={(c) => setCategories((prev) => [...prev, c])}
+            />
+        </div>
+      </div>
+      
+      <div className="lg:col-span-1">
+        <BudgetCard budget={budget} totalExpenses={totalExpenses} onSetBudget={setBudget} />
+      </div>
+
+      <div className="lg:col-span-2">
         <SavingsGoalsCard goals={goals} onAddGoal={(g) => setGoals(prev => [...prev, g])} currentSavings={balance} />
       </div>
 
-      <div className="lg:col-span-3">
+      <div className="lg:col-span-4">
         <FinancialAdviceCard
           transactions={transactions}
           goals={goals}
@@ -188,7 +191,6 @@ export function Dashboard() {
           totalIncome={totalIncome}
         />
       </div>
-
     </div>
   );
 }
@@ -784,3 +786,4 @@ function AddCategoryDialog({ onAddCategory, type, children }: { onAddCategory: (
   }
 
     
+

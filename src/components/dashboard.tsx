@@ -152,31 +152,35 @@ export function Dashboard() {
   }, [transactions]);
   
   return (
-    <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
-      <div className="lg:col-span-4">
+    <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+      <div className="lg:col-span-3">
         <OverviewCard totalIncome={totalIncome} totalExpenses={totalExpenses} balance={balance} />
       </div>
 
       <div className="lg:col-span-2">
-        <AddTransactionCard
-          categories={categories}
-          onAddTransaction={(t) => setTransactions((prev) => [...prev, t])}
-          onAddCategory={(c) => setCategories((prev) => [...prev, c])}
-        />
-      </div>
-      <div className="lg:col-span-2">
-        <SpendingChartCard transactions={transactions} />
+        <RecentTransactionsCard transactions={transactions} />
       </div>
 
       <div className="lg:col-span-1">
-        <BudgetCard budget={budget} totalExpenses={totalExpenses} onSetBudget={setBudget} />
+        <div className="space-y-8">
+          <AddTransactionCard
+            categories={categories}
+            onAddTransaction={(t) => setTransactions((prev) => [...prev, t])}
+            onAddCategory={(c) => setCategories((prev) => [...prev, c])}
+          />
+          <BudgetCard budget={budget} totalExpenses={totalExpenses} onSetBudget={setBudget} />
+        </div>
+      </div>
+      
+      <div className="lg:col-span-2">
+        <SpendingChartCard transactions={transactions} />
       </div>
 
       <div className="lg:col-span-1">
         <SavingsGoalsCard goals={goals} onAddGoal={(g) => setGoals(prev => [...prev, g])} currentSavings={balance} />
       </div>
 
-      <div className="lg:col-span-2">
+      <div className="lg:col-span-3">
         <FinancialAdviceCard
           transactions={transactions}
           goals={goals}
@@ -185,9 +189,6 @@ export function Dashboard() {
         />
       </div>
 
-      <div className="lg:col-span-4">
-        <RecentTransactionsCard transactions={transactions} />
-      </div>
     </div>
   );
 }
@@ -677,7 +678,7 @@ function RecentTransactionsCard({ transactions }: { transactions: Transaction[]}
   const recentTransactions = [...transactions].sort((a, b) => b.date.getTime() - a.date.getTime()).slice(0, 5);
 
   return (
-    <Card className="lg:col-span-4">
+    <Card>
        <CardHeader>
         <CardTitle>Recent Transactions</CardTitle>
         <CardDescription>Your last 5 transactions.</CardDescription>

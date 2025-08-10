@@ -152,26 +152,42 @@ export function Dashboard() {
   }, [transactions]);
   
   return (
-    <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-      <div className="lg:col-span-3">
+    <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
+      <div className="lg:col-span-4">
         <OverviewCard totalIncome={totalIncome} totalExpenses={totalExpenses} balance={balance} />
       </div>
 
-      <AddTransactionCard
-        categories={categories}
-        onAddTransaction={(t) => setTransactions((prev) => [...prev, t])}
-        onAddCategory={(c) => setCategories((prev) => [...prev, c])}
-      />
-      <SpendingChartCard transactions={transactions} />
-      <BudgetCard budget={budget} totalExpenses={totalExpenses} onSetBudget={setBudget} />
-      <SavingsGoalsCard goals={goals} onAddGoal={(g) => setGoals(prev => [...prev, g])} currentSavings={balance} />
-      <FinancialAdviceCard
-        transactions={transactions}
-        goals={goals}
-        budget={budget}
-        totalIncome={totalIncome}
-      />
-      <RecentTransactionsCard transactions={transactions} />
+      <div className="lg:col-span-2">
+        <AddTransactionCard
+          categories={categories}
+          onAddTransaction={(t) => setTransactions((prev) => [...prev, t])}
+          onAddCategory={(c) => setCategories((prev) => [...prev, c])}
+        />
+      </div>
+      <div className="lg:col-span-2">
+        <SpendingChartCard transactions={transactions} />
+      </div>
+
+      <div className="lg:col-span-1">
+        <BudgetCard budget={budget} totalExpenses={totalExpenses} onSetBudget={setBudget} />
+      </div>
+
+      <div className="lg:col-span-1">
+        <SavingsGoalsCard goals={goals} onAddGoal={(g) => setGoals(prev => [...prev, g])} currentSavings={balance} />
+      </div>
+
+      <div className="lg:col-span-2">
+        <FinancialAdviceCard
+          transactions={transactions}
+          goals={goals}
+          budget={budget}
+          totalIncome={totalIncome}
+        />
+      </div>
+
+      <div className="lg:col-span-4">
+        <RecentTransactionsCard transactions={transactions} />
+      </div>
     </div>
   );
 }
@@ -239,7 +255,7 @@ function AddTransactionCard({ categories, onAddTransaction, onAddCategory }: { c
   };
   
   return (
-    <Card className="lg:col-span-1">
+    <Card>
       <CardHeader>
         <CardTitle>Add Transaction</CardTitle>
         <CardDescription>Log a new income or expense.</CardDescription>
@@ -528,7 +544,7 @@ function SavingsGoalsCard({ goals, onAddGoal, currentSavings }: { goals: Savings
   };
   
   return (
-    <Card className="lg:row-span-2 flex flex-col">
+    <Card className="flex flex-col">
       <CardHeader>
         <CardTitle className="flex items-center gap-2"><Target /> Savings Goals</CardTitle>
         <CardDescription>Track progress towards your financial targets.</CardDescription>
@@ -625,7 +641,7 @@ function FinancialAdviceCard({ transactions, goals, budget, totalIncome }: { tra
   };
   
   return (
-    <Card className="lg:col-span-2">
+    <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2"><Bot /> AI Financial Advisor</CardTitle>
         <CardDescription>Get personalized advice based on your financial data.</CardDescription>
@@ -661,7 +677,7 @@ function RecentTransactionsCard({ transactions }: { transactions: Transaction[]}
   const recentTransactions = [...transactions].sort((a, b) => b.date.getTime() - a.date.getTime()).slice(0, 5);
 
   return (
-    <Card className="lg:col-span-3">
+    <Card className="lg:col-span-4">
        <CardHeader>
         <CardTitle>Recent Transactions</CardTitle>
         <CardDescription>Your last 5 transactions.</CardDescription>
@@ -765,3 +781,5 @@ function AddCategoryDialog({ onAddCategory, type, children }: { onAddCategory: (
       </Dialog>
     );
   }
+
+    

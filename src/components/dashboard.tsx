@@ -15,6 +15,7 @@ import {
   Bot,
   Loader2,
   Edit,
+  Video,
 } from "lucide-react";
 import {
   PieChart,
@@ -76,6 +77,7 @@ import { format } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "./ui/badge";
+import { FinancialPlanner } from "./financial-planner";
 
 const transactionSchema = z.object({
   type: z.enum(["income", "expense"]),
@@ -153,7 +155,7 @@ export function Dashboard() {
   
   return (
     <div className="flex flex-col gap-8">
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
         <OverviewCard totalIncome={totalIncome} totalExpenses={totalExpenses} balance={balance} />
       </div>
 
@@ -162,19 +164,23 @@ export function Dashboard() {
         <SpendingChartCard transactions={transactions} />
       </div>
 
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
         <div className="lg:col-span-1 grid gap-8">
             <AddTransactionCard
                 categories={categories}
                 onAddTransaction={(t) => setTransactions((prev) => [...prev, t])}
                 onAddCategory={(c) => setCategories((prev) => [...prev, c])}
             />
-            <BudgetCard budget={budget} totalExpenses={totalExpenses} onSetBudget={setBudget} />
         </div>
-        <div className="md:col-span-1 lg:col-span-2">
+        <div className="lg:col-span-2">
             <SavingsGoalsCard goals={goals} onAddGoal={(g) => setGoals(prev => [...prev, g])} currentSavings={balance} />
         </div>
+        <div className="lg:col-span-1 grid gap-8">
+            <BudgetCard budget={budget} totalExpenses={totalExpenses} onSetBudget={setBudget} />
+        </div>
       </div>
+      
+      <FinancialPlanner />
 
       <FinancialAdviceCard
         transactions={transactions}
@@ -218,6 +224,20 @@ function OverviewCard({ totalIncome, totalExpenses, balance }: { totalIncome: nu
             <div className="text-2xl font-bold">{formatCurrency(totalExpenses)}</div>
             <p className="text-xs text-muted-foreground">Total spending this period</p>
           </CardContent>
+        </Card>
+        <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Quick Actions</CardTitle>
+                <PlusCircle className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent className="flex flex-col gap-2">
+                <Button size="sm" >
+                    <PlusCircle className="mr-2 h-4 w-4" /> Add Transaction
+                </Button>
+                <Button size="sm" variant="outline">
+                    <Target className="mr-2 h-4 w-4" /> Add Goal
+                </Button>
+            </CardContent>
         </Card>
     </>
   );
@@ -775,7 +795,3 @@ function AddCategoryDialog({ onAddCategory, type, children }: { onAddCategory: (
       </Dialog>
     );
   }
-
-    
-
-    

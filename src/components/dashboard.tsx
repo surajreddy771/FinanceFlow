@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
@@ -133,7 +134,7 @@ const initialCategories: Category[] = [
     { name: 'Dining Out', type: 'expense' },
 ];
 
-export function Dashboard() {
+export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
   const [transactions, setTransactions] = useState<Transaction[]>(initialTransactions);
   const [goals, setGoals] = useState<SavingsGoal[]>(initialGoals);
   const [budget, setBudget] = useState<number>(3000);
@@ -180,7 +181,11 @@ export function Dashboard() {
         </div>
       </div>
       
-      <FinancialPlanner />
+      <FinancialPlanner 
+        categories={categories}
+        onCategoriesChange={setCategories}
+        language={language}
+      />
 
       <FinancialAdviceCard
         transactions={transactions}

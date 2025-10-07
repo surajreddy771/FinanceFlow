@@ -84,7 +84,7 @@ export function FinancialPlanner() {
           <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="single-goal">Single Goal</TabsTrigger>
             <TabsTrigger value="multi-goal">Multi-Goal</TabsTrigger>
-            <TabsTrigger value="funds">Funds Recommendation</TabsTrigger>
+            <TabsTrigger value="funds">Investment & Loans</TabsTrigger>
             <TabsTrigger value="experts">Financial Experts</TabsTrigger>
           </TabsList>
           <TabsContent value="single-goal">
@@ -110,7 +110,7 @@ function SingleGoalPlanner() {
   const form = useForm<z.infer<typeof singleGoalSchema>>({
     resolver: zodResolver(singleGoalSchema),
     defaultValues: {
-      goalName: "",
+      goalName: "New Tractor",
       goalCost: 10000,
       currentSavings: 1000,
       monthlySalary: 5000,
@@ -165,7 +165,7 @@ Suggestions:
                 <FormItem>
                   <FormLabel>Goal Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g., Buy a new car" {...field} />
+                    <Input placeholder="e.g., Buy a new tractor" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -202,7 +202,7 @@ Suggestions:
               name="monthlySalary"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Monthly Salary</FormLabel>
+                  <FormLabel>Monthly Income</FormLabel>
                   <FormControl>
                     <Input type="number" {...field} />
                   </FormControl>
@@ -257,7 +257,7 @@ function MultiGoalPlanner() {
     const form = useForm<z.infer<typeof multiGoalSchema>>({
       resolver: zodResolver(multiGoalSchema),
       defaultValues: {
-        goals: [{ id: '1', name: "New Car", cost: 20000, priority: 1}],
+        goals: [{ id: '1', name: "New Tractor", cost: 20000, priority: 1}],
         planningMode: "simultaneous",
         monthlySavings: 1000,
       },
@@ -314,7 +314,7 @@ function MultiGoalPlanner() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Goal Name</FormLabel>
-                        <FormControl><Input {...field} /></FormControl>
+                        <FormControl><Input placeholder="e.g. New barn" {...field} /></FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -413,34 +413,43 @@ function FundsRecommendation() {
     });
 
     function onSubmit(values: z.infer<typeof fundsSchema>) {
-        let recommendation = "Based on your selections, here are some mock investment recommendations:\n\n";
+        let recommendation = "Based on your selections, here are some mock investment and loan recommendations for a rural context:\n\n";
 
         if (values.timeHorizon === 'short-term') {
+            recommendation += "### For Savings (1-3 Years):\n";
             if (values.riskAppetite === 'low') {
-                recommendation += "- **Fixed Deposits (FDs):** Very safe, predictable returns.\n- **Liquid Mutual Funds:** Low risk, higher liquidity than FDs.";
+                recommendation += "- **Cooperative Bank Fixed Deposits (FDs):** Very safe, predictable returns, supports local community.\n- **Post Office Time Deposit:** Government-backed security.";
             } else if (values.riskAppetite === 'medium') {
-                recommendation += "- **Short-Term Debt Funds:** Slightly higher returns than liquid funds, with slightly more risk.\n- **Arbitrage Funds:** Low risk, potential for returns similar to liquid funds, tax-efficient.";
+                recommendation += "- **Kisan Vikas Patra (KVP):** A government savings scheme that doubles the investment over a certain period.\n- **Balanced Mutual Funds:** A mix of equity and debt for moderate growth.";
             } else { // high
-                recommendation += "- **Aggressive Hybrid Funds:** A mix of equity and debt, for those willing to take some risk for higher returns.\n- **High-yield Savings Account:** Not an investment, but safe and offers better returns than traditional savings.";
+                recommendation += "- **High-yield Savings Account in a Rural Bank:** Safe and offers better returns than traditional savings.\n- **Equity Linked Savings Scheme (ELSS):** Higher risk with tax benefits, suitable for those with some risk capacity.";
             }
         } else if (values.timeHorizon === 'medium-term') {
+            recommendation += "### For Investments (3-5 Years):\n";
             if (values.riskAppetite === 'low') {
-                recommendation += "- **Corporate Bond Funds:** Investing in company bonds, relatively safe.\n- **National Savings Certificates (NSC):** Government-backed, fixed return, tax benefits.";
+                recommendation += "- **National Savings Certificates (NSC):** Government-backed, fixed return, tax benefits.\n- **Debt Mutual Funds:** Investing in government and corporate bonds.";
             } else if (values.riskAppetite === 'medium') {
-                recommendation += "- **Balanced Advantage Funds:** Dynamic allocation between equity and debt.\n- **Large-Cap Equity Funds:** Investing in top, stable companies. Lower risk within equities.";
+                recommendation += "- **Large-Cap Equity Funds:** Investing in top, stable companies. Lower risk within equities.\n- **Hybrid Funds:** A balanced mix of stocks and bonds.";
             } else { // high
-                recommendation += "- **Flexi-Cap/Multi-Cap Equity Funds:** Diversified across market caps, higher risk-return potential.\n- **Thematic Funds (e.g., Tech or Healthcare):** High risk, concentrated in a specific sector.";
+                recommendation += "- **Flexi-Cap/Multi-Cap Equity Funds:** Diversified across different-sized companies, higher risk-return potential.\n- **Real Estate Investment in Farmland:** Can provide rental income and capital appreciation.";
             }
         } else { // long-term
+            recommendation += "### For Long-Term Growth (5+ Years):\n";
             if (values.riskAppetite === 'low') {
-                recommendation += "- **Public Provident Fund (PPF):** Long-term, government-backed, tax-free returns.\n- **Index Funds (e.g., Nifty 50):** Invests in the market index, diversified and relatively safe for long-term equity exposure.";
+                recommendation += "- **Public Provident Fund (PPF):** Long-term, government-backed, tax-free returns.\n- **Sukanya Samriddhi Yojana:** For a girl child's future education and marriage expenses.";
             } else if (values.riskAppetite === 'medium') {
-                recommendation += "- **ELSS (Equity Linked Savings Scheme):** Tax-saving scheme with a 3-year lock-in, invests in equity.\n- **Mid-Cap Equity Funds:** Investing in mid-sized companies with high growth potential.";
+                recommendation += "- **Index Funds (e.g., Nifty 50):** Invests in the market index, diversified and relatively safe for long-term equity exposure.\n- **Gold Bonds:** An alternative to physical gold, offering interest income.";
             } else { // high
-                recommendation += "- **Small-Cap Equity Funds:** Highest risk and highest return potential, investing in small companies.\n- **International Equity Funds:** Diversify your portfolio globally, but subject to currency and geopolitical risks.";
+                recommendation += "- **Mid-Cap/Small-Cap Equity Funds:** Higher risk with the potential for high returns from growing companies.\n- **Direct Equity:** Investing directly in stocks, requires knowledge and research.";
             }
         }
-        recommendation += "\n\n*Disclaimer: This is not real financial advice. Please consult with a certified financial advisor before making any investment decisions.*"
+        
+        recommendation += "\n### For Loans:\n"
+        recommendation += "- **Kisan Credit Card (KCC):** For short-term credit for farming needs like seeds, fertilizers, and pesticides.\n"
+        recommendation += "- **Tractor and Equipment Loans:** Offered by most rural and commercial banks to finance machinery purchase.\n"
+        recommendation += "- **Microfinance Loans:** Small loans from Microfinance Institutions (MFIs) for various needs, including small business or livestock.\n"
+        
+        recommendation += "\n*Disclaimer: This is not real financial advice. Please consult with a certified financial advisor before making any investment or loan decisions.*"
         setResult(recommendation);
     }
     
@@ -491,7 +500,7 @@ function FundsRecommendation() {
             </Form>
             {result && (
                 <Alert className="mt-6">
-                    <AlertTitle>Investment Fund Recommendations</AlertTitle>
+                    <AlertTitle>Investment & Loan Recommendations</AlertTitle>
                     <AlertDescription className="whitespace-pre-wrap">{result}</AlertDescription>
                 </Alert>
             )}
@@ -502,9 +511,9 @@ function FundsRecommendation() {
 function FinancialExperts() {
 
     const experts = [
-        { id: 1, name: "Alice Johnson", specialty: "Retirement Planning", rate: 150 },
-        { id: 2, name: "Bob Williams", specialty: "Stock Market Analysis", rate: 200 },
-        { id: 3, name: "Charlie Brown", specialty: "General Financial Advice", rate: 120 },
+        { id: 1, name: "Anita Desai", specialty: "Agricultural Loans & KCC", rate: 150 },
+        { id: 2, name: "Rajesh Kumar", specialty: "Crop Insurance & Risk", rate: 200 },
+        { id: 3, name: "Sita Sharma", specialty: "Rural Investment Schemes", rate: 120 },
     ]
 
     const handleSchedule = (expertName: string) => {
@@ -517,7 +526,7 @@ function FinancialExperts() {
         <div className="p-4">
             <h3 className="text-lg font-medium mb-4">Connect with a Financial Expert</h3>
             <p className="text-muted-foreground mb-6">
-                Schedule a one-on-one video conference with a certified financial planner to get personalized advice.
+                Schedule a one-on-one video conference with a certified financial planner to get personalized advice for your agricultural needs.
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {experts.map(expert => (

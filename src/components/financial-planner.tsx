@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -305,6 +305,11 @@ Suggestions:
 
 function MultiGoalPlanner() {
     const [result, setResult] = useState<string | null>(null);
+    const [isClient, setIsClient] = useState(false);
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
+
     const form = useForm<z.infer<typeof multiGoalSchema>>({
       resolver: zodResolver(multiGoalSchema),
       defaultValues: {
@@ -350,6 +355,10 @@ function MultiGoalPlanner() {
 
         setResult(plan);
     }
+
+    const handleAddGoal = () => {
+        append({ id: crypto.randomUUID(), name: "", cost: 1000, priority: 3 });
+    };
   
     return (
       <div className="p-4">
@@ -397,14 +406,14 @@ function MultiGoalPlanner() {
                   </Button>
                 </div>
               ))}
-              <Button
+              {isClient && <Button
                 type="button"
                 variant="outline"
                 size="sm"
-                onClick={() => append({ id: crypto.randomUUID(), name: "", cost: 1000, priority: 3 })}
+                onClick={handleAddGoal}
               >
                 <PlusCircle className="mr-2 h-4 w-4" /> Add Goal
-              </Button>
+              </Button>}
             </div>
             
             <Separator />
@@ -878,3 +887,5 @@ function LearnTab({ language = 'en' }: { language?: 'en' | 'hi' }) {
     </div>
   );
 }
+
+    

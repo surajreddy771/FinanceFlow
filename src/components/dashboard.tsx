@@ -138,8 +138,9 @@ export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
   const [goals, setGoals] = useState<SavingsGoal[]>([]);
   const [budget, setBudget] = useState<number>(3000);
   const [categories, setCategories] = useState<Category[]>([]);
-  
+
   const [isMounted, setIsMounted] = useState(false);
+
   useEffect(() => {
     setIsMounted(true);
     setTransactions(initialTransactions);
@@ -287,13 +288,15 @@ function AddTransactionDialog({ categories, onAddTransaction, onAddCategory, chi
   });
 
   useEffect(() => {
-    form.reset({
-      type: "expense",
-      amount: 0,
-      date: new Date(),
-      description: "",
-      category: "",
-    });
+    if (open) {
+      form.reset({
+        type: "expense",
+        amount: 0,
+        date: new Date(),
+        description: "",
+        category: "",
+      });
+    }
   }, [form, open]);
 
 
@@ -789,8 +792,3 @@ function AddCategoryDialog({ onAddCategory, type, children }: { onAddCategory: (
       </Dialog>
     );
   }
-
-
-    
-
-    

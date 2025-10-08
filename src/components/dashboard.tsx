@@ -139,10 +139,10 @@ export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    setIsMounted(true);
     setTransactions(initialTransactions);
     setGoals(initialGoals);
     setCategories(initialCategories);
-    setIsMounted(true);
   }, []);
 
 
@@ -186,7 +186,7 @@ export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
               balance={balance}
               categories={categories}
               onAddTransaction={handleAddTransaction}
-              onAddCategory={onAddCategory}
+              onAddCategory={handleAddCategory}
               onAddGoal={onAddGoal}
             />
         </div>
@@ -778,3 +778,5 @@ function AddCategoryDialog({ onAddCategory, type, children }: { onAddCategory: (
   }
 
       
+
+    

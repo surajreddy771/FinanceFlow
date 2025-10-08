@@ -1,3 +1,4 @@
+
 "use client";
 
 import { BookOpen, Newspaper, Video } from "lucide-react";
@@ -24,7 +25,7 @@ const learnContent = {
         icon: Newspaper,
         image: ImageData.articles.mutualFunds.src,
         aiHint: ImageData.articles.mutualFunds.aiHint,
-        link: "#"
+        link: "https://www.investopedia.com/insights/what-are-mutual-funds/"
       },
       {
         title: "Basics of Kisan Credit Card (KCC)",
@@ -32,7 +33,7 @@ const learnContent = {
         icon: Newspaper,
         image: ImageData.articles.kisanCreditCard.src,
         aiHint: ImageData.articles.kisanCreditCard.aiHint,
-        link: "#"
+        link: "https://www.sbi.co.in/web/agri-rural/agriculture-banking/crop-finance/kisan-credit-card-kcc"
       },
        {
         title: "The Power of Compounding",
@@ -40,7 +41,7 @@ const learnContent = {
         icon: Newspaper,
         image: ImageData.articles.powerOfCompounding.src,
         aiHint: ImageData.articles.powerOfCompounding.aiHint,
-        link: "#"
+        link: "https://www.investopedia.com/terms/c/compounding.asp"
       },
       {
         title: "Credit Score 101",
@@ -48,7 +49,23 @@ const learnContent = {
         icon: Newspaper,
         image: ImageData.articles.creditScore.src,
         aiHint: ImageData.articles.creditScore.aiHint,
-        link: "#"
+        link: "https://www.nerdwallet.com/article/finance/what-is-a-credit-score"
+      },
+      {
+        title: "What is a Demat Account?",
+        description: "An essential guide to understanding Demat accounts for holding shares and securities electronically.",
+        icon: Newspaper,
+        image: ImageData.articles.dematAccount.src,
+        aiHint: ImageData.articles.dematAccount.aiHint,
+        link: "https://www.forbes.com/advisor/in/investing/what-is-a-demat-account/"
+      },
+      {
+        title: "All about Public Provident Fund (PPF)",
+        description: "Explore the features, benefits, and rules of the popular government-backed savings scheme.",
+        icon: Newspaper,
+        image: ImageData.articles.ppf.src,
+        aiHint: ImageData.articles.ppf.aiHint,
+        link: "https://www.bankbazaar.com/saving-schemes/ppf-scheme.html"
       },
     ],
     videos: [
@@ -58,7 +75,7 @@ const learnContent = {
         icon: Video,
         image: ImageData.videos.budgeting.src,
         aiHint: ImageData.videos.budgeting.aiHint,
-        link: "#"
+        link: "https://www.youtube.com/watch?v=sVKQn2I4xSM"
       },
       {
         title: "Video: Crop Insurance Explained",
@@ -66,7 +83,7 @@ const learnContent = {
         icon: Video,
         image: ImageData.videos.cropInsurance.src,
         aiHint: ImageData.videos.cropInsurance.aiHint,
-        link: "#"
+        link: "https://www.youtube.com/watch?v=bh9g331a_4s"
       },
       {
         title: "Video: Stock Market for Beginners",
@@ -74,7 +91,7 @@ const learnContent = {
         icon: Video,
         image: ImageData.videos.stockMarket.src,
         aiHint: ImageData.videos.stockMarket.aiHint,
-        link: "#"
+        link: "https://www.youtube.com/watch?v=ZCFkWDdmXG8"
       },
       {
         title: "Video: Why You Need an Emergency Fund",
@@ -82,7 +99,23 @@ const learnContent = {
         icon: Video,
         image: ImageData.videos.emergencyFund.src,
         aiHint: ImageData.videos.emergencyFund.aiHint,
-        link: "#"
+        link: "https://www.youtube.com/watch?v=C2gO4_2hI2w"
+      },
+      {
+        title: "Video: Introduction to SIPs",
+        description: "A clear and concise explanation of Systematic Investment Plans (SIPs) for mutual funds.",
+        icon: Video,
+        image: ImageData.videos.sip.src,
+        aiHint: ImageData.videos.sip.aiHint,
+        link: "https://www.youtube.com/watch?v=d2C4hMMs3e4"
+      },
+      {
+        title: "Video: Understanding Inflation",
+        description: "Learn what inflation is, how it's measured, and how it impacts your personal finances.",
+        icon: Video,
+        image: ImageData.videos.inflation.src,
+        aiHint: ImageData.videos.inflation.aiHint,
+        link: "https://www.youtube.com/watch?v=hK226V5yQ-I"
       }
     ]
   },
@@ -96,7 +129,7 @@ const learnContent = {
         icon: Newspaper,
         image: ImageData.articles.mutualFunds.src,
         aiHint: ImageData.articles.mutualFunds.aiHint,
-        link: "#"
+        link: "https://www.investopedia.com/insights/what-are-mutual-funds/"
       },
       {
         title: "किसान क्रेडिट कार्ड (KCC) की मूल बातें",
@@ -104,7 +137,7 @@ const learnContent = {
         icon: Newspaper,
         image: ImageData.articles.kisanCreditCard.src,
         aiHint: ImageData.articles.kisanCreditCard.aiHint,
-        link: "#"
+        link: "https://www.sbi.co.in/web/agri-rural/agriculture-banking/crop-finance/kisan-credit-card-kcc"
       },
       {
         title: "चक्रवृद्धि की शक्ति",
@@ -112,7 +145,7 @@ const learnContent = {
         icon: Newspaper,
         image: ImageData.articles.powerOfCompounding.src,
         aiHint: ImageData.articles.powerOfCompounding.aiHint,
-        link: "#"
+        link: "https://www.investopedia.com/terms/c/compounding.asp"
       },
       {
         title: "क्रेडिट स्कोर 101",
@@ -120,7 +153,23 @@ const learnContent = {
         icon: Newspaper,
         image: ImageData.articles.creditScore.src,
         aiHint: ImageData.articles.creditScore.aiHint,
-        link: "#"
+        link: "https://www.nerdwallet.com/article/finance/what-is-a-credit-score"
+      },
+       {
+        title: "डीमैट खाता क्या है?",
+        description: "इलेक्ट्रॉनिक रूप से शेयरों और प्रतिभूतियों को रखने के लिए डीमैट खातों को समझने के लिए एक आवश्यक गाइड।",
+        icon: Newspaper,
+        image: ImageData.articles.dematAccount.src,
+        aiHint: ImageData.articles.dematAccount.aiHint,
+        link: "https://www.forbes.com/advisor/in/investing/what-is-a-demat-account/"
+      },
+      {
+        title: "सार्वजनिक भविष्य निधि (PPF) के बारे में सब कुछ",
+        description: "लोकप्रिय सरकार समर्थित बचत योजना की विशेषताओं, लाभों और नियमों का अन्वेषण करें।",
+        icon: Newspaper,
+        image: ImageData.articles.ppf.src,
+        aiHint: ImageData.articles.ppf.aiHint,
+        link: "https://www.bankbazaar.com/saving-schemes/ppf-scheme.html"
       },
     ],
     videos: [
@@ -130,7 +179,7 @@ const learnContent = {
         icon: Video,
         image: ImageData.videos.budgeting.src,
         aiHint: ImageData.videos.budgeting.aiHint,
-        link: "#"
+        link: "https://www.youtube.com/watch?v=sVKQn2I4xSM"
       },
       {
         title: "वीडियो: फसल बीमा समझाया गया",
@@ -138,7 +187,7 @@ const learnContent = {
         icon: Video,
         image: ImageData.videos.cropInsurance.src,
         aiHint: ImageData.videos.cropInsurance.aiHint,
-        link: "#"
+        link: "https://www.youtube.com/watch?v=bh9g331a_4s"
       },
       {
         title: "वीडियो: शुरुआती लोगों के लिए शेयर बाजार",
@@ -146,7 +195,7 @@ const learnContent = {
         icon: Video,
         image: ImageData.videos.stockMarket.src,
         aiHint: ImageData.videos.stockMarket.aiHint,
-        link: "#"
+        link: "https://www.youtube.com/watch?v=ZCFkWDdmXG8"
       },
       {
         title: "वीडियो: आपको आपातकालीन निधि की आवश्यकता क्यों है",
@@ -154,7 +203,23 @@ const learnContent = {
         icon: Video,
         image: ImageData.videos.emergencyFund.src,
         aiHint: ImageData.videos.emergencyFund.aiHint,
-        link: "#"
+        link: "https://www.youtube.com/watch?v=C2gO4_2hI2w"
+      },
+       {
+        title: "वीडियो: एसआईपी का परिचय",
+        description: "म्यूचुअल फंड के लिए व्यवस्थित निवेश योजनाओं (एसआईपी) की एक स्पष्ट और संक्षिप्त व्याख्या।",
+        icon: Video,
+        image: ImageData.videos.sip.src,
+        aiHint: ImageData.videos.sip.aiHint,
+        link: "https://www.youtube.com/watch?v=d2C4hMMs3e4"
+      },
+      {
+        title: "वीडियो: मुद्रास्फीति को समझना",
+        description: "जानें कि मुद्रास्फीति क्या है, इसे कैसे मापा जाता है, और यह आपके व्यक्तिगत वित्त को कैसे प्रभावित करती है।",
+        icon: Video,
+        image: ImageData.videos.inflation.src,
+        aiHint: ImageData.videos.inflation.aiHint,
+        link: "https://www.youtube.com/watch?v=hK226V5yQ-I"
       }
     ]
   }
@@ -172,7 +237,7 @@ export function LearnSection({ language = 'en' }: { language?: 'en' | 'hi' }) {
         <CardContent className="space-y-8">
             <div>
                 <h4 className="text-xl font-semibold mb-4">Articles</h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {content.articles.map((item) => (
                     <Card key={item.title} className="overflow-hidden">
                     <Image src={item.image} alt={item.title} width={600} height={400} className="w-full h-48 object-cover" data-ai-hint={item.aiHint}/>
@@ -194,7 +259,7 @@ export function LearnSection({ language = 'en' }: { language?: 'en' | 'hi' }) {
             
             <div>
                 <h4 className="text-xl font-semibold mb-4">Videos</h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {content.videos.map((item) => (
                     <Card key={item.title} className="overflow-hidden">
                     <Image src={item.image} alt={item.title} width={600} height={400} className="w-full h-48 object-cover" data-ai-hint={item.aiHint}/>
@@ -217,3 +282,6 @@ export function LearnSection({ language = 'en' }: { language?: 'en' | 'hi' }) {
     </Card>
   );
 }
+
+
+    

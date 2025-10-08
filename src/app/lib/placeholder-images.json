@@ -15,6 +15,14 @@
         "creditScore": {
             "src": "https://picsum.photos/seed/creditScore/600/400",
             "aiHint": "credit report"
+        },
+        "dematAccount": {
+            "src": "https://picsum.photos/seed/demat/600/400",
+            "aiHint": "stock market chart"
+        },
+        "ppf": {
+            "src": "https://picsum.photos/seed/ppf/600/400",
+            "aiHint": "savings document"
         }
     },
     "videos": {
@@ -33,6 +41,14 @@
         "emergencyFund": {
             "src": "https://picsum.photos/seed/emergencyFund/600/400",
             "aiHint": "emergency fund"
+        },
+        "sip": {
+            "src": "https://picsum.photos/seed/sip/600/400",
+            "aiHint": "investment plan"
+        },
+        "inflation": {
+            "src": "https://picsum.photos/seed/inflation/600/400",
+            "aiHint": "rising prices"
         }
     }
 }

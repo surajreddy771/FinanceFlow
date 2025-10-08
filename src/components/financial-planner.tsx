@@ -227,37 +227,37 @@ function FundsRecommendation() {
     });
 
     function onSubmit(values: z.infer<typeof fundsSchema>) {
-        let recommendation = `Based on your selections, here are some mock investment recommendations for the **${values.investmentCategory}** category:\n\n`;
+        let recommendation = `Based on your selections, here are some mock investment recommendations for the ${values.investmentCategory} category:\n\n`;
 
         if (values.investmentCategory === 'equity') {
             if (values.riskAppetite === 'low') {
-                recommendation += "### Low Risk Equity:\n- **Large-Cap Index Funds (Nifty 50, Sensex):** Invests in the largest, most stable companies. Diversified and relatively lower risk for equity.\n- **Dividend Yield Funds:** Focus on companies that pay regular dividends, providing a cushion.";
+                recommendation += "Low Risk Equity:\n- Large-Cap Index Funds (Nifty 50, Sensex): Invests in the largest, most stable companies. Diversified and relatively lower risk for equity.\n- Dividend Yield Funds: Focus on companies that pay regular dividends, providing a cushion.";
             } else if (values.riskAppetite === 'medium') {
-                recommendation += "### Medium Risk Equity:\n- **Flexi-Cap/Multi-Cap Funds:** Diversified across companies of different sizes. Good for capturing broad market growth.\n- **ELSS (Tax Saver) Funds:** Offer tax benefits under Section 80C with a 3-year lock-in, suitable for medium-risk investors.";
+                recommendation += "Medium Risk Equity:\n- Flexi-Cap/Multi-Cap Funds: Diversified across companies of different sizes. Good for capturing broad market growth.\n- ELSS (Tax Saver) Funds: Offer tax benefits under Section 80C with a 3-year lock-in, suitable for medium-risk investors.";
             } else { // high
-                recommendation += "### High Risk Equity:\n- **Mid-Cap and Small-Cap Funds:** Invest in smaller, high-growth potential companies. Higher risk but can offer significant returns.\n- **Sectoral/Thematic Funds:** Focus on a specific sector like technology or healthcare. Very high risk due to lack of diversification.";
+                recommendation += "High Risk Equity:\n- Mid-Cap and Small-Cap Funds: Invest in smaller, high-growth potential companies. Higher risk but can offer significant returns.\n- Sectoral/Thematic Funds: Focus on a specific sector like technology or healthcare. Very high risk due to lack of diversification.";
             }
         } else if (values.investmentCategory === 'debt') {
              if (values.riskAppetite === 'low') {
-                recommendation += "### Low Risk Debt:\n- **Liquid Funds / Ultra Short Duration Funds:** For very short-term goals (a few days to months). Highly stable.\n- **Bank Fixed Deposits (FDs) / Post Office Deposits:** Safest options with guaranteed returns.";
+                recommendation += "Low Risk Debt:\n- Liquid Funds / Ultra Short Duration Funds: For very short-term goals (a few days to months). Highly stable.\n- Bank Fixed Deposits (FDs) / Post Office Deposits: Safest options with guaranteed returns.";
             } else if (values.riskAppetite === 'medium') {
-                recommendation += "### Medium Risk Debt:\n- **Corporate Bond Funds:** Invest in bonds issued by companies. Carry slightly more risk than government bonds for better returns.\n- **Short to Medium Duration Funds:** Invest in bonds with maturities of 1-5 years.";
+                recommendation += "Medium Risk Debt:\n- Corporate Bond Funds: Invest in bonds issued by companies. Carry slightly more risk than government bonds for better returns.\n- Short to Medium Duration Funds: Invest in bonds with maturities of 1-5 years.";
             } else { // high
-                recommendation += "### High Risk Debt:\n- **Credit Risk Funds:** Invest in lower-rated corporate bonds for higher yields. Risk of default is higher.\n- **Long Duration Funds:** Sensitive to interest rate changes, can be volatile but offer higher returns if rates fall.";
+                recommendation += "High Risk Debt:\n- Credit Risk Funds: Invest in lower-rated corporate bonds for higher yields. Risk of default is higher.\n- Long Duration Funds: Sensitive to interest rate changes, can be volatile but offer higher returns if rates fall.";
             }
         } else if (values.investmentCategory === 'hybrid') {
             if (values.riskAppetite === 'low') {
-                recommendation += "### Low Risk Hybrid:\n- **Conservative Hybrid Funds:** Invests 75-90% in debt and the rest in equity. Provides stability with a small growth component.\n- **Equity Savings Funds:** Use a mix of equity, debt, and arbitrage for stable, tax-efficient returns.";
+                recommendation += "Low Risk Hybrid:\n- Conservative Hybrid Funds: Invests 75-90% in debt and the rest in equity. Provides stability with a small growth component.\n- Equity Savings Funds: Use a mix of equity, debt, and arbitrage for stable, tax-efficient returns.";
             } else if (values.riskAppetite === 'medium') {
-                recommendation += "### Medium Risk Hybrid:\n- **Balanced Hybrid / Aggressive Hybrid Funds:** A classic mix of 65-80% in equity and the rest in debt. Good for long-term wealth creation with managed risk.\n- **Dynamic Asset Allocation Funds:** Actively manage equity/debt allocation based on market conditions.";
+                recommendation += "Medium Risk Hybrid:\n- Balanced Hybrid / Aggressive Hybrid Funds: A classic mix of 65-80% in equity and the rest in debt. Good for long-term wealth creation with managed risk.\n- Dynamic Asset Allocation Funds: Actively manage equity/debt allocation based on market conditions.";
             } else { // high
-                recommendation += "### High Risk Hybrid:\n- **Multi-Asset Allocation Funds:** Invest in at least three asset classes (e.g., equity, debt, gold, real estate), offering diversification but can be complex.\n- **Aggressive Hybrid Funds with higher equity allocation (up to 80%).**";
+                recommendation += "High Risk Hybrid:\n- Multi-Asset Allocation Funds: Invest in at least three asset classes (e.g., equity, debt, gold, real estate), offering diversification but can be complex.\n- Aggressive Hybrid Funds with higher equity allocation (up to 80%).";
             }
         } else { // commodities
-             recommendation += "### Commodities (Generally High Risk):\n- **Gold ETFs / Gold Savings Funds:** Invest in gold electronically without holding it physically. Acts as a hedge against inflation.\n- **Silver ETFs:** Similar to Gold ETFs but for silver, which can be more volatile.\n- **Global Commodity Funds:** Mutual funds that invest in a basket of commodities. High risk and complex.";
+             recommendation += "Commodities (Generally High Risk):\n- Gold ETFs / Gold Savings Funds: Invest in gold electronically without holding it physically. Acts as a hedge against inflation.\n- Silver ETFs: Similar to Gold ETFs but for silver, which can be more volatile.\n- Global Commodity Funds: Mutual funds that invest in a basket of commodities. High risk and complex.";
         }
         
-        recommendation += "\n\n*Disclaimer: This is not real financial advice. Please consult with a certified financial advisor before making any investment decisions.*"
+        recommendation += "\n\nDisclaimer: This is not real financial advice. Please consult with a certified financial advisor before making any investment decisions."
         setResult(recommendation);
     }
     

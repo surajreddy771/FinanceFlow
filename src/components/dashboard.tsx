@@ -79,6 +79,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "./ui/badge";
 import { FinancialPlanner } from "./financial-planner";
+import { LearnSection } from "./learn-section";
 
 const transactionSchema = z.object({
   type: z.enum(["income", "expense"]),
@@ -186,6 +187,8 @@ export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
         onCategoriesChange={setCategories}
         language={language}
       />
+      
+      <LearnSection language={language} />
 
       <FinancialAdviceCard
         transactions={transactions}

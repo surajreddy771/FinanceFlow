@@ -32,10 +32,9 @@ import {
 } from "@/components/ui/select";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { PlusCircle, Trash2, Video, BookOpen, Newspaper, LifeBuoy, Users, Tractor, Briefcase } from "lucide-react";
+import { PlusCircle, Trash2, Video } from "lucide-react";
 import { Separator } from "./ui/separator";
 import type { Category } from "@/lib/types";
-import Image from "next/image";
 import { Badge } from "./ui/badge";
 
 const formatCurrency = (amount: number) =>
@@ -93,7 +92,7 @@ export function FinancialPlanner({ categories, onCategoriesChange, language = 'e
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="single-goal" className="w-full">
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="single-goal">{t.tabs.singleGoal}</TabsTrigger>
             <TabsTrigger value="multi-goal">{t.tabs.multiGoal}</TabsTrigger>
             <TabsTrigger value="funds">
@@ -102,10 +101,6 @@ export function FinancialPlanner({ categories, onCategoriesChange, language = 'e
             </TabsTrigger>
             <TabsTrigger value="categories">
               {t.tabs.categories}
-              <Badge variant="outline" className="ml-2 bg-accent text-accent-foreground">New</Badge>
-            </TabsTrigger>
-            <TabsTrigger value="learn">
-              {t.tabs.learn}
               <Badge variant="outline" className="ml-2 bg-accent text-accent-foreground">New</Badge>
             </TabsTrigger>
             {/* <TabsTrigger value="experts">{t.tabs.experts}</TabsTrigger> */}
@@ -122,9 +117,6 @@ export function FinancialPlanner({ categories, onCategoriesChange, language = 'e
           <TabsContent value="categories">
             <CategoryManager categories={categories} onCategoriesChange={onCategoriesChange} />
           </TabsContent>
-          <TabsContent value="learn">
-            <LearnTab language={language}/>
-          </TabsContent>
           {/* <TabsContent value="experts">
             <FinancialExperts />
           </TabsContent> */}
@@ -138,28 +130,26 @@ const translations = {
   en: {
     planner: {
       title: 'Financial Goal Planner',
-      description: 'Plan your financial goals, get investment recommendations, and browse educational content.'
+      description: 'Plan your financial goals, get investment recommendations, and manage your budget categories.'
     },
     tabs: {
       singleGoal: 'Single Goal',
       multiGoal: 'Multi-Goal',
       investments: 'Investments',
       categories: 'Categories',
-      learn: 'Learn',
       experts: 'Financial Experts',
     }
   },
   hi: {
     planner: {
       title: 'वित्तीय लक्ष्य योजनाकार',
-      description: 'अपने वित्तीय लक्ष्यों की योजना बनाएं, निवेश सिफारिशें प्राप्त करें, और शैक्षिक सामग्री ब्राउज़ करें।'
+      description: 'अपने वित्तीय लक्ष्यों की योजना बनाएं, निवेश सिफारिशें प्राप्त करें और अपनी बजट श्रेणियां प्रबंधित करें।'
     },
     tabs: {
       singleGoal: 'एकल लक्ष्य',
       multiGoal: 'बहु-लक्ष्य',
       investments: 'निवेश',
       categories: 'श्रेणियाँ',
-      learn: 'जानें',
       experts: 'वित्तीय विशेषज्ञ',
     }
   }
@@ -323,11 +313,21 @@ function MultiGoalPlanner() {
     const form = useForm<z.infer<typeof multiGoalSchema>>({
       resolver: zodResolver(multiGoalSchema),
       defaultValues: {
-        goals: [{ id: '1', name: "New Tractor", cost: 20000, priority: 1}],
+        goals: [],
         planningMode: "simultaneous",
         monthlySavings: 1000,
       },
     });
+
+    useEffect(() => {
+        if(isClient){
+            form.reset({
+                goals: [{ id: crypto.randomUUID(), name: "New Tractor", cost: 20000, priority: 1}],
+                planningMode: "simultaneous",
+                monthlySavings: 1000,
+            })
+        }
+    }, [isClient, form])
   
     const { fields, append, remove } = useFieldArray({
       control: form.control,
@@ -368,7 +368,7 @@ function MultiGoalPlanner() {
 
     const handleAddGoal = () => {
         // Using a more reliable way to generate unique IDs on the client
-        append({ id: `goal-${Date.now()}-${Math.random()}`, name: "", cost: 1000, priority: 3 });
+        append({ id: crypto.randomUUID(), name: "", cost: 1000, priority: 3 });
     };
   
     return (
@@ -758,147 +758,3 @@ function CategoryManager({ categories, onCategoriesChange }: { categories: Categ
     </div>
   );
 }
-
-const learnContent = {
-  en: {
-    title: "Financial Literacy Corner",
-    description: "Empower yourself with knowledge. Browse articles and videos to improve your financial health.",
-    articles: [
-      {
-        title: "Understanding Mutual Funds",
-        description: "A beginner's guide to how mutual funds work, their types, and how to invest in them.",
-        icon: Newspaper,
-        image: "https://picsum.photos/seed/mf/600/400",
-        aiHint: "finance charts",
-        link: "#"
-      },
-      {
-        title: "Basics of Kisan Credit Card (KCC)",
-        description: "Learn about the features, benefits, and application process for the Kisan Credit Card scheme.",
-        icon: Newspaper,
-        image: "https://picsum.photos/seed/kcc/600/400",
-        aiHint: "farmland agriculture",
-        link: "#"
-      },
-    ],
-    videos: [
-        {
-        title: "Video: Budgeting 101 for Families",
-        description: "A short video explaining how to create and stick to a family budget effectively.",
-        icon: Video,
-        image: "https://picsum.photos/seed/budget/600/400",
-        aiHint: "family smiling",
-        link: "#"
-      },
-      {
-        title: "Video: Crop Insurance Explained",
-        description: "Understand the importance of crop insurance and how it can protect you from financial losses.",
-        icon: Video,
-        image: "https://picsum.photos/seed/crop/600/400",
-        aiHint: "agriculture crops",
-        link: "#"
-      }
-    ]
-  },
-  hi: {
-    title: "वित्तीय साक्षरता कॉर्नर",
-    description: "ज्ञान से खुद को सशक्त बनाएं। अपने वित्तीय स्वास्थ्य को बेहतर बनाने के लिए लेख और वीडियो ब्राउज़ करें।",
-    articles: [
-      {
-        title: "म्यूचुअल फंड को समझना",
-        description: "म्यूचुअल फंड कैसे काम करते हैं, उनके प्रकार और उनमें निवेश कैसे करें, इसके लिए एक शुरुआती गाइड।",
-        icon: Newspaper,
-        image: "https://picsum.photos/seed/mf/600/400",
-        aiHint: "finance charts",
-        link: "#"
-      },
-      {
-        title: "किसान क्रेडिट कार्ड (KCC) की मूल बातें",
-        description: "किसान क्रेडिट कार्ड योजना की विशेषताओं, लाभों और आवेदन प्रक्रिया के बारे में जानें।",
-        icon: Newspaper,
-        image: "https://picsum.photos/seed/kcc/600/400",
-        aiHint: "farmland agriculture",
-        link: "#"
-      },
-    ],
-    videos: [
-        {
-        title: "वीडियो: परिवारों के लिए बजट 101",
-        description: "एक छोटा वीडियो जो बताता है कि परिवार का बजट प्रभावी ढंग से कैसे बनाया जाए और उसका पालन कैसे किया जाए।",
-        icon: Video,
-        image: "https://picsum.photos/seed/budget/600/400",
-        aiHint: "family smiling",
-        link: "#"
-      },
-      {
-        title: "वीडियो: फसल बीमा समझाया गया",
-        description: "फसल बीमा के महत्व को समझें और यह आपको वित्तीय नुकसान से कैसे बचा सकता है।",
-        icon: Video,
-        image: "https://picsum.photos/seed/crop/600/400",
-        aiHint: "agriculture crops",
-        link: "#"
-      }
-    ]
-  }
-}
-
-function LearnTab({ language = 'en' }: { language?: 'en' | 'hi' }) {
-  const content = learnContent[language];
-
-  return (
-    <div className="p-4 space-y-8">
-      <div>
-        <h3 className="text-2xl font-bold flex items-center gap-2"><BookOpen/> {content.title}</h3>
-        <p className="text-muted-foreground">{content.description}</p>
-      </div>
-
-      <div>
-        <h4 className="text-xl font-semibold mb-4">Articles</h4>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {content.articles.map((item) => (
-            <Card key={item.title} className="overflow-hidden">
-              <Image src={item.image} alt={item.title} width={600} height={400} className="w-full h-48 object-cover" data-ai-hint={item.aiHint}/>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2"><item.icon className="h-5 w-5"/> {item.title}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">{item.description}</p>
-              </CardContent>
-              <CardFooter>
-                <Button asChild variant="link" className="p-0">
-                  <a href={item.link} target="_blank" rel="noopener noreferrer">Read More &rarr;</a>
-                </Button>
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
-      </div>
-      
-      <div>
-        <h4 className="text-xl font-semibold mb-4">Videos</h4>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {content.videos.map((item) => (
-            <Card key={item.title} className="overflow-hidden">
-               <Image src={item.image} alt={item.title} width={600} height={400} className="w-full h-48 object-cover" data-ai-hint={item.aiHint}/>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2"><item.icon className="h-5 w-5"/> {item.title}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">{item.description}</p>
-              </CardContent>
-              <CardFooter>
-                 <Button asChild variant="link" className="p-0">
-                  <a href={item.link} target="_blank" rel="noopener noreferrer">Watch Now &rarr;</a>
-                </Button>
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-    
-
-    

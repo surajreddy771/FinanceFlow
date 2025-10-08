@@ -1,0 +1,22 @@
+{
+    "articles": {
+        "mutualFunds": {
+            "src": "https://picsum.photos/seed/mutualFunds/600/400",
+            "aiHint": "finance charts"
+        },
+        "kisanCreditCard": {
+            "src": "https://picsum.photos/seed/kisanCard/600/400",
+            "aiHint": "farmland agriculture"
+        }
+    },
+    "videos": {
+        "budgeting": {
+            "src": "https://picsum.photos/seed/familyBudget/600/400",
+            "aiHint": "family smiling"
+        },
+        "cropInsurance": {
+            "src": "https://picsum.photos/seed/insuranceCrops/600/400",
+            "aiHint": "agriculture crops"
+        }
+    }
+}

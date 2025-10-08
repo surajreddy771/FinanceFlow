@@ -164,9 +164,9 @@ export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
         totalExpenses={totalExpenses}
         balance={balance}
         categories={categories}
-        onAddTransaction={(t) => setTransactions((prev) => [...prev, t])}
+        onAddTransaction={(t) => setTransactions((prev) => [...prev, { ...t, id: crypto.randomUUID() }])}
         onAddCategory={(c) => setCategories((prev) => [...prev, c])}
-        onAddGoal={(g) => setGoals(prev => [...prev, g])}
+        onAddGoal={(g) => setGoals(prev => [...prev, { ...g, id: crypto.randomUUID() }])}
         currentSavings={balance}
       />
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
@@ -199,43 +199,41 @@ export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
 function FinancialOverviewCard({ totalIncome, totalExpenses, balance, categories, onAddTransaction, onAddCategory, onAddGoal, currentSavings }: { totalIncome: number; totalExpenses: number; balance: number; categories: Category[]; onAddTransaction: (t: Transaction) => void; onAddCategory: (c: Category) => void; onAddGoal: (g: SavingsGoal) => void; currentSavings: number; }) {
   return (
     <Card>
-      <CardContent className="p-3 grid grid-cols-1 md:grid-cols-3 gap-3 items-center">
-        <div className="text-center md:text-left">
-          <CardDescription>Total Balance</CardDescription>
-          <CardTitle className="text-lg font-bold text-primary">{formatCurrency(balance)}</CardTitle>
-          <p className="text-xs text-muted-foreground">Available funds</p>
-        </div>
-        
-        <div className="grid grid-cols-2 gap-3">
-            <div className="flex items-center gap-2">
-                <ArrowUpCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+        <CardContent className="p-4 grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+            <div className="text-center md:text-left row-span-2">
+                <CardDescription>Total Balance</CardDescription>
+                <CardTitle className="text-2xl font-bold text-primary">{formatCurrency(balance)}</CardTitle>
+                <p className="text-xs text-muted-foreground">Your current available funds</p>
+            </div>
+            
+            <div className="flex items-center gap-3 p-2 rounded-md bg-background">
+                <ArrowUpCircle className="h-6 w-6 text-green-500 flex-shrink-0" />
                 <div>
-                    <p className="text-sm font-semibold">{formatCurrency(totalIncome)}</p>
-                    <p className="text-xs text-muted-foreground">Income</p>
+                    <p className="text-sm text-muted-foreground">Total Income</p>
+                    <p className="text-base font-semibold">{formatCurrency(totalIncome)}</p>
                 </div>
             </div>
-            <div className="flex items-center gap-2">
-                <ArrowDownCircle className="h-5 w-5 text-red-500 flex-shrink-0" />
+            <div className="flex items-center gap-3 p-2 rounded-md bg-background">
+                <ArrowDownCircle className="h-6 w-6 text-red-500 flex-shrink-0" />
                 <div>
-                    <p className="text-sm font-semibold">{formatCurrency(totalExpenses)}</p>
-                    <p className="text-xs text-muted-foreground">Expenses</p>
+                    <p className="text-sm text-muted-foreground">Total Expenses</p>
+                    <p className="text-base font-semibold">{formatCurrency(totalExpenses)}</p>
                 </div>
             </div>
-        </div>
-        
-        <div className="flex gap-2 justify-center md:justify-end">
-            <AddTransactionDialog categories={categories} onAddTransaction={onAddTransaction} onAddCategory={onAddCategory}>
-              <Button size="sm">
-                  <PlusCircle className="mr-2 h-4 w-4" /> Transaction
-              </Button>
-            </AddTransactionDialog>
-            <AddGoalDialog onAddGoal={onAddGoal}>
-              <Button size="sm" variant="outline">
-                  <Target className="mr-2 h-4 w-4" /> Add Goal
-              </Button>
-            </AddGoalDialog>
-        </div>
-      </CardContent>
+            
+            <div className="col-span-1 md:col-span-2 flex gap-2 justify-center md:justify-start">
+                <AddTransactionDialog categories={categories} onAddTransaction={onAddTransaction} onAddCategory={onAddCategory}>
+                  <Button size="sm">
+                      <PlusCircle className="mr-2 h-4 w-4" /> Transaction
+                  </Button>
+                </AddTransactionDialog>
+                <AddGoalDialog onAddGoal={onAddGoal}>
+                  <Button size="sm" variant="outline">
+                      <Target className="mr-2 h-4 w-4" /> Add Goal
+                  </Button>
+                </AddGoalDialog>
+            </div>
+        </CardContent>
     </Card>
   );
 }
@@ -760,3 +758,4 @@ function AddCategoryDialog({ onAddCategory, type, children }: { onAddCategory: (
     
 
     
+

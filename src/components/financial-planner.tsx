@@ -110,7 +110,7 @@ const translations = {
     tabs: {
       goalPlanner: 'Goal Planner',
       investments: 'Investments',
-      categories: 'Categories',
+      categories: 'Expenditure Categories',
     }
   },
   hi: {
@@ -121,7 +121,7 @@ const translations = {
     tabs: {
       goalPlanner: 'लक्ष्य योजनाकार',
       investments: 'निवेश',
-      categories: 'श्रेणियाँ',
+      categories: 'खर्च श्रेणियाँ',
     }
   }
 };
@@ -439,7 +439,7 @@ function CategoryManager({ categories, onCategoriesChange }: { categories: Categ
       </Form>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>
-          <h3 className="text-lg font-medium mb-2">Income Categories</h3>
+          <h3 className="text-lg font-medium mb-2">Income</h3>
           <ul className="space-y-2">
             {incomeCategories.map(cat => (
               <li key={cat.name} className="flex items-center justify-between p-2 border rounded-md">
@@ -450,7 +450,7 @@ function CategoryManager({ categories, onCategoriesChange }: { categories: Categ
           </ul>
         </div>
         <div>
-          <h3 className="text-lg font-medium mb-2">Expense Categories</h3>
+          <h3 className="text-lg font-medium mb-2">Expense</h3>
            <ul className="space-y-2">
             {expenseCategories.map(cat => (
               <li key={cat.name} className="flex items-center justify-between p-2 border rounded-md">

@@ -47,7 +47,7 @@ Savings Goals: {{{savingsGoals}}}
 Income: {{{income}}}
 Budget: {{{budget}}}
 
-Provide specific and actionable recommendations to help the user improve their financial situation and achieve their savings goals.`,
+Provide specific and actionable recommendations to help the user improve their financial situation and achieve their savings goals. Do not use markdown formatting like asterisks for bolding. Present the advice as plain text.`,
 });
 
 const generateFinancialAdviceFlow = ai.defineFlow(

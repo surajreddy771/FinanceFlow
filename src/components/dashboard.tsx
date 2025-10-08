@@ -15,7 +15,6 @@ import {
   Bot,
   Loader2,
   Edit,
-  DollarSign,
 } from "lucide-react";
 import {
   PieChart,
@@ -75,7 +74,6 @@ import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { FinancialPlanner } from "./financial-planner";
 import { LearnSection } from "./learn-section";
 
@@ -138,7 +136,7 @@ export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
   const [goals, setGoals] = useState<SavingsGoal[]>([]);
   const [budget, setBudget] = useState<number>(3000);
   const [categories, setCategories] = useState<Category[]>([]);
-
+  
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -183,8 +181,8 @@ export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
   
   return (
     <div className="flex flex-col gap-8">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 grid gap-8 content-start">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <div className="lg:col-span-3 grid gap-8 content-start">
            <FinancialOverviewCard
               totalIncome={totalIncome}
               totalExpenses={totalExpenses}
@@ -193,7 +191,6 @@ export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
               onAddTransaction={handleAddTransaction}
               onAddCategory={handleAddCategory}
               onAddGoal={handleAddGoal}
-              budget={budget}
             />
           <FinancialPlanner 
             categories={categories}
@@ -220,18 +217,17 @@ export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
   );
 }
 
-function FinancialOverviewCard({ totalIncome, totalExpenses, balance, categories, onAddTransaction, onAddCategory, onAddGoal, budget }: { totalIncome: number; totalExpenses: number; balance: number; categories: Category[]; onAddTransaction: (t: Omit<Transaction, 'id'>) => void; onAddCategory: (c: Category) => void; onAddGoal: (g: Omit<SavingsGoal, 'id'>) => void; budget: number; }) {
-  const percentageSpent = budget > 0 ? (totalExpenses / budget) * 100 : 0;
+function FinancialOverviewCard({ totalIncome, totalExpenses, balance, categories, onAddTransaction, onAddCategory, onAddGoal }: { totalIncome: number; totalExpenses: number; balance: number; categories: Category[]; onAddTransaction: (t: Omit<Transaction, 'id'>) => void; onAddCategory: (c: Category) => void; onAddGoal: (g: Omit<SavingsGoal, 'id'>) => void;}) {
   
   return (
-     <Card className="lg:col-span-2">
-        <CardContent className="p-4 grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
+     <Card>
+        <CardContent className="p-4 grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
             <div className="md:col-span-1 text-center md:text-left">
               <CardDescription>Total Balance</CardDescription>
               <CardTitle className="text-4xl font-bold text-primary">{formatCurrency(balance)}</CardTitle>
             </div>
             
-            <div className="md:col-span-2 grid grid-cols-2 sm:grid-cols-3 gap-4">
+            <div className="md:col-span-1 grid grid-cols-2 sm:grid-cols-2 gap-4">
                 <div className="flex items-center gap-3 p-3 rounded-lg bg-background">
                     <ArrowUpCircle className="h-8 w-8 text-green-500 flex-shrink-0" />
                     <div>
@@ -244,13 +240,6 @@ function FinancialOverviewCard({ totalIncome, totalExpenses, balance, categories
                     <div>
                         <p className="text-sm text-muted-foreground">Total Expenses</p>
                         <p className="text-lg font-semibold">{formatCurrency(totalExpenses)}</p>
-                    </div>
-                </div>
-                 <div className="flex items-center gap-3 p-3 rounded-lg bg-background">
-                    <DollarSign className="h-8 w-8 text-blue-500 flex-shrink-0" />
-                    <div>
-                        <p className="text-sm text-muted-foreground">Budget Spent</p>
-                        <p className="text-lg font-semibold">{percentageSpent.toFixed(0)}%</p>
                     </div>
                 </div>
             </div>
@@ -656,9 +645,6 @@ function FinancialAdviceCard({ transactions, goals, budget, totalIncome }: { tra
         <CardTitle className="flex items-center gap-2"><Bot /> AI Financial Advisor</CardTitle>
         <CardDescription>Get personalized advice based on your financial data.</CardDescription>
       </CardHeader>
-      <CardContent className="text-center text-muted-foreground p-4">
-        Click the button to get started!
-      </CardContent>
       <CardFooter>
         <Button onClick={handleGenerateAdvice} disabled={isLoading} className="w-full">
           {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin"/> Generating...</> : "Generate Advice"}

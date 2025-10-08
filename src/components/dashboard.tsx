@@ -163,7 +163,7 @@ export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
   const handleAddTransaction = (transaction: Omit<Transaction, 'id'>) => {
     setTransactions(prev => [...prev, { ...transaction, id: crypto.randomUUID() }]);
   };
-  
+
   const handleAddGoal = (goal: Omit<SavingsGoal, 'id'>) => {
     setGoals(prev => [...prev, { ...goal, id: crypto.randomUUID() }]);
   };
@@ -187,7 +187,7 @@ export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
               categories={categories}
               onAddTransaction={handleAddTransaction}
               onAddCategory={handleAddCategory}
-              onAddGoal={onAddGoal}
+              onAddGoal={handleAddGoal}
             />
         </div>
         <div className="lg:col-span-2 grid gap-8 content-start">
@@ -778,5 +778,7 @@ function AddCategoryDialog({ onAddCategory, type, children }: { onAddCategory: (
   }
 
       
+
+    
 
     

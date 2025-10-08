@@ -138,10 +138,16 @@ const initialCategories: Category[] = [
 ];
 
 export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
-  const [transactions, setTransactions] = useState<Transaction[]>(initialTransactions);
-  const [goals, setGoals] = useState<SavingsGoal[]>(initialGoals);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [goals, setGoals] = useState<SavingsGoal[]>([]);
   const [budget, setBudget] = useState<number>(3000);
-  const [categories, setCategories] = useState<Category[]>(initialCategories);
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    setTransactions(initialTransactions);
+    setGoals(initialGoals);
+    setCategories(initialCategories);
+  }, []);
 
   const { totalIncome, totalExpenses, balance } = useMemo(() => {
     const income = transactions
@@ -170,13 +176,13 @@ export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
               onAddCategory={(c) => setCategories((prev) => [...prev, c])}
               onAddGoal={(g) => setGoals(prev => [...prev, { ...g, id: crypto.randomUUID() }])}
             />
-             <FinancialPlanner 
-                categories={categories}
-                onCategoriesChange={setCategories}
-                goals={goals}
-                onGoalsChange={setGoals}
-                language={language}
-              />
+            <FinancialPlanner 
+              categories={categories}
+              onCategoriesChange={setCategories}
+              goals={goals}
+              onGoalsChange={setGoals}
+              language={language}
+            />
           </div>
           <div className="lg:col-span-1 grid grid-cols-1 gap-8 content-start">
               <BudgetCard budget={budget} totalExpenses={totalExpenses} onSetBudget={setBudget} />
@@ -230,20 +236,16 @@ function FinancialOverviewCard({ totalIncome, totalExpenses, balance, categories
             </div>
             
             <div className="md:col-span-1 flex flex-col sm:flex-row md:flex-col gap-2 justify-center">
-              <Dialog>
-                  <AddTransactionDialog categories={categories} onAddTransaction={onAddTransaction} onAddCategory={onAddCategory}>
-                    <Button size="sm" className="w-full">
-                        <PlusCircle className="mr-2 h-4 w-4" /> Transaction
-                    </Button>
-                  </AddTransactionDialog>
-              </Dialog>
-              <Dialog>
-                  <AddGoalDialog onAddGoal={onAddGoal}>
-                    <Button size="sm" variant="outline" className="w-full">
-                        <Target className="mr-2 h-4 w-4" /> Add Goal
-                    </Button>
-                  </AddGoalDialog>
-              </Dialog>
+              <AddTransactionDialog categories={categories} onAddTransaction={onAddTransaction} onAddCategory={onAddCategory}>
+                <Button size="sm" className="w-full">
+                    <PlusCircle className="mr-2 h-4 w-4" /> Transaction
+                </Button>
+              </AddTransactionDialog>
+              <AddGoalDialog onAddGoal={onAddGoal}>
+                <Button size="sm" variant="outline" className="w-full">
+                    <Target className="mr-2 h-4 w-4" /> Add Goal
+                </Button>
+              </AddGoalDialog>
             </div>
       </CardContent>
     </Card>
@@ -431,7 +433,7 @@ function SpendingChartCard({ transactions }: { transactions: Transaction[] }) {
   }
 
   return (
-    <Card>
+    <Card className="lg:col-span-1">
       <CardHeader>
         <CardTitle>Spending Breakdown</CardTitle>
         <CardDescription>Your expenses by category.</CardDescription>
@@ -770,6 +772,7 @@ function AddCategoryDialog({ onAddCategory, type, children }: { onAddCategory: (
     
 
     
+
 
 
 

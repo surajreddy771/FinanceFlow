@@ -32,12 +32,13 @@ import {
 } from "@/components/ui/select";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { PlusCircle, Trash2, Video } from "lucide-react";
+import { PlusCircle, Trash2, Video, Edit } from "lucide-react";
 import { Separator } from "./ui/separator";
 import type { Category, SavingsGoal } from "@/lib/types";
 import { Badge } from "./ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { Progress } from "./ui/progress";
+import { Label } from "./ui/label";
 
 const formatCurrency = (amount: number) =>
   new Intl.NumberFormat("en-US", {
@@ -50,14 +51,7 @@ const goalSchema = z.object({
   id: z.string(),
   name: z.string().min(1, "Goal name is required"),
   targetAmount: z.coerce.number().positive("Target must be positive"),
-  savedAmount: z.coerce.number().nonnegative(),
 });
-
-const goalPlannerSchema = z.object({
-  goals: z.array(goalSchema),
-  monthlyContribution: z.coerce.number().positive("Contribution must be positive"),
-});
-
 
 const fundsSchema = z.object({
     investmentCategory: z.enum(['equity', 'debt', 'hybrid', 'commodities']),
@@ -135,7 +129,6 @@ const translations = {
 };
 
 function GoalPlanner({ goals, onGoalsChange }: { goals: SavingsGoal[], onGoalsChange: (goals: SavingsGoal[]) => void }) {
-  const { toast } = useToast();
 
   const handleAddGoal = () => {
     onGoalsChange([...goals, { id: crypto.randomUUID(), name: "New Goal", targetAmount: 1000 }]);
@@ -211,7 +204,7 @@ function GoalItem({ goal, onUpdate, onDelete }: { goal: SavingsGoal, onUpdate: (
               </p>
             </div>
             <div className="flex items-center gap-2">
-              <Button size="sm" variant="outline" onClick={() => setIsEditing(true)}>Edit</Button>
+              <Button size="sm" variant="outline" onClick={() => setIsEditing(true)}><Edit className="h-4 w-4 mr-2" />Edit</Button>
               <Button size="sm" variant="destructive" onClick={() => onDelete(goal.id)}><Trash2 className="h-4 w-4" /></Button>
             </div>
           </div>
@@ -470,5 +463,6 @@ function CategoryManager({ categories, onCategoriesChange }: { categories: Categ
     </div>
   );
 }
+
 
 

@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
@@ -198,43 +199,41 @@ export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
 function FinancialOverviewCard({ totalIncome, totalExpenses, balance, categories, onAddTransaction, onAddCategory, onAddGoal, currentSavings }: { totalIncome: number; totalExpenses: number; balance: number; categories: Category[]; onAddTransaction: (t: Transaction) => void; onAddCategory: (c: Category) => void; onAddGoal: (g: SavingsGoal) => void; currentSavings: number; }) {
   return (
     <Card>
-      <CardContent className="p-4 grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
-        <div className="text-center md:text-left col-span-1">
+      <CardContent className="p-3 grid grid-cols-1 md:grid-cols-3 gap-3 items-center">
+        <div className="text-center md:text-left">
           <CardDescription>Total Balance</CardDescription>
-          <CardTitle className="text-xl font-bold text-primary">{formatCurrency(balance)}</CardTitle>
-          <p className="text-xs text-muted-foreground">Your current available funds</p>
+          <CardTitle className="text-lg font-bold text-primary">{formatCurrency(balance)}</CardTitle>
+          <p className="text-xs text-muted-foreground">Available funds</p>
         </div>
-        <Separator orientation="vertical" className="hidden md:block mx-auto h-16"/>
-        <div className="col-span-1 grid grid-cols-2 md:grid-cols-1 gap-4">
+        
+        <div className="grid grid-cols-2 gap-3">
             <div className="flex items-center gap-2">
-                <ArrowUpCircle className="h-5 w-5 text-green-500" />
+                <ArrowUpCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
                 <div>
-                    <p className="text-md font-semibold">{formatCurrency(totalIncome)}</p>
-                    <p className="text-xs text-muted-foreground">Total Income</p>
+                    <p className="text-sm font-semibold">{formatCurrency(totalIncome)}</p>
+                    <p className="text-xs text-muted-foreground">Income</p>
                 </div>
             </div>
             <div className="flex items-center gap-2">
-                <ArrowDownCircle className="h-5 w-5 text-red-500" />
+                <ArrowDownCircle className="h-5 w-5 text-red-500 flex-shrink-0" />
                 <div>
-                    <p className="text-md font-semibold">{formatCurrency(totalExpenses)}</p>
-                    <p className="text-xs text-muted-foreground">Total Expenses</p>
+                    <p className="text-sm font-semibold">{formatCurrency(totalExpenses)}</p>
+                    <p className="text-xs text-muted-foreground">Expenses</p>
                 </div>
             </div>
         </div>
-        <div className="col-span-full md:col-span-2 flex flex-col gap-2 justify-center">
-            <p className="text-sm font-medium text-muted-foreground mb-2 text-center md:text-left">Quick Actions</p>
-             <div className="flex gap-2 justify-center md:justify-start">
-                <AddTransactionDialog categories={categories} onAddTransaction={onAddTransaction} onAddCategory={onAddCategory}>
-                  <Button size="sm">
-                      <PlusCircle className="mr-2 h-4 w-4" /> Add Transaction
-                  </Button>
-                </AddTransactionDialog>
-                <AddGoalDialog onAddGoal={onAddGoal}>
-                  <Button size="sm" variant="outline">
-                      <Target className="mr-2 h-4 w-4" /> Add Goal
-                  </Button>
-                </AddGoalDialog>
-             </div>
+        
+        <div className="flex gap-2 justify-center md:justify-end">
+            <AddTransactionDialog categories={categories} onAddTransaction={onAddTransaction} onAddCategory={onAddCategory}>
+              <Button size="sm">
+                  <PlusCircle className="mr-2 h-4 w-4" /> Transaction
+              </Button>
+            </AddTransactionDialog>
+            <AddGoalDialog onAddGoal={onAddGoal}>
+              <Button size="sm" variant="outline">
+                  <Target className="mr-2 h-4 w-4" /> Add Goal
+              </Button>
+            </AddGoalDialog>
         </div>
       </CardContent>
     </Card>

@@ -33,9 +33,7 @@ import {
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PlusCircle, Trash2, Video, Edit } from "lucide-react";
-import { Separator } from "./ui/separator";
 import type { Category, SavingsGoal } from "@/lib/types";
-import { Badge } from "./ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { Progress } from "./ui/progress";
 import { Label } from "./ui/label";
@@ -129,12 +127,13 @@ const translations = {
 };
 
 function GoalPlanner({ goals, onGoalsChange }: { goals: SavingsGoal[], onGoalsChange: (goals: SavingsGoal[]) => void }) {
-
+  
   const handleAddGoal = () => {
-    onGoalsChange([...goals, { id: crypto.randomUUID(), name: "New Goal", targetAmount: 1000 }]);
+    const newId = crypto.randomUUID();
+    onGoalsChange([...goals, { id: newId, name: "New Goal", targetAmount: 1000 }]);
   };
 
-  const handleUpdateGoal = (id: string, updatedGoal: Partial<SavingsGoal>) => {
+  const handleUpdateGoal = (id: string, updatedGoal: Partial<Omit<SavingsGoal, 'id'>>) => {
     onGoalsChange(goals.map(g => g.id === id ? { ...g, ...updatedGoal } : g));
   };
 
@@ -166,7 +165,7 @@ function GoalPlanner({ goals, onGoalsChange }: { goals: SavingsGoal[], onGoalsCh
   );
 }
 
-function GoalItem({ goal, onUpdate, onDelete }: { goal: SavingsGoal, onUpdate: (id: string, data: Partial<SavingsGoal>) => void, onDelete: (id: string) => void }) {
+function GoalItem({ goal, onUpdate, onDelete }: { goal: SavingsGoal, onUpdate: (id: string, data: Partial<Omit<SavingsGoal, 'id'>>) => void, onDelete: (id: string) => void }) {
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState(goal.name);
   const [targetAmount, setTargetAmount] = useState(goal.targetAmount);
@@ -379,6 +378,7 @@ function FinancialExperts() {
 }
 
 function CategoryManager({ categories, onCategoriesChange }: { categories: Category[], onCategoriesChange: (cats: Category[]) => void }) {
+  const { toast } = useToast();
   const form = useForm<z.infer<typeof newCategorySchema>>({
     resolver: zodResolver(newCategorySchema),
     defaultValues: {
@@ -392,6 +392,7 @@ function CategoryManager({ categories, onCategoriesChange }: { categories: Categ
 
   function onSubmit(values: z.infer<typeof newCategorySchema>) {
     onCategoriesChange([...categories, values]);
+    toast({ title: 'Category Added', description: `New ${values.type} category "${values.name}" created.` });
     form.reset();
   }
   
@@ -463,6 +464,3 @@ function CategoryManager({ categories, onCategoriesChange }: { categories: Categ
     </div>
   );
 }
-
-
-

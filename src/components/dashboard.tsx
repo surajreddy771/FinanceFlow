@@ -9,15 +9,12 @@ import { z } from "zod";
 import {
   ArrowDownCircle,
   ArrowUpCircle,
-  Banknote,
   CalendarIcon,
   PlusCircle,
-  DollarSign,
   Target,
   Bot,
   Loader2,
   Edit,
-  Video,
 } from "lucide-react";
 import {
   PieChart,
@@ -64,7 +61,6 @@ import {
   DialogTitle,
   DialogTrigger,
   DialogFooter,
-  DialogClose,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -78,10 +74,8 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Badge } from "./ui/badge";
 import { FinancialPlanner } from "./financial-planner";
 import { LearnSection } from "./learn-section";
-import { Separator } from "./ui/separator";
 
 const transactionSchema = z.object({
   type: z.enum(["income", "expense"]),
@@ -163,6 +157,18 @@ export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
     };
   }, [transactions]);
   
+  const handleAddTransaction = (transaction: Omit<Transaction, 'id'>) => {
+    setTransactions(prev => [...prev, { ...transaction, id: crypto.randomUUID() }]);
+  };
+  
+  const handleAddGoal = (goal: Omit<SavingsGoal, 'id'>) => {
+    setGoals(prev => [...prev, { ...goal, id: crypto.randomUUID() }]);
+  };
+  
+  const handleAddCategory = (category: Category) => {
+    setCategories(prev => [...prev, category]);
+  };
+  
   return (
     <div className="flex flex-col gap-8">
        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -172,53 +178,50 @@ export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
               totalExpenses={totalExpenses}
               balance={balance}
               categories={categories}
-              onAddTransaction={(t) => setTransactions((prev) => [...prev, { ...t, id: crypto.randomUUID() }])}
-              onAddCategory={(c) => setCategories((prev) => [...prev, c])}
-              onAddGoal={(g) => setGoals(prev => [...prev, { ...g, id: crypto.randomUUID() }])}
+              onAddTransaction={handleAddTransaction}
+              onAddCategory={handleAddCategory}
+              onAddGoal={handleAddGoal}
             />
-            <FinancialPlanner 
-              categories={categories}
-              onCategoriesChange={setCategories}
-              goals={goals}
-              onGoalsChange={setGoals}
-              language={language}
-            />
+             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+               <FinancialPlanner 
+                  categories={categories}
+                  onCategoriesChange={setCategories}
+                  goals={goals}
+                  onGoalsChange={setGoals}
+                  language={language}
+                />
+                <SpendingChartCard transactions={transactions} />
+            </div>
           </div>
           <div className="lg:col-span-1 grid grid-cols-1 gap-8 content-start">
               <BudgetCard budget={budget} totalExpenses={totalExpenses} onSetBudget={setBudget} />
-              <SpendingChartCard transactions={transactions} />
+              <RecentTransactionsCard transactions={transactions} />
+              <FinancialAdviceCard
+                transactions={transactions}
+                goals={goals}
+                budget={budget}
+                totalIncome={totalIncome}
+              />
           </div>
       </div>
       
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-        <div className="lg:col-span-2 grid gap-8">
-            <RecentTransactionsCard transactions={transactions} />
-             <LearnSection language={language} />
-        </div>
-        <div className="lg:col-span-1 grid gap-8">
-            <FinancialAdviceCard
-              transactions={transactions}
-              goals={goals}
-              budget={budget}
-              totalIncome={totalIncome}
-            />
-        </div>
-      </div>
+      <LearnSection language={language} />
+
   </div>
   );
 }
 
-function FinancialOverviewCard({ totalIncome, totalExpenses, balance, categories, onAddTransaction, onAddCategory, onAddGoal }: { totalIncome: number; totalExpenses: number; balance: number; categories: Category[]; onAddTransaction: (t: Transaction) => void; onAddCategory: (c: Category) => void; onAddGoal: (g: SavingsGoal) => void; }) {
+function FinancialOverviewCard({ totalIncome, totalExpenses, balance, categories, onAddTransaction, onAddCategory, onAddGoal }: { totalIncome: number; totalExpenses: number; balance: number; categories: Category[]; onAddTransaction: (t: Omit<Transaction, 'id'>) => void; onAddCategory: (c: Category) => void; onAddGoal: (g: Omit<SavingsGoal, 'id'>) => void; }) {
   return (
-     <Card className="lg:col-span-3">
-        <CardContent className="p-4 grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
-            <div className="md:col-span-1 text-center md:text-left">
+     <Card className="lg:col-span-2">
+        <CardContent className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-center">
+            <div className="lg:col-span-1 text-center md:text-left">
               <CardDescription>Total Balance</CardDescription>
               <CardTitle className="text-3xl font-bold text-primary">{formatCurrency(balance)}</CardTitle>
               <p className="text-xs text-muted-foreground">Your current available funds</p>
             </div>
             
-            <div className="md:col-span-2 grid grid-cols-2 gap-4">
+            <div className="lg:col-span-2 grid grid-cols-2 gap-4">
                 <div className="flex items-center gap-3 p-3 rounded-lg bg-background">
                     <ArrowUpCircle className="h-8 w-8 text-green-500 flex-shrink-0" />
                     <div>
@@ -235,7 +238,7 @@ function FinancialOverviewCard({ totalIncome, totalExpenses, balance, categories
                 </div>
             </div>
             
-            <div className="md:col-span-1 flex flex-col sm:flex-row md:flex-col gap-2 justify-center">
+            <div className="lg:col-span-1 flex flex-col sm:flex-row md:flex-col gap-2 justify-center">
               <AddTransactionDialog categories={categories} onAddTransaction={onAddTransaction} onAddCategory={onAddCategory}>
                 <Button size="sm" className="w-full">
                     <PlusCircle className="mr-2 h-4 w-4" /> Transaction
@@ -253,7 +256,7 @@ function FinancialOverviewCard({ totalIncome, totalExpenses, balance, categories
 }
 
 
-function AddTransactionDialog({ categories, onAddTransaction, onAddCategory, children }: { categories: Category[], onAddTransaction: (t: Transaction) => void, onAddCategory: (c: Category) => void, children: React.ReactNode }) {
+function AddTransactionDialog({ categories, onAddTransaction, onAddCategory, children }: { categories: Category[], onAddTransaction: (t: Omit<Transaction, 'id'>) => void, onAddCategory: (c: Category) => void, children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
   const { toast } = useToast();
 
@@ -269,7 +272,7 @@ function AddTransactionDialog({ categories, onAddTransaction, onAddCategory, chi
   });
 
   const onSubmit = (values: z.infer<typeof transactionSchema>) => {
-    onAddTransaction({ ...values, id: crypto.randomUUID() });
+    onAddTransaction(values);
     toast({
       title: "Transaction Added",
       description: `${formatCurrency(values.amount)} ${values.type} for ${values.category}.`,
@@ -332,10 +335,10 @@ function AddTransactionDialog({ categories, onAddTransaction, onAddCategory, chi
                         {categories.filter(c => c.type === form.watch('type')).map(cat => (
                           <SelectItem key={cat.name} value={cat.name}>{cat.name}</SelectItem>
                         ))}
-                        <AddCategoryDialog onAddCategory={onAddCategory} type={form.watch('type')} >
-                          <div className="flex w-full items-center p-2 text-sm text-primary cursor-pointer hover:bg-muted rounded-sm">
-                            <PlusCircle className="mr-2 h-4 w-4" /> Add New Category
-                          </div>
+                         <AddCategoryDialog onAddCategory={onAddCategory} type={form.watch('type')} >
+                            <div className="flex w-full items-center p-2 text-sm text-primary cursor-pointer hover:bg-muted rounded-sm">
+                                <PlusCircle className="mr-2 h-4 w-4" /> Add New Category
+                            </div>
                         </AddCategoryDialog>
                       </SelectContent>
                     </Select>
@@ -422,18 +425,8 @@ function SpendingChartCard({ transactions }: { transactions: Transaction[] }) {
     }));
   }, [transactions]);
   
-  const chartConfig = {
-    amount: {
-      label: "Amount",
-    },
-    ...expenseData.reduce((acc, item) => {
-      acc[item.name] = { label: item.name };
-      return acc;
-    }, {}),
-  }
-
   return (
-    <Card className="lg:col-span-1">
+    <Card>
       <CardHeader>
         <CardTitle>Spending Breakdown</CardTitle>
         <CardDescription>Your expenses by category.</CardDescription>
@@ -542,7 +535,7 @@ function BudgetCard({ budget, totalExpenses, onSetBudget }: { budget: number, to
   );
 }
 
-function AddGoalDialog({ onAddGoal, children }: { onAddGoal: (g: SavingsGoal) => void, children: React.ReactNode }) {
+function AddGoalDialog({ onAddGoal, children }: { onAddGoal: (g: Omit<SavingsGoal, 'id'>) => void, children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
   const { toast } = useToast();
   const form = useForm<z.infer<typeof savingsGoalSchema>>({
@@ -551,7 +544,7 @@ function AddGoalDialog({ onAddGoal, children }: { onAddGoal: (g: SavingsGoal) =>
   });
 
   const onSubmit = (values: z.infer<typeof savingsGoalSchema>) => {
-    onAddGoal({ ...values, id: crypto.randomUUID() });
+    onAddGoal(values);
     toast({ title: "Goal Added", description: `You're now saving for ${values.name}!` });
     form.reset();
     setOpen(false);
@@ -767,14 +760,3 @@ function AddCategoryDialog({ onAddCategory, type, children }: { onAddCategory: (
       </Dialog>
     );
   }
-
-
-    
-
-    
-
-
-
-
-
-

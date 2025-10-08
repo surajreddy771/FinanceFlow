@@ -160,7 +160,7 @@ export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
   return (
     <div className="flex flex-col gap-8">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-2 grid gap-8">
           <FinancialOverviewCard
             totalIncome={totalIncome}
             totalExpenses={totalExpenses}
@@ -171,8 +171,15 @@ export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
             onAddGoal={(g) => setGoals(prev => [...prev, { ...g, id: crypto.randomUUID() }])}
             currentSavings={balance}
           />
+          <FinancialPlanner 
+            categories={categories}
+            onCategoriesChange={setCategories}
+            goals={goals}
+            onGoalsChange={setGoals}
+            language={language}
+          />
         </div>
-        <div className="lg:col-span-1 grid gap-8">
+        <div className="lg:col-span-1 grid gap-8 content-start">
             <BudgetCard budget={budget} totalExpenses={totalExpenses} onSetBudget={setBudget} />
             <SpendingChartCard transactions={transactions} />
         </div>
@@ -193,14 +200,6 @@ export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
       </div>
 
       <LearnSection language={language} />
-
-      <FinancialPlanner 
-        categories={categories}
-        onCategoriesChange={setCategories}
-        goals={goals}
-        onGoalsChange={setGoals}
-        language={language}
-      />
   </div>
   );
 }
@@ -233,16 +232,16 @@ function FinancialOverviewCard({ totalIncome, totalExpenses, balance, categories
         </div>
         
         <div className="md:col-span-2 flex flex-col sm:flex-row gap-2 justify-center">
-            <AddTransactionDialog categories={categories} onAddTransaction={onAddTransaction} onAddCategory={onAddCategory}>
-              <Button size="sm" className="w-full">
-                  <PlusCircle className="mr-2 h-4 w-4" /> Transaction
-              </Button>
-            </AddTransactionDialog>
-            <AddGoalDialog onAddGoal={onAddGoal}>
-              <Button size="sm" variant="outline" className="w-full">
-                  <Target className="mr-2 h-4 w-4" /> Add Goal
-              </Button>
-            </AddGoalDialog>
+          <AddTransactionDialog categories={categories} onAddTransaction={onAddTransaction} onAddCategory={onAddCategory}>
+            <Button size="sm" className="w-full">
+                <PlusCircle className="mr-2 h-4 w-4" /> Transaction
+            </Button>
+          </AddTransactionDialog>
+          <AddGoalDialog onAddGoal={onAddGoal}>
+            <Button size="sm" variant="outline" className="w-full">
+                <Target className="mr-2 h-4 w-4" /> Add Goal
+            </Button>
+          </AddGoalDialog>
         </div>
       </CardContent>
     </Card>
@@ -769,6 +768,7 @@ function AddCategoryDialog({ onAddCategory, type, children }: { onAddCategory: (
     
 
     
+
 
 
 

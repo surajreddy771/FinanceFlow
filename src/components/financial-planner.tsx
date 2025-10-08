@@ -34,8 +34,10 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PlusCircle, Trash2, Video } from "lucide-react";
 import { Separator } from "./ui/separator";
-import type { Category } from "@/lib/types";
+import type { Category, SavingsGoal } from "@/lib/types";
 import { Badge } from "./ui/badge";
+import { useToast } from "@/hooks/use-toast";
+import { Progress } from "./ui/progress";
 
 const formatCurrency = (amount: number) =>
   new Intl.NumberFormat("en-US", {
@@ -44,21 +46,21 @@ const formatCurrency = (amount: number) =>
   }).format(amount);
 
 // Schemas
-const multiGoalItemSchema = z.object({
+const goalSchema = z.object({
   id: z.string(),
   name: z.string().min(1, "Goal name is required"),
-  cost: z.coerce.number().positive(),
-  priority: z.coerce.number().min(1).max(5),
+  targetAmount: z.coerce.number().positive("Target must be positive"),
+  savedAmount: z.coerce.number().nonnegative(),
 });
 
-const multiGoalSchema = z.object({
-  goals: z.array(multiGoalItemSchema),
-  planningMode: z.enum(["sequential", "simultaneous"]),
-  monthlySavings: z.coerce.number().positive(),
+const goalPlannerSchema = z.object({
+  goals: z.array(goalSchema),
+  monthlyContribution: z.coerce.number().positive("Contribution must be positive"),
 });
+
 
 const fundsSchema = z.object({
-    location: z.enum(['urban', 'rural']),
+    investmentCategory: z.enum(['equity', 'debt', 'hybrid', 'commodities']),
     timeHorizon: z.enum(["short-term", "medium-term", "long-term"]),
     riskAppetite: z.enum(["low", "medium", "high"]),
 });
@@ -69,7 +71,7 @@ const newCategorySchema = z.object({
 });
 
 
-export function FinancialPlanner({ categories, onCategoriesChange, language = 'en' }: { categories: Category[], onCategoriesChange: (cats: Category[]) => void, language?: 'en' | 'hi' }) {
+export function FinancialPlanner({ categories, onCategoriesChange, goals, onGoalsChange, language = 'en' }: { categories: Category[], onCategoriesChange: (cats: Category[]) => void, goals: SavingsGoal[], onGoalsChange: (goals: SavingsGoal[]) => void, language?: 'en' | 'hi' }) {
 
   const t = translations[language];
 
@@ -87,15 +89,13 @@ export function FinancialPlanner({ categories, onCategoriesChange, language = 'e
             <TabsTrigger value="goal-planner">{t.tabs.goalPlanner}</TabsTrigger>
             <TabsTrigger value="investments">
               {t.tabs.investments}
-              <Badge variant="outline" className="ml-2 bg-accent text-accent-foreground">New</Badge>
             </TabsTrigger>
             <TabsTrigger value="categories">
               {t.tabs.categories}
-              <Badge variant="outline" className="ml-2 bg-accent text-accent-foreground">New</Badge>
             </TabsTrigger>
           </TabsList>
           <TabsContent value="goal-planner">
-            <MultiGoalPlanner />
+            <GoalPlanner goals={goals} onGoalsChange={onGoalsChange} />
           </TabsContent>
           <TabsContent value="investments">
             <FundsRecommendation />
@@ -134,263 +134,138 @@ const translations = {
   }
 };
 
-function MultiGoalPlanner() {
-    const [result, setResult] = useState<string | null>(null);
-    const [isClient, setIsClient] = useState(false);
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
+function GoalPlanner({ goals, onGoalsChange }: { goals: SavingsGoal[], onGoalsChange: (goals: SavingsGoal[]) => void }) {
+  const { toast } = useToast();
 
-    const form = useForm<z.infer<typeof multiGoalSchema>>({
-      resolver: zodResolver(multiGoalSchema),
-      defaultValues: {
-        goals: [],
-        planningMode: "simultaneous",
-        monthlySavings: 1000,
-      },
-    });
+  const handleAddGoal = () => {
+    onGoalsChange([...goals, { id: crypto.randomUUID(), name: "New Goal", targetAmount: 1000 }]);
+  };
 
-    useEffect(() => {
-        if(isClient){
-            form.reset({
-                goals: [{ id: crypto.randomUUID(), name: "New Tractor", cost: 20000, priority: 1}],
-                planningMode: "simultaneous",
-                monthlySavings: 1000,
-            })
-        }
-    }, [isClient, form])
-  
-    const { fields, append, remove } = useFieldArray({
-      control: form.control,
-      name: "goals",
-    });
-  
-    function onSubmit(values: z.infer<typeof multiGoalSchema>) {
-        if (values.goals.length === 0) {
-            setResult("Please add at least one goal to generate a plan.");
-            return;
-        }
+  const handleUpdateGoal = (id: string, updatedGoal: Partial<SavingsGoal>) => {
+    onGoalsChange(goals.map(g => g.id === id ? { ...g, ...updatedGoal } : g));
+  };
 
-        let plan = '';
-        if (values.planningMode === 'sequential') {
-            plan = 'Sequential Plan:\n';
-            let remainingSavings = values.monthlySavings;
-            let months = 0;
-            const sortedGoals = [...values.goals].sort((a,b) => a.priority - b.priority);
-            sortedGoals.forEach(goal => {
-                const monthsToAchieve = goal.cost / remainingSavings;
-                months += monthsToAchieve;
-                plan += `- Goal "${goal.name}" (${formatCurrency(goal.cost)}): Achieved in ${monthsToAchieve.toFixed(1)} months. Total time: ${months.toFixed(1)} months.\n`;
-            });
-            plan += `\nTotal time to achieve all goals sequentially is ${months.toFixed(1)} months.`;
+  const handleDeleteGoal = (id: string) => {
+    onGoalsChange(goals.filter(g => g.id !== id));
+  };
 
-        } else { // Simultaneous
-            plan = 'Simultaneous Plan:\n';
-            const totalPriority = values.goals.reduce((sum, g) => sum + g.priority, 0);
-            values.goals.forEach(goal => {
-                const allocatedSavings = (goal.priority / totalPriority) * values.monthlySavings;
-                const monthsToAchieve = goal.cost / allocatedSavings;
-                plan += `- Goal "${goal.name}" (${formatCurrency(goal.cost)}): Allocate ${formatCurrency(allocatedSavings)}/month. Achieved in ${monthsToAchieve.toFixed(1)} months.\n`;
-            });
-            const maxTime = Math.max(...values.goals.map(goal => {
-                const allocatedSavings = (goal.priority / values.goals.reduce((s, g) => s + g.priority, 0)) * values.monthlySavings;
-                return goal.cost / allocatedSavings;
-            }));
-            plan += `\nAll goals will be achieved in approximately ${maxTime.toFixed(1)} months.`
-        }
-
-        setResult(plan);
-    }
-
-    const handleAddGoal = () => {
-        append({ id: crypto.randomUUID(), name: "", cost: 1000, priority: 3 });
-    };
-  
-    return (
-      <div className="p-4">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <div>
-              <h3 className="text-lg font-medium mb-2">Your Goals</h3>
-              {fields.map((field, index) => (
-                <div key={field.id} className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end mb-4 p-4 border rounded-lg">
-                  <FormField
-                    control={form.control}
-                    name={`goals.${index}.name`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Goal Name</FormLabel>
-                        <FormControl><Input placeholder="e.g. New barn" {...field} /></FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name={`goals.${index}.cost`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Cost</FormLabel>
-                        <FormControl><Input type="number" {...field} /></FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name={`goals.${index}.priority`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Priority (1-5)</FormLabel>
-                        <FormControl><Input type="number" min="1" max="5" {...field} /></FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <Button type="button" variant="destructive" size="icon" onClick={() => remove(index)}>
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
-              ))}
-              {isClient && <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={handleAddGoal}
-              >
-                <PlusCircle className="mr-2 h-4 w-4" /> Add Goal
-              </Button>}
-            </div>
-            
-            <Separator />
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField
-                    control={form.control}
-                    name="monthlySavings"
-                    render={({ field }) => (
-                        <FormItem>
-                        <FormLabel>Total Monthly Savings Available</FormLabel>
-                        <FormControl><Input type="number" {...field} /></FormControl>
-                        <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="planningMode"
-                    render={({ field }) => (
-                        <FormItem>
-                        <FormLabel>Planning Mode</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl>
-                            <SelectContent>
-                            <SelectItem value="simultaneous">Simultaneous</SelectItem>
-                            <SelectItem value="sequential">Sequential</SelectItem>
-                            </SelectContent>
-                        </Select>
-                        <FormMessage />
-                        </FormItem>
-                    )}
-                />
-            </div>
-
-            <Button type="submit">Generate Plan</Button>
-          </form>
-        </Form>
-        {result && (
-          <Alert className="mt-6">
-            <AlertTitle>Your Multi-Goal Plan</AlertTitle>
-            <AlertDescription className="whitespace-pre-wrap">{result}</AlertDescription>
-          </Alert>
-        )}
+  return (
+    <div className="p-4 space-y-6">
+      <div className="space-y-4">
+        {goals.map((goal) => (
+          <GoalItem
+            key={goal.id}
+            goal={goal}
+            onUpdate={handleUpdateGoal}
+            onDelete={handleDeleteGoal}
+          />
+        ))}
       </div>
-    );
-  }
+      <Button
+        type="button"
+        variant="outline"
+        size="sm"
+        onClick={handleAddGoal}
+      >
+        <PlusCircle className="mr-2 h-4 w-4" /> Add Goal
+      </Button>
+    </div>
+  );
+}
+
+function GoalItem({ goal, onUpdate, onDelete }: { goal: SavingsGoal, onUpdate: (id: string, data: Partial<SavingsGoal>) => void, onDelete: (id: string) => void }) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [name, setName] = useState(goal.name);
+  const [targetAmount, setTargetAmount] = useState(goal.targetAmount);
+  
+  const savedAmount = 0; // This would come from transactions in a real app
+  const progress = (savedAmount / goal.targetAmount) * 100;
+
+  const handleSave = () => {
+    onUpdate(goal.id, { name, targetAmount });
+    setIsEditing(false);
+  };
+
+  return (
+    <Card>
+      <CardContent className="p-4 space-y-3">
+        {isEditing ? (
+          <div className="flex items-end gap-2">
+            <div className="flex-1">
+              <Label htmlFor={`name-${goal.id}`}>Goal Name</Label>
+              <Input id={`name-${goal.id}`} value={name} onChange={(e) => setName(e.target.value)} />
+            </div>
+            <div className="w-32">
+              <Label htmlFor={`target-${goal.id}`}>Target</Label>
+              <Input id={`target-${goal.id}`} type="number" value={targetAmount} onChange={(e) => setTargetAmount(Number(e.target.value))} />
+            </div>
+            <Button size="sm" onClick={handleSave}>Save</Button>
+            <Button size="sm" variant="ghost" onClick={() => setIsEditing(false)}>Cancel</Button>
+          </div>
+        ) : (
+          <div className="flex items-center justify-between">
+            <div className="flex-1">
+              <p className="font-semibold">{goal.name}</p>
+              <p className="text-sm text-muted-foreground">
+                {formatCurrency(savedAmount)} / <span className="font-medium">{formatCurrency(goal.targetAmount)}</span>
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <Button size="sm" variant="outline" onClick={() => setIsEditing(true)}>Edit</Button>
+              <Button size="sm" variant="destructive" onClick={() => onDelete(goal.id)}><Trash2 className="h-4 w-4" /></Button>
+            </div>
+          </div>
+        )}
+        <Progress value={progress} />
+      </CardContent>
+    </Card>
+  );
+}
+
 
 function FundsRecommendation() {
     const [result, setResult] = useState<string | null>(null);
     const form = useForm<z.infer<typeof fundsSchema>>({
         resolver: zodResolver(fundsSchema),
         defaultValues: {
-            location: 'rural',
+            investmentCategory: 'hybrid',
             timeHorizon: 'medium-term',
             riskAppetite: 'medium',
         }
     });
 
     function onSubmit(values: z.infer<typeof fundsSchema>) {
-        let recommendation = `Based on your selections for a user in a ${values.location} area, here are some mock investment and loan recommendations:\n\n`;
+        let recommendation = `Based on your selections, here are some mock investment recommendations for the **${values.investmentCategory}** category:\n\n`;
 
-        if (values.location === 'rural') {
-            if (values.timeHorizon === 'short-term') {
-                recommendation += "### For Savings (1-3 Years):\n";
-                if (values.riskAppetite === 'low') {
-                    recommendation += "- **Cooperative Bank Fixed Deposits (FDs):** Very safe, predictable returns, supports local community.\n- **Post Office Time Deposit:** Government-backed security.";
-                } else if (values.riskAppetite === 'medium') {
-                    recommendation += "- **Kisan Vikas Patra (KVP):** A government savings scheme that doubles the investment over a certain period.\n- **Balanced Mutual Funds:** A mix of equity and debt for moderate growth.";
-                } else { // high
-                    recommendation += "- **High-yield Savings Account in a Rural Bank:** Safe and offers better returns than traditional savings.\n- **Equity Linked Savings Scheme (ELSS):** Higher risk with tax benefits, suitable for those with some risk capacity.";
-                }
-            } else if (values.timeHorizon === 'medium-term') {
-                recommendation += "### For Investments (3-5 Years):\n";
-                if (values.riskAppetite === 'low') {
-                    recommendation += "- **National Savings Certificates (NSC):** Government-backed, fixed return, tax benefits.\n- **Debt Mutual Funds:** Investing in government and corporate bonds.";
-                } else if (values.riskAppetite === 'medium') {
-                    recommendation += "- **Large-Cap Equity Funds:** Investing in top, stable companies. Lower risk within equities.\n- **Hybrid Funds:** A balanced mix of stocks and bonds.";
-                } else { // high
-                    recommendation += "- **Flexi-Cap/Multi-Cap Equity Funds:** Diversified across different-sized companies, higher risk-return potential.\n- **Real Estate Investment in Farmland:** Can provide rental income and capital appreciation.";
-                }
-            } else { // long-term
-                recommendation += "### For Long-Term Growth (5+ Years):\n";
-                if (values.riskAppetite === 'low') {
-                    recommendation += "- **Public Provident Fund (PPF):** Long-term, government-backed, tax-free returns.\n- **Sukanya Samriddhi Yojana:** For a girl child's future education and marriage expenses.";
-                } else if (values.riskAppetite === 'medium') {
-                    recommendation += "- **Index Funds (e.g., Nifty 50):** Invests in the market index, diversified and relatively safe for long-term equity exposure.\n- **Gold Bonds:** An alternative to physical gold, offering interest income.";
-                } else { // high
-                    recommendation += "- **Mid-Cap/Small-Cap Equity Funds:** Higher risk with the potential for high returns from growing companies.\n- **Direct Equity:** Investing directly in stocks, requires knowledge and research.";
-                }
+        if (values.investmentCategory === 'equity') {
+            if (values.riskAppetite === 'low') {
+                recommendation += "### Low Risk Equity:\n- **Large-Cap Index Funds (Nifty 50, Sensex):** Invests in the largest, most stable companies. Diversified and relatively lower risk for equity.\n- **Dividend Yield Funds:** Focus on companies that pay regular dividends, providing a cushion.";
+            } else if (values.riskAppetite === 'medium') {
+                recommendation += "### Medium Risk Equity:\n- **Flexi-Cap/Multi-Cap Funds:** Diversified across companies of different sizes. Good for capturing broad market growth.\n- **ELSS (Tax Saver) Funds:** Offer tax benefits under Section 80C with a 3-year lock-in, suitable for medium-risk investors.";
+            } else { // high
+                recommendation += "### High Risk Equity:\n- **Mid-Cap and Small-Cap Funds:** Invest in smaller, high-growth potential companies. Higher risk but can offer significant returns.\n- **Sectoral/Thematic Funds:** Focus on a specific sector like technology or healthcare. Very high risk due to lack of diversification.";
             }
-            
-            recommendation += "\n### For Loans:\n"
-            recommendation += "- **Kisan Credit Card (KCC):** For short-term credit for farming needs like seeds, fertilizers, and pesticides.\n"
-            recommendation += "- **Tractor and Equipment Loans:** Offered by most rural and commercial banks to finance machinery purchase.\n"
-            recommendation += "- **Microfinance Loans:** Small loans from Microfinance Institutions (MFIs) for various needs, including small business or livestock.\n"
-        } else { // urban
-            if (values.timeHorizon === 'short-term') {
-                recommendation += "### For Savings (1-3 Years):\n";
-                if (values.riskAppetite === 'low') {
-                    recommendation += "- **Bank Fixed Deposits (FDs):** Safe, predictable returns.\n- **Liquid Mutual Funds:** Low risk, higher liquidity than FDs.";
-                } else {
-                    recommendation += "- **Arbitrage Funds:** Low-risk funds that leverage price differences in different markets.\n- **Short-Term Debt Funds:** Invest in debt instruments with short maturities.";
-                }
-            } else if (values.timeHorizon === 'medium-term') {
-                recommendation += "### For Investments (3-5 Years):\n";
-                if (values.riskAppetite === 'low') {
-                    recommendation += "- **Corporate Bond Funds:** Investing in bonds issued by companies.\n- **National Savings Certificates (NSC):** Government-backed, fixed return.";
-                } else if (values.riskAppetite === 'medium') {
-                    recommendation += "- **Balanced Advantage Funds:** Dynamically allocate between equity and debt.\n- **Large-Cap Equity Funds:** Investing in top, stable blue-chip companies.";
-                } else {
-                    recommendation += "- **Real Estate Investment Trusts (REITs):** Invest in a portfolio of income-generating real estate.";
-                }
-            } else { // long-term
-                recommendation += "### For Long-Term Growth (5+ Years):\n";
-                if (values.riskAppetite === 'low') {
-                    recommendation += "- **Public Provident Fund (PPF):** Long-term, tax-free returns, government-backed.\n- **Voluntary Provident Fund (VPF):** Higher contribution than EPF, with same benefits.";
-                } else if (values.riskAppetite === 'medium') {
-                    recommendation += "- **Index Funds (Nifty 50, Sensex):** Diversified, market-linked returns.\n- **ELSS Mutual Funds:** Tax-saving funds with a 3-year lock-in, equity exposure.";
-                } else { // high
-                    recommendation += "- **Mid-Cap/Small-Cap Equity Funds:** Higher risk, high growth potential.\n- **Direct Equity/Stocks:** Requires significant research and risk tolerance.";
-                }
+        } else if (values.investmentCategory === 'debt') {
+             if (values.riskAppetite === 'low') {
+                recommendation += "### Low Risk Debt:\n- **Liquid Funds / Ultra Short Duration Funds:** For very short-term goals (a few days to months). Highly stable.\n- **Bank Fixed Deposits (FDs) / Post Office Deposits:** Safest options with guaranteed returns.";
+            } else if (values.riskAppetite === 'medium') {
+                recommendation += "### Medium Risk Debt:\n- **Corporate Bond Funds:** Invest in bonds issued by companies. Carry slightly more risk than government bonds for better returns.\n- **Short to Medium Duration Funds:** Invest in bonds with maturities of 1-5 years.";
+            } else { // high
+                recommendation += "### High Risk Debt:\n- **Credit Risk Funds:** Invest in lower-rated corporate bonds for higher yields. Risk of default is higher.\n- **Long Duration Funds:** Sensitive to interest rate changes, can be volatile but offer higher returns if rates fall.";
             }
-
-            recommendation += "\n### For Loans:\n"
-            recommendation += "- **Home Loans:** For purchasing property.\n"
-            recommendation += "- **Car Loans:** For purchasing a vehicle.\n"
-            recommendation += "- **Personal Loans:** Unsecured loans for various personal needs.\n"
+        } else if (values.investmentCategory === 'hybrid') {
+            if (values.riskAppetite === 'low') {
+                recommendation += "### Low Risk Hybrid:\n- **Conservative Hybrid Funds:** Invests 75-90% in debt and the rest in equity. Provides stability with a small growth component.\n- **Equity Savings Funds:** Use a mix of equity, debt, and arbitrage for stable, tax-efficient returns.";
+            } else if (values.riskAppetite === 'medium') {
+                recommendation += "### Medium Risk Hybrid:\n- **Balanced Hybrid / Aggressive Hybrid Funds:** A classic mix of 65-80% in equity and the rest in debt. Good for long-term wealth creation with managed risk.\n- **Dynamic Asset Allocation Funds:** Actively manage equity/debt allocation based on market conditions.";
+            } else { // high
+                recommendation += "### High Risk Hybrid:\n- **Multi-Asset Allocation Funds:** Invest in at least three asset classes (e.g., equity, debt, gold, real estate), offering diversification but can be complex.\n- **Aggressive Hybrid Funds with higher equity allocation (up to 80%).**";
+            }
+        } else { // commodities
+             recommendation += "### Commodities (Generally High Risk):\n- **Gold ETFs / Gold Savings Funds:** Invest in gold electronically without holding it physically. Acts as a hedge against inflation.\n- **Silver ETFs:** Similar to Gold ETFs but for silver, which can be more volatile.\n- **Global Commodity Funds:** Mutual funds that invest in a basket of commodities. High risk and complex.";
         }
         
-        recommendation += "\n*Disclaimer: This is not real financial advice. Please consult with a certified financial advisor before making any investment or loan decisions.*"
+        recommendation += "\n\n*Disclaimer: This is not real financial advice. Please consult with a certified financial advisor before making any investment decisions.*"
         setResult(recommendation);
     }
     
@@ -401,15 +276,17 @@ function FundsRecommendation() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <FormField
                         control={form.control}
-                        name="location"
+                        name="investmentCategory"
                         render={({ field }) => (
                             <FormItem>
-                            <FormLabel>Your Location</FormLabel>
+                            <FormLabel>Investment Category</FormLabel>
                             <Select onValueChange={field.onChange} defaultValue={field.value}>
                                 <FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl>
                                 <SelectContent>
-                                    <SelectItem value="rural">Rural</SelectItem>
-                                    <SelectItem value="urban">Urban</SelectItem>
+                                    <SelectItem value="equity">Equity (Stocks)</SelectItem>
+                                    <SelectItem value="debt">Debt (Bonds, FDs)</SelectItem>
+                                    <SelectItem value="hybrid">Hybrid (Mix of Equity & Debt)</SelectItem>
+                                    <SelectItem value="commodities">Commodities (Gold, Silver)</SelectItem>
                                 </SelectContent>
                             </Select>
                             <FormMessage />
@@ -458,7 +335,7 @@ function FundsRecommendation() {
             </Form>
             {result && (
                 <Alert className="mt-6">
-                    <AlertTitle>Investment & Loan Recommendations</AlertTitle>
+                    <AlertTitle>Investment Recommendations</AlertTitle>
                     <AlertDescription className="whitespace-pre-wrap">{result}</AlertDescription>
                 </Alert>
             )}
@@ -593,4 +470,5 @@ function CategoryManager({ categories, onCategoriesChange }: { categories: Categ
     </div>
   );
 }
+
 

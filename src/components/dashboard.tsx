@@ -15,6 +15,7 @@ import {
   Bot,
   Loader2,
   Edit,
+  DollarSign,
 } from "lucide-react";
 import {
   PieChart,
@@ -181,9 +182,9 @@ export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
   
   return (
     <div className="flex flex-col gap-8">
-       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 grid gap-8 content-start">
-            <FinancialOverviewCard
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2 grid gap-8 content-start">
+           <FinancialOverviewCard
               totalIncome={totalIncome}
               totalExpenses={totalExpenses}
               balance={balance}
@@ -193,30 +194,28 @@ export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
               onAddGoal={handleAddGoal}
               budget={budget}
             />
-            <FinancialPlanner 
-              categories={categories}
-              onCategoriesChange={setCategories}
-              goals={goals}
-              onGoalsChange={setGoals}
-              language={language}
-            />
-          </div>
-          <div className="lg:col-span-1 grid grid-cols-1 gap-8 content-start">
-              <BudgetCard budget={budget} totalExpenses={totalExpenses} onSetBudget={setBudget} />
-              <SpendingChartCard transactions={transactions} />
-              <RecentTransactionsCard transactions={transactions} />
-              <FinancialAdviceCard
-                transactions={transactions}
-                goals={goals}
-                budget={budget}
-                totalIncome={totalIncome}
-              />
-          </div>
+          <FinancialPlanner 
+            categories={categories}
+            onCategoriesChange={setCategories}
+            goals={goals}
+            onGoalsChange={setGoals}
+            language={language}
+          />
+        </div>
+        <div className="lg:col-span-1 grid grid-cols-1 gap-8 content-start">
+          <BudgetCard budget={budget} totalExpenses={totalExpenses} onSetBudget={setBudget} />
+          <SpendingChartCard transactions={transactions} />
+          <RecentTransactionsCard transactions={transactions} />
+          <FinancialAdviceCard
+            transactions={transactions}
+            goals={goals}
+            budget={budget}
+            totalIncome={totalIncome}
+          />
+        </div>
       </div>
-      
       <LearnSection language={language} />
-
-  </div>
+    </div>
   );
 }
 
@@ -225,14 +224,13 @@ function FinancialOverviewCard({ totalIncome, totalExpenses, balance, categories
   
   return (
      <Card className="lg:col-span-2">
-        <CardContent className="p-4 grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+        <CardContent className="p-4 grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
             <div className="md:col-span-1 text-center md:text-left">
               <CardDescription>Total Balance</CardDescription>
               <CardTitle className="text-4xl font-bold text-primary">{formatCurrency(balance)}</CardTitle>
-              <p className="text-xs text-muted-foreground">Your current available funds</p>
             </div>
             
-            <div className="md:col-span-1 grid grid-cols-2 sm:grid-cols-2 gap-4">
+            <div className="md:col-span-2 grid grid-cols-2 sm:grid-cols-3 gap-4">
                 <div className="flex items-center gap-3 p-3 rounded-lg bg-background">
                     <ArrowUpCircle className="h-8 w-8 text-green-500 flex-shrink-0" />
                     <div>
@@ -245,6 +243,13 @@ function FinancialOverviewCard({ totalIncome, totalExpenses, balance, categories
                     <div>
                         <p className="text-sm text-muted-foreground">Total Expenses</p>
                         <p className="text-lg font-semibold">{formatCurrency(totalExpenses)}</p>
+                    </div>
+                </div>
+                 <div className="flex items-center gap-3 p-3 rounded-lg bg-background">
+                    <DollarSign className="h-8 w-8 text-blue-500 flex-shrink-0" />
+                    <div>
+                        <p className="text-sm text-muted-foreground">Budget Spent</p>
+                        <p className="text-lg font-semibold">{percentageSpent.toFixed(0)}%</p>
                     </div>
                 </div>
             </div>
@@ -276,11 +281,21 @@ function AddTransactionDialog({ categories, onAddTransaction, onAddCategory, chi
     defaultValues: {
       type: "expense",
       amount: 0,
-      date: new Date(),
       description: "",
       category: "",
     },
   });
+
+  useEffect(() => {
+    form.reset({
+      type: "expense",
+      amount: 0,
+      date: new Date(),
+      description: "",
+      category: "",
+    });
+  }, [form, open]);
+
 
   const onSubmit = (values: z.infer<typeof transactionSchema>) => {
     onAddTransaction(values);
@@ -775,5 +790,7 @@ function AddCategoryDialog({ onAddCategory, type, children }: { onAddCategory: (
     );
   }
 
+
+    
 
     

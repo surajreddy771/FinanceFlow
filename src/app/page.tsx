@@ -2,147 +2,75 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { Icons } from '@/components/icons';
-import { Button } from '@/components/ui/button';
+import { Dashboard } from "@/components/dashboard";
+import { Icons } from "@/components/icons";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { useToast } from '@/hooks/use-toast';
-import Image from 'next/image';
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Globe } from 'lucide-react';
 
-const loginSchema = z.object({
-  email: z.string().email('Please enter a valid email address.'),
-  password: z.string().min(8, 'Password must be at least 8 characters.'),
-});
+type Language = 'en' | 'hi';
 
-export default function LoginPage() {
-  const router = useRouter();
-  const { toast } = useToast();
-  const [isLoading, setIsLoading] = useState(false);
+export default function Home() {
+  const [language, setLanguage] = useState<Language>('en');
 
-  const form = useForm<z.infer<typeof loginSchema>>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: {
-      email: '',
-      password: '',
+  const translations = {
+    en: {
+      title: 'FinanceFlow',
+      builtBy: 'Built by your AI assistant.',
+      language: 'Language',
     },
-  });
+    hi: {
+      title: 'फाइनेंसफ्लो',
+      builtBy: 'आपके AI सहायक द्वारा निर्मित।',
+      language: 'भाषा',
+    }
+  }
 
-  const onSubmit = (values: z.infer<typeof loginSchema>) => {
-    setIsLoading(true);
-    // Mock login logic
-    setTimeout(() => {
-      if (values.email && values.password) {
-        toast({
-          title: 'Login Successful',
-          description: "Welcome back! You're being redirected.",
-        });
-        router.push('/dashboard');
-      } else {
-        toast({
-          variant: 'destructive',
-          title: 'Login Failed',
-          description: 'Please check your credentials and try again.',
-        });
-      }
-      setIsLoading(false);
-    }, 1500);
-  };
+  const t = translations[language];
 
   return (
-    <div className="relative flex min-h-screen w-full flex-col items-center justify-center bg-background">
-      <div className="absolute inset-0 z-0">
-        <Image
-          src="https://placehold.co/1920x1080.png"
-          alt="Financial background"
-          layout="fill"
-          objectFit="cover"
-          className="opacity-20"
-          data-ai-hint="finance abstract"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
-      </div>
-      <div className="container relative z-10 flex max-w-lg flex-col items-center justify-center">
-        <div className="flex items-center gap-3 mb-6">
-            <Icons.logo className="h-8 w-8 text-primary" />
-            <span className="font-headline text-3xl font-bold tracking-tight text-primary">
-                FinanceFlow
+    <div className="flex min-h-screen w-full flex-col">
+      <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="container flex h-16 items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Icons.logo className="h-7 w-7 text-primary" />
+            <span className="font-headline text-2xl font-bold tracking-tight text-primary">
+              {t.title}
             </span>
+          </div>
+          <div className="flex items-center gap-4">
+              <div className='flex items-center gap-2'>
+                <Globe className="h-5 w-5 text-muted-foreground" />
+                <Select onValueChange={(value: Language) => setLanguage(value)} defaultValue={language}>
+                    <SelectTrigger className="w-[120px] h-9">
+                        <SelectValue placeholder={t.language} />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="en">English</SelectItem>
+                        <SelectItem value="hi">हिंदी (Hindi)</SelectItem>
+                    </SelectContent>
+                </Select>
+              </div>
+          </div>
         </div>
-        <Card className="w-full">
-          <CardHeader className="text-center">
-            <CardTitle>Welcome Back!</CardTitle>
-            <CardDescription>
-              Sign in to your account to manage your finances.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="email"
-                          placeholder="your.email@example.com"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Password</FormLabel>
-                      <FormControl>
-                        <Input type="password" placeholder="********" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                 <Button type="submit" className="w-full" disabled={isLoading}>
-                  {isLoading ? 'Signing in...' : 'Sign In'}
-                </Button>
-              </form>
-            </Form>
-          </CardContent>
-          <CardFooter className="flex flex-col gap-4">
-            <p className="text-sm text-muted-foreground">
-              Don't have an account?{' '}
-              <a href="#" className="text-primary hover:underline">
-                Sign Up
-              </a>
-            </p>
-          </CardFooter>
-        </Card>
-      </div>
+      </header>
+      <main className="flex-1">
+        <div className="container py-8">
+          <Dashboard language={language}/>
+        </div>
+      </main>
+      <footer className="py-6 md:py-0">
+        <div className="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
+          <p className="text-balance text-center text-sm leading-loose text-muted-foreground md:text-left">
+            {t.builtBy}
+          </p>
+        </div>
+      </footer>
     </div>
   );
 }

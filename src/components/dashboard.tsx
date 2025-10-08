@@ -1,5 +1,4 @@
 
-
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
@@ -162,13 +161,11 @@ export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
   }, [transactions]);
   
   const handleAddTransaction = (transaction: Omit<Transaction, 'id'>) => {
-    const newId = crypto.randomUUID();
-    setTransactions(prev => [...prev, { ...transaction, id: newId }]);
+    setTransactions(prev => [...prev, { ...transaction, id: crypto.randomUUID() }]);
   };
   
   const handleAddGoal = (goal: Omit<SavingsGoal, 'id'>) => {
-    const newId = crypto.randomUUID();
-    setGoals(prev => [...prev, { ...goal, id: newId }]);
+    setGoals(prev => [...prev, { ...goal, id: crypto.randomUUID() }]);
   };
   
   const handleAddCategory = (category: Category) => {
@@ -181,8 +178,8 @@ export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
   
   return (
     <div className="flex flex-col gap-8">
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        <div className="lg:col-span-3 grid gap-8 content-start">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2 grid gap-8 content-start">
            <FinancialOverviewCard
               totalIncome={totalIncome}
               totalExpenses={totalExpenses}
@@ -191,6 +188,7 @@ export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
               onAddTransaction={handleAddTransaction}
               onAddCategory={handleAddCategory}
               onAddGoal={handleAddGoal}
+              budget={budget}
             />
           <FinancialPlanner 
             categories={categories}
@@ -199,10 +197,10 @@ export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
             onGoalsChange={setGoals}
             language={language}
           />
+          <SpendingChartCard transactions={transactions} />
         </div>
         <div className="lg:col-span-1 grid grid-cols-1 gap-8 content-start">
           <BudgetCard budget={budget} totalExpenses={totalExpenses} onSetBudget={setBudget} />
-          <SpendingChartCard transactions={transactions} />
           <RecentTransactionsCard transactions={transactions} />
           <FinancialAdviceCard
             transactions={transactions}
@@ -217,8 +215,8 @@ export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
   );
 }
 
-function FinancialOverviewCard({ totalIncome, totalExpenses, balance, categories, onAddTransaction, onAddCategory, onAddGoal }: { totalIncome: number; totalExpenses: number; balance: number; categories: Category[]; onAddTransaction: (t: Omit<Transaction, 'id'>) => void; onAddCategory: (c: Category) => void; onAddGoal: (g: Omit<SavingsGoal, 'id'>) => void;}) {
-  
+function FinancialOverviewCard({ totalIncome, totalExpenses, balance, categories, onAddTransaction, onAddCategory, onAddGoal, budget }: { totalIncome: number; totalExpenses: number; balance: number; categories: Category[]; onAddTransaction: (t: Omit<Transaction, 'id'>) => void; onAddCategory: (c: Category) => void; onAddGoal: (g: Omit<SavingsGoal, 'id'>) => void; budget: number}) {
+  const percentageSpent = budget > 0 ? (totalExpenses / budget) * 100 : 0;
   return (
      <Card>
         <CardContent className="p-4 grid grid-cols-1 md:grid-cols-3 gap-4 items-center">

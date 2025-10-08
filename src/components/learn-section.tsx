@@ -34,6 +34,22 @@ const learnContent = {
         aiHint: ImageData.articles.kisanCreditCard.aiHint,
         link: "#"
       },
+       {
+        title: "The Power of Compounding",
+        description: "Discover how the magic of compounding can significantly grow your wealth over time.",
+        icon: Newspaper,
+        image: ImageData.articles.powerOfCompounding.src,
+        aiHint: ImageData.articles.powerOfCompounding.aiHint,
+        link: "#"
+      },
+      {
+        title: "Credit Score 101",
+        description: "What is a credit score, why does it matter, and how can you improve yours?",
+        icon: Newspaper,
+        image: ImageData.articles.creditScore.src,
+        aiHint: ImageData.articles.creditScore.aiHint,
+        link: "#"
+      },
     ],
     videos: [
         {
@@ -50,6 +66,22 @@ const learnContent = {
         icon: Video,
         image: ImageData.videos.cropInsurance.src,
         aiHint: ImageData.videos.cropInsurance.aiHint,
+        link: "#"
+      },
+      {
+        title: "Video: Stock Market for Beginners",
+        description: "A simple introduction to the stock market and how you can start investing.",
+        icon: Video,
+        image: ImageData.videos.stockMarket.src,
+        aiHint: ImageData.videos.stockMarket.aiHint,
+        link: "#"
+      },
+      {
+        title: "Video: Why You Need an Emergency Fund",
+        description: "Learn how to build a financial safety net for unexpected life events.",
+        icon: Video,
+        image: ImageData.videos.emergencyFund.src,
+        aiHint: ImageData.videos.emergencyFund.aiHint,
         link: "#"
       }
     ]
@@ -74,6 +106,22 @@ const learnContent = {
         aiHint: ImageData.articles.kisanCreditCard.aiHint,
         link: "#"
       },
+      {
+        title: "चक्रवृद्धि की शक्ति",
+        description: "जानें कि कैसे चक्रवृद्धि का जादू समय के साथ आपकी संपत्ति को महत्वपूर्ण रूप से बढ़ा सकता है।",
+        icon: Newspaper,
+        image: ImageData.articles.powerOfCompounding.src,
+        aiHint: ImageData.articles.powerOfCompounding.aiHint,
+        link: "#"
+      },
+      {
+        title: "क्रेडिट स्कोर 101",
+        description: "क्रेडिट स्कोर क्या है, यह क्यों मायने रखता है, और आप अपना कैसे सुधार सकते हैं?",
+        icon: Newspaper,
+        image: ImageData.articles.creditScore.src,
+        aiHint: ImageData.articles.creditScore.aiHint,
+        link: "#"
+      },
     ],
     videos: [
         {
@@ -90,6 +138,22 @@ const learnContent = {
         icon: Video,
         image: ImageData.videos.cropInsurance.src,
         aiHint: ImageData.videos.cropInsurance.aiHint,
+        link: "#"
+      },
+      {
+        title: "वीडियो: शुरुआती लोगों के लिए शेयर बाजार",
+        description: "शेयर बाजार का एक सरल परिचय और आप निवेश कैसे शुरू कर सकते हैं।",
+        icon: Video,
+        image: ImageData.videos.stockMarket.src,
+        aiHint: ImageData.videos.stockMarket.aiHint,
+        link: "#"
+      },
+      {
+        title: "वीडियो: आपको आपातकालीन निधि की आवश्यकता क्यों है",
+        description: "अप्रत्याशित जीवन की घटनाओं के लिए वित्तीय सुरक्षा जाल बनाना सीखें।",
+        icon: Video,
+        image: ImageData.videos.emergencyFund.src,
+        aiHint: ImageData.videos.emergencyFund.aiHint,
         link: "#"
       }
     ]
@@ -108,15 +172,15 @@ export function LearnSection({ language = 'en' }: { language?: 'en' | 'hi' }) {
         <CardContent className="space-y-8">
             <div>
                 <h4 className="text-xl font-semibold mb-4">Articles</h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {content.articles.map((item) => (
                     <Card key={item.title} className="overflow-hidden">
                     <Image src={item.image} alt={item.title} width={600} height={400} className="w-full h-48 object-cover" data-ai-hint={item.aiHint}/>
                     <CardHeader>
-                        <CardTitle className="flex items-center gap-2"><item.icon className="h-5 w-5"/> {item.title}</CardTitle>
+                        <CardTitle className="flex items-center gap-2 text-base"><item.icon className="h-5 w-5"/> {item.title}</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <p className="text-muted-foreground">{item.description}</p>
+                        <p className="text-sm text-muted-foreground">{item.description}</p>
                     </CardContent>
                     <CardFooter>
                         <Button asChild variant="link" className="p-0">
@@ -130,15 +194,15 @@ export function LearnSection({ language = 'en' }: { language?: 'en' | 'hi' }) {
             
             <div>
                 <h4 className="text-xl font-semibold mb-4">Videos</h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {content.videos.map((item) => (
                     <Card key={item.title} className="overflow-hidden">
                     <Image src={item.image} alt={item.title} width={600} height={400} className="w-full h-48 object-cover" data-ai-hint={item.aiHint}/>
                     <CardHeader>
-                        <CardTitle className="flex items-center gap-2"><item.icon className="h-5 w-5"/> {item.title}</CardTitle>
+                        <CardTitle className="flex items-center gap-2 text-base"><item.icon className="h-5 w-5"/> {item.title}</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <p className="text-muted-foreground">{item.description}</p>
+                        <p className="text-sm text-muted-foreground">{item.description}</p>
                     </CardContent>
                     <CardFooter>
                         <Button asChild variant="link" className="p-0">

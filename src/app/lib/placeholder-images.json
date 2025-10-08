@@ -7,6 +7,14 @@
         "kisanCreditCard": {
             "src": "https://picsum.photos/seed/kisanCard/600/400",
             "aiHint": "farmland agriculture"
+        },
+        "powerOfCompounding": {
+            "src": "https://picsum.photos/seed/compounding/600/400",
+            "aiHint": "growing money"
+        },
+        "creditScore": {
+            "src": "https://picsum.photos/seed/creditScore/600/400",
+            "aiHint": "credit report"
         }
     },
     "videos": {
@@ -17,6 +25,14 @@
         "cropInsurance": {
             "src": "https://picsum.photos/seed/insuranceCrops/600/400",
             "aiHint": "agriculture crops"
+        },
+        "stockMarket": {
+            "src": "https://picsum.photos/seed/stockMarket/600/400",
+            "aiHint": "stock market"
+        },
+        "emergencyFund": {
+            "src": "https://picsum.photos/seed/emergencyFund/600/400",
+            "aiHint": "emergency fund"
         }
     }
 }

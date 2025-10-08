@@ -129,7 +129,7 @@ const translations = {
 function GoalPlanner({ goals, onGoalsChange }: { goals: SavingsGoal[], onGoalsChange: (goals: SavingsGoal[]) => void }) {
   
   const handleAddGoal = () => {
-    const newId = crypto.randomUUID();
+    const newId = `goal-${Date.now()}-${Math.random()}`;
     onGoalsChange([...goals, { id: newId, name: "New Goal", targetAmount: 1000 }]);
   };
 

@@ -80,6 +80,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "./ui/badge";
 import { FinancialPlanner } from "./financial-planner";
 import { LearnSection } from "./learn-section";
+import { Separator } from "./ui/separator";
 
 const transactionSchema = z.object({
   type: z.enum(["income", "expense"]),
@@ -157,31 +158,26 @@ export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
   
   return (
     <div className="flex flex-col gap-8">
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
-        <OverviewCard totalIncome={totalIncome} totalExpenses={totalExpenses} balance={balance} />
-      </div>
-
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-        <RecentTransactionsCard transactions={transactions} />
-        <SpendingChartCard transactions={transactions} />
-      </div>
-
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
-        <div className="lg:col-span-1 grid gap-8">
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+        <div className="lg:col-span-2">
+            <FinancialOverviewCard totalIncome={totalIncome} totalExpenses={totalExpenses} balance={balance} />
+        </div>
+        <div className="grid gap-8">
             <AddTransactionCard
                 categories={categories}
                 onAddTransaction={(t) => setTransactions((prev) => [...prev, t])}
                 onAddCategory={(c) => setCategories((prev) => [...prev, c])}
             />
-        </div>
-        <div className="lg:col-span-2">
-            <SavingsGoalsCard goals={goals} onAddGoal={(g) => setGoals(prev => [...prev, g])} currentSavings={balance} />
-        </div>
-        <div className="lg:col-span-1 grid gap-8">
             <BudgetCard budget={budget} totalExpenses={totalExpenses} onSetBudget={setBudget} />
         </div>
       </div>
-      
+
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+        <RecentTransactionsCard transactions={transactions} />
+        <SpendingChartCard transactions={transactions} />
+        <SavingsGoalsCard goals={goals} onAddGoal={(g) => setGoals(prev => [...prev, g])} currentSavings={balance} />
+      </div>
+
       <FinancialPlanner 
         categories={categories}
         onCategoriesChange={setCategories}
@@ -200,54 +196,47 @@ export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
   );
 }
 
-function OverviewCard({ totalIncome, totalExpenses, balance }: { totalIncome: number; totalExpenses: number; balance: number }) {
+function FinancialOverviewCard({ totalIncome, totalExpenses, balance }: { totalIncome: number; totalExpenses: number; balance: number }) {
   return (
-    <>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Balance</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{formatCurrency(balance)}</div>
-            <p className="text-xs text-muted-foreground">Your current available funds</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Income</CardTitle>
-            <ArrowUpCircle className="h-4 w-4 text-green-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{formatCurrency(totalIncome)}</div>
-            <p className="text-xs text-muted-foreground">Total earnings this period</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Expenses</CardTitle>
-            <ArrowDownCircle className="h-4 w-4 text-red-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{formatCurrency(totalExpenses)}</div>
-            <p className="text-xs text-muted-foreground">Total spending this period</p>
-          </CardContent>
-        </Card>
-        <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Quick Actions</CardTitle>
-                <PlusCircle className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent className="flex flex-col gap-2">
-                <Button size="sm" >
-                    <PlusCircle className="mr-2 h-4 w-4" /> Add Transaction
-                </Button>
-                <Button size="sm" variant="outline">
-                    <Target className="mr-2 h-4 w-4" /> Add Goal
-                </Button>
-            </CardContent>
-        </Card>
-    </>
+    <Card className="h-full">
+      <CardHeader>
+        <CardTitle>Financial Overview</CardTitle>
+        <CardDescription>A snapshot of your current financial health.</CardDescription>
+      </CardHeader>
+      <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+        <div>
+          <CardTitle className="text-3xl font-bold text-primary">{formatCurrency(balance)}</CardTitle>
+          <CardDescription>Total Balance</CardDescription>
+        </div>
+        <Separator orientation="vertical" className="hidden md:block" />
+        <div className="space-y-4">
+            <div className="flex items-center justify-center gap-2">
+                <ArrowUpCircle className="h-6 w-6 text-green-500" />
+                <div>
+                    <p className="text-xl font-semibold">{formatCurrency(totalIncome)}</p>
+                    <p className="text-xs text-muted-foreground">Total Income</p>
+                </div>
+            </div>
+            <div className="flex items-center justify-center gap-2">
+                <ArrowDownCircle className="h-6 w-6 text-red-500" />
+                <div>
+                    <p className="text-xl font-semibold">{formatCurrency(totalExpenses)}</p>
+                    <p className="text-xs text-muted-foreground">Total Expenses</p>
+                </div>
+            </div>
+        </div>
+        <Separator orientation="vertical" className="hidden md:block"/>
+        <div className="flex flex-col gap-2 justify-center">
+            <p className="text-sm font-medium text-muted-foreground mb-2">Quick Actions</p>
+            <Button size="sm" >
+                <PlusCircle className="mr-2 h-4 w-4" /> Add Transaction
+            </Button>
+            <Button size="sm" variant="outline">
+                <Target className="mr-2 h-4 w-4" /> Add Goal
+            </Button>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
 
@@ -278,11 +267,11 @@ function AddTransactionCard({ categories, onAddTransaction, onAddCategory }: { c
   
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="p-4">
         <CardTitle>Add Transaction</CardTitle>
-        <CardDescription>Log a new income or expense.</CardDescription>
+        <CardDescription className="text-xs">Log a new income or expense.</CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-4 pt-0">
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <Button className="w-full">
@@ -500,24 +489,24 @@ function BudgetCard({ budget, totalExpenses, onSetBudget }: { budget: number, to
   
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="p-4">
         <CardTitle>Budget</CardTitle>
-        <CardDescription>Your monthly spending limit.</CardDescription>
+        <CardDescription className="text-xs">Your monthly spending limit.</CardDescription>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-2 p-4 pt-0">
         <div className="flex justify-between items-baseline">
-          <span className="text-2xl font-bold">{formatCurrency(totalExpenses)}</span>
-          <span className="text-muted-foreground">/ {formatCurrency(budget)}</span>
+          <span className="text-xl font-bold">{formatCurrency(totalExpenses)}</span>
+          <span className="text-sm text-muted-foreground">/ {formatCurrency(budget)}</span>
         </div>
         <Progress value={percentageSpent} />
-        <div className="text-sm text-muted-foreground">
+        <div className="text-xs text-muted-foreground">
           {remainingBudget >= 0 ? `${formatCurrency(remainingBudget)} remaining` : `${formatCurrency(Math.abs(remainingBudget))} over budget`}
         </div>
       </CardContent>
-      <CardFooter>
+      <CardFooter className="p-4 pt-0">
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" className="w-full">
                 <Edit className="mr-2 h-4 w-4" /> Edit Budget
               </Button>
             </DialogTrigger>
@@ -803,3 +792,6 @@ function AddCategoryDialog({ onAddCategory, type, children }: { onAddCategory: (
       </Dialog>
     );
   }
+
+
+    

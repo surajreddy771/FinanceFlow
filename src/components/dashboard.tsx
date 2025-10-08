@@ -61,6 +61,7 @@ import {
   DialogTitle,
   DialogTrigger,
   DialogFooter,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -161,12 +162,12 @@ export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
   }, [transactions]);
   
   const handleAddTransaction = (transaction: Omit<Transaction, 'id'>) => {
-    const newId = isMounted ? crypto.randomUUID() : String(Date.now());
+    const newId = crypto.randomUUID();
     setTransactions(prev => [...prev, { ...transaction, id: newId }]);
   };
   
   const handleAddGoal = (goal: Omit<SavingsGoal, 'id'>) => {
-    const newId = isMounted ? crypto.randomUUID() : String(Date.now());
+    const newId = crypto.randomUUID();
     setGoals(prev => [...prev, { ...goal, id: newId }]);
   };
   
@@ -181,7 +182,7 @@ export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
   return (
     <div className="flex flex-col gap-8">
        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 grid gap-8">
+          <div className="lg:col-span-2 grid gap-8 content-start">
             <FinancialOverviewCard
               totalIncome={totalIncome}
               totalExpenses={totalExpenses}
@@ -223,15 +224,15 @@ function FinancialOverviewCard({ totalIncome, totalExpenses, balance, categories
   const percentageSpent = budget > 0 ? (totalExpenses / budget) * 100 : 0;
   
   return (
-     <Card className="lg:col-span-3">
-        <CardContent className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-center">
-            <div className="lg:col-span-1 text-center md:text-left">
+     <Card className="lg:col-span-2">
+        <CardContent className="p-4 grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+            <div className="md:col-span-1 text-center md:text-left">
               <CardDescription>Total Balance</CardDescription>
               <CardTitle className="text-4xl font-bold text-primary">{formatCurrency(balance)}</CardTitle>
               <p className="text-xs text-muted-foreground">Your current available funds</p>
             </div>
             
-            <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="md:col-span-1 grid grid-cols-2 sm:grid-cols-2 gap-4">
                 <div className="flex items-center gap-3 p-3 rounded-lg bg-background">
                     <ArrowUpCircle className="h-8 w-8 text-green-500 flex-shrink-0" />
                     <div>
@@ -246,17 +247,9 @@ function FinancialOverviewCard({ totalIncome, totalExpenses, balance, categories
                         <p className="text-lg font-semibold">{formatCurrency(totalExpenses)}</p>
                     </div>
                 </div>
-                <div className="p-3 rounded-lg bg-background space-y-1">
-                  <div className="flex justify-between items-baseline">
-                    <p className="text-sm text-muted-foreground">Budget</p>
-                    <p className="text-sm font-semibold">{formatCurrency(totalExpenses)} / {formatCurrency(budget)}</p>
-                  </div>
-                  <Progress value={percentageSpent} />
-                  <p className="text-xs text-muted-foreground">{percentageSpent.toFixed(0)}% of budget spent</p>
-              </div>
             </div>
             
-            <div className="lg:col-span-1 flex flex-col sm:flex-row md:flex-col lg:flex-row gap-2 justify-center">
+            <div className="md:col-span-1 flex flex-col sm:flex-row md:flex-col gap-2 justify-center">
               <AddTransactionDialog categories={categories} onAddTransaction={onAddTransaction} onAddCategory={onAddCategory}>
                 <Button className="w-full">
                     <PlusCircle className="mr-2 h-4 w-4" /> Transaction
@@ -603,6 +596,7 @@ function AddGoalDialog({ onAddGoal, children }: { onAddGoal: (g: Omit<SavingsGoa
 function FinancialAdviceCard({ transactions, goals, budget, totalIncome }: { transactions: Transaction[], goals: SavingsGoal[], budget: number, totalIncome: number }) {
   const [advice, setAdvice] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [showAdviceDialog, setShowAdviceDialog] = useState(false);
   const { toast } = useToast();
 
   const handleGenerateAdvice = async () => {
@@ -626,6 +620,7 @@ function FinancialAdviceCard({ transactions, goals, budget, totalIncome }: { tra
       });
 
       setAdvice(result.advice);
+      setShowAdviceDialog(true);
     } catch (error) {
       console.error("Failed to generate advice:", error);
       toast({
@@ -643,29 +638,30 @@ function FinancialAdviceCard({ transactions, goals, budget, totalIncome }: { tra
         <CardTitle className="flex items-center gap-2"><Bot /> AI Financial Advisor</CardTitle>
         <CardDescription>Get personalized advice based on your financial data.</CardDescription>
       </CardHeader>
-      <CardContent className="space-y-4">
-        {isLoading && (
-          <div className="flex items-center justify-center p-8">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          </div>
-        )}
-        {advice && (
-          <Alert>
-            <AlertTitle>Your Personalized Advice</AlertTitle>
-            <AlertDescription className="whitespace-pre-wrap">{advice}</AlertDescription>
-          </Alert>
-        )}
-        {!isLoading && !advice && (
-          <div className="text-center text-muted-foreground p-4">
-            Click the button to get started!
-          </div>
-        )}
+      <CardContent className="text-center text-muted-foreground p-4">
+        Click the button to get started!
       </CardContent>
       <CardFooter>
         <Button onClick={handleGenerateAdvice} disabled={isLoading} className="w-full">
           {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin"/> Generating...</> : "Generate Advice"}
         </Button>
       </CardFooter>
+      <Dialog open={showAdviceDialog} onOpenChange={setShowAdviceDialog}>
+        <DialogContent className="sm:max-w-[625px]">
+          <DialogHeader>
+            <DialogTitle>Your Personalized Advice</DialogTitle>
+            <DialogDescription>
+              Here are some recommendations based on your financial data.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="prose prose-sm max-h-[60vh] overflow-y-auto p-4 border rounded-lg">
+            <p className="whitespace-pre-wrap">{advice}</p>
+          </div>
+          <DialogFooter>
+            <Button onClick={() => setShowAdviceDialog(false)}>Close</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 }
@@ -778,3 +774,6 @@ function AddCategoryDialog({ onAddCategory, type, children }: { onAddCategory: (
       </Dialog>
     );
   }
+
+
+    

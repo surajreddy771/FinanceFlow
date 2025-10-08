@@ -158,89 +158,91 @@ export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
   
   return (
     <div className="flex flex-col gap-8">
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-        <div className="lg:col-span-2">
-            <FinancialOverviewCard totalIncome={totalIncome} totalExpenses={totalExpenses} balance={balance} />
-        </div>
-        <div className="grid gap-8">
-            <AddTransactionCard
-                categories={categories}
-                onAddTransaction={(t) => setTransactions((prev) => [...prev, t])}
-                onAddCategory={(c) => setCategories((prev) => [...prev, c])}
+       <FinancialOverviewCard
+        totalIncome={totalIncome}
+        totalExpenses={totalExpenses}
+        balance={balance}
+        categories={categories}
+        onAddTransaction={(t) => setTransactions((prev) => [...prev, t])}
+        onAddCategory={(c) => setCategories((prev) => [...prev, c])}
+        onAddGoal={(g) => setGoals(prev => [...prev, g])}
+        currentSavings={balance}
+      />
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
+        <div className="lg:col-span-2 grid gap-8">
+            <RecentTransactionsCard transactions={transactions} />
+            <FinancialAdviceCard
+              transactions={transactions}
+              goals={goals}
+              budget={budget}
+              totalIncome={totalIncome}
             />
+        </div>
+        <div className="lg:col-span-2 grid gap-8">
+            <SpendingChartCard transactions={transactions} />
             <BudgetCard budget={budget} totalExpenses={totalExpenses} onSetBudget={setBudget} />
         </div>
       </div>
-
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-        <RecentTransactionsCard transactions={transactions} />
-        <SpendingChartCard transactions={transactions} />
-        <SavingsGoalsCard goals={goals} onAddGoal={(g) => setGoals(prev => [...prev, g])} currentSavings={balance} />
-      </div>
-
+      
       <FinancialPlanner 
         categories={categories}
         onCategoriesChange={setCategories}
         language={language}
       />
-      
-      <LearnSection language={language} />
+       <LearnSection language={language} />
 
-      <FinancialAdviceCard
-        transactions={transactions}
-        goals={goals}
-        budget={budget}
-        totalIncome={totalIncome}
-      />
   </div>
   );
 }
 
-function FinancialOverviewCard({ totalIncome, totalExpenses, balance }: { totalIncome: number; totalExpenses: number; balance: number }) {
+function FinancialOverviewCard({ totalIncome, totalExpenses, balance, categories, onAddTransaction, onAddCategory, onAddGoal, currentSavings }: { totalIncome: number; totalExpenses: number; balance: number; categories: Category[]; onAddTransaction: (t: Transaction) => void; onAddCategory: (c: Category) => void; onAddGoal: (g: SavingsGoal) => void; currentSavings: number; }) {
   return (
-    <Card className="h-full">
-      <CardHeader>
-        <CardTitle>Financial Overview</CardTitle>
-        <CardDescription>A snapshot of your current financial health.</CardDescription>
-      </CardHeader>
-      <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-        <div>
-          <CardTitle className="text-3xl font-bold text-primary">{formatCurrency(balance)}</CardTitle>
+    <Card>
+      <CardContent className="p-4 grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
+        <div className="text-center md:text-left col-span-1">
           <CardDescription>Total Balance</CardDescription>
+          <CardTitle className="text-xl font-bold text-primary">{formatCurrency(balance)}</CardTitle>
+          <p className="text-xs text-muted-foreground">Your current available funds</p>
         </div>
-        <Separator orientation="vertical" className="hidden md:block" />
-        <div className="space-y-4">
-            <div className="flex items-center justify-center gap-2">
-                <ArrowUpCircle className="h-6 w-6 text-green-500" />
+        <Separator orientation="vertical" className="hidden md:block mx-auto h-16"/>
+        <div className="col-span-1 grid grid-cols-2 md:grid-cols-1 gap-4">
+            <div className="flex items-center gap-2">
+                <ArrowUpCircle className="h-5 w-5 text-green-500" />
                 <div>
-                    <p className="text-xl font-semibold">{formatCurrency(totalIncome)}</p>
+                    <p className="text-md font-semibold">{formatCurrency(totalIncome)}</p>
                     <p className="text-xs text-muted-foreground">Total Income</p>
                 </div>
             </div>
-            <div className="flex items-center justify-center gap-2">
-                <ArrowDownCircle className="h-6 w-6 text-red-500" />
+            <div className="flex items-center gap-2">
+                <ArrowDownCircle className="h-5 w-5 text-red-500" />
                 <div>
-                    <p className="text-xl font-semibold">{formatCurrency(totalExpenses)}</p>
+                    <p className="text-md font-semibold">{formatCurrency(totalExpenses)}</p>
                     <p className="text-xs text-muted-foreground">Total Expenses</p>
                 </div>
             </div>
         </div>
-        <Separator orientation="vertical" className="hidden md:block"/>
-        <div className="flex flex-col gap-2 justify-center">
-            <p className="text-sm font-medium text-muted-foreground mb-2">Quick Actions</p>
-            <Button size="sm" >
-                <PlusCircle className="mr-2 h-4 w-4" /> Add Transaction
-            </Button>
-            <Button size="sm" variant="outline">
-                <Target className="mr-2 h-4 w-4" /> Add Goal
-            </Button>
+        <div className="col-span-full md:col-span-2 flex flex-col gap-2 justify-center">
+            <p className="text-sm font-medium text-muted-foreground mb-2 text-center md:text-left">Quick Actions</p>
+             <div className="flex gap-2 justify-center md:justify-start">
+                <AddTransactionDialog categories={categories} onAddTransaction={onAddTransaction} onAddCategory={onAddCategory}>
+                  <Button size="sm">
+                      <PlusCircle className="mr-2 h-4 w-4" /> Add Transaction
+                  </Button>
+                </AddTransactionDialog>
+                <AddGoalDialog onAddGoal={onAddGoal}>
+                  <Button size="sm" variant="outline">
+                      <Target className="mr-2 h-4 w-4" /> Add Goal
+                  </Button>
+                </AddGoalDialog>
+             </div>
         </div>
       </CardContent>
     </Card>
   );
 }
 
-function AddTransactionCard({ categories, onAddTransaction, onAddCategory }: { categories: Category[], onAddTransaction: (t: Transaction) => void, onAddCategory: (c: Category) => void}) {
+
+function AddTransactionDialog({ categories, onAddTransaction, onAddCategory, children }: { categories: Category[], onAddTransaction: (t: Transaction) => void, onAddCategory: (c: Category) => void, children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
   const { toast } = useToast();
 
@@ -266,138 +268,128 @@ function AddTransactionCard({ categories, onAddTransaction, onAddCategory }: { c
   };
   
   return (
-    <Card>
-      <CardHeader className="p-4">
-        <CardTitle>Add Transaction</CardTitle>
-        <CardDescription className="text-xs">Log a new income or expense.</CardDescription>
-      </CardHeader>
-      <CardContent className="p-4 pt-0">
-        <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger asChild>
-            <Button className="w-full">
-              <PlusCircle className="mr-2 h-4 w-4" /> Add New Transaction
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>New Transaction</DialogTitle>
-            </DialogHeader>
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="type"
-                  render={({ field }) => (
-                    <Tabs defaultValue={field.value} onValueChange={field.onChange} className="w-full">
-                      <TabsList className="grid w-full grid-cols-2">
-                        <TabsTrigger value="expense">Expense</TabsTrigger>
-                        <TabsTrigger value="income">Income</TabsTrigger>
-                      </TabsList>
-                    </Tabs>
-                  )}
-                />
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger asChild>
+          {children}
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>New Transaction</DialogTitle>
+          </DialogHeader>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <FormField
+                control={form.control}
+                name="type"
+                render={({ field }) => (
+                  <Tabs defaultValue={field.value} onValueChange={field.onChange} className="w-full">
+                    <TabsList className="grid w-full grid-cols-2">
+                      <TabsTrigger value="expense">Expense</TabsTrigger>
+                      <TabsTrigger value="income">Income</TabsTrigger>
+                    </TabsList>
+                  </Tabs>
+                )}
+              />
 
-                <FormField
-                  control={form.control}
-                  name="amount"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Amount</FormLabel>
+              <FormField
+                control={form.control}
+                name="amount"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Amount</FormLabel>
+                    <FormControl>
+                      <Input type="number" placeholder="0.00" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="category"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Category</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
-                        <Input type="number" placeholder="0.00" {...field} />
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a category" />
+                        </SelectTrigger>
                       </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                      <SelectContent>
+                        {categories.filter(c => c.type === form.watch('type')).map(cat => (
+                          <SelectItem key={cat.name} value={cat.name}>{cat.name}</SelectItem>
+                        ))}
+                        <AddCategoryDialog onAddCategory={onAddCategory} type={form.watch('type')} >
+                          <div className="flex w-full items-center p-2 text-sm text-primary cursor-pointer hover:bg-muted rounded-sm">
+                            <PlusCircle className="mr-2 h-4 w-4" /> Add New Category
+                          </div>
+                        </AddCategoryDialog>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-                <FormField
-                  control={form.control}
-                  name="category"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Category</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Description</FormLabel>
+                    <FormControl>
+                      <Input placeholder="e.g., Coffee with friends" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="date"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>Date</FormLabel>
+                    <Popover>
+                      <PopoverTrigger asChild>
                         <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select a category" />
-                          </SelectTrigger>
+                          <Button
+                            variant={"outline"}
+                            className={cn(
+                              "w-full pl-3 text-left font-normal",
+                              !field.value && "text-muted-foreground"
+                            )}
+                          >
+                            {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
+                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                          </Button>
                         </FormControl>
-                        <SelectContent>
-                          {categories.filter(c => c.type === form.watch('type')).map(cat => (
-                            <SelectItem key={cat.name} value={cat.name}>{cat.name}</SelectItem>
-                          ))}
-                          <AddCategoryDialog onAddCategory={onAddCategory} type={form.watch('type')} >
-                            <div className="flex w-full items-center p-2 text-sm text-primary cursor-pointer hover:bg-muted rounded-sm">
-                              <PlusCircle className="mr-2 h-4 w-4" /> Add New Category
-                            </div>
-                          </AddCategoryDialog>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="description"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Description</FormLabel>
-                      <FormControl>
-                        <Input placeholder="e.g., Coffee with friends" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="date"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-col">
-                      <FormLabel>Date</FormLabel>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <FormControl>
-                            <Button
-                              variant={"outline"}
-                              className={cn(
-                                "w-full pl-3 text-left font-normal",
-                                !field.value && "text-muted-foreground"
-                              )}
-                            >
-                              {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
-                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                            </Button>
-                          </FormControl>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar
-                            mode="single"
-                            selected={field.value}
-                            onSelect={field.onChange}
-                            disabled={(date) => date > new Date() || date < new Date("1900-01-01")}
-                            initialFocus
-                          />
-                        </PopoverContent>
-                      </Popover>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <DialogFooter>
-                  <Button type="submit">Add Transaction</Button>
-                </DialogFooter>
-              </form>
-            </Form>
-          </DialogContent>
-        </Dialog>
-      </CardContent>
-    </Card>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={field.value}
+                          onSelect={field.onChange}
+                          disabled={(date) => date > new Date() || date < new Date("1900-01-01")}
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <DialogFooter>
+                <Button type="submit">Add Transaction</Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
   );
 }
 
@@ -539,7 +531,7 @@ function BudgetCard({ budget, totalExpenses, onSetBudget }: { budget: number, to
   );
 }
 
-function SavingsGoalsCard({ goals, onAddGoal, currentSavings }: { goals: SavingsGoal[], onAddGoal: (g: SavingsGoal) => void, currentSavings: number }) {
+function AddGoalDialog({ onAddGoal, children }: { onAddGoal: (g: SavingsGoal) => void, children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
   const { toast } = useToast();
   const form = useForm<z.infer<typeof savingsGoalSchema>>({
@@ -555,64 +547,36 @@ function SavingsGoalsCard({ goals, onAddGoal, currentSavings }: { goals: Savings
   };
   
   return (
-    <Card className="flex flex-col h-full">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2"><Target /> Savings Goals</CardTitle>
-        <CardDescription>Track progress towards your financial targets.</CardDescription>
-      </CardHeader>
-      <CardContent className="flex-1 space-y-4 overflow-y-auto">
-        {goals.length > 0 ? goals.map(goal => {
-          const progress = currentSavings > 0 ? (currentSavings / goal.targetAmount) * 100 : 0;
-          return (
-            <div key={goal.id} className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span className="font-medium">{goal.name}</span>
-                <span className="text-muted-foreground">{formatCurrency(goal.targetAmount)}</span>
-              </div>
-              <Progress value={Math.min(progress, 100)} />
-              <div className="text-xs text-muted-foreground text-right">{Math.min(progress, 100).toFixed(0)}% complete</div>
-            </div>
-          )
-        }) : (
-           <div className="flex h-full items-center justify-center text-muted-foreground">
-            No savings goals yet. Add one!
-          </div>
-        )}
-      </CardContent>
-      <CardFooter>
-        <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger asChild>
-            <Button variant="outline" className="w-full"><PlusCircle className="mr-2 h-4 w-4" /> Add Goal</Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader><DialogTitle>New Savings Goal</DialogTitle></DialogHeader>
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                <FormField control={form.control} name="name" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Goal Name</FormLabel>
-                    <FormControl><Input placeholder="e.g., New car" {...field} /></FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="targetAmount" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Target Amount</FormLabel>
-                    <FormControl><Input type="number" placeholder="e.g., 20000" {...field} /></FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )} />
-                <DialogFooter>
-                  <Button type="submit">Add Goal</Button>
-                </DialogFooter>
-              </form>
-            </Form>
-          </DialogContent>
-        </Dialog>
-      </CardFooter>
-    </Card>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogContent>
+        <DialogHeader><DialogTitle>New Savings Goal</DialogTitle></DialogHeader>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormField control={form.control} name="name" render={({ field }) => (
+              <FormItem>
+                <FormLabel>Goal Name</FormLabel>
+                <FormControl><Input placeholder="e.g., New car" {...field} /></FormControl>
+                <FormMessage />
+              </FormItem>
+            )} />
+            <FormField control={form.control} name="targetAmount" render={({ field }) => (
+              <FormItem>
+                <FormLabel>Target Amount</FormLabel>
+                <FormControl><Input type="number" placeholder="e.g., 20000" {...field} /></FormControl>
+                <FormMessage />
+              </FormItem>
+            )} />
+            <DialogFooter>
+              <Button type="submit">Add Goal</Button>
+            </DialogFooter>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
   );
 }
+
 
 function FinancialAdviceCard({ transactions, goals, budget, totalIncome }: { transactions: Transaction[], goals: SavingsGoal[], budget: number, totalIncome: number }) {
   const [advice, setAdvice] = useState("");
@@ -793,5 +757,7 @@ function AddCategoryDialog({ onAddCategory, type, children }: { onAddCategory: (
     );
   }
 
+
+    
 
     

@@ -44,15 +44,6 @@ const formatCurrency = (amount: number) =>
   }).format(amount);
 
 // Schemas
-const singleGoalSchema = z.object({
-  goalName: z.string().min(1, "Goal name is required."),
-  goalCost: z.coerce.number().positive(),
-  currentSavings: z.coerce.number().min(0),
-  monthlySalary: z.coerce.number().positive(),
-  monthlyExpenses: z.coerce.number().min(0),
-  tenure: z.coerce.number().positive("Tenure must be positive (in months)."),
-});
-
 const multiGoalItemSchema = z.object({
   id: z.string(),
   name: z.string().min(1, "Goal name is required"),
@@ -91,11 +82,10 @@ export function FinancialPlanner({ categories, onCategoriesChange, language = 'e
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Tabs defaultValue="single-goal" className="w-full">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="single-goal">{t.tabs.singleGoal}</TabsTrigger>
-            <TabsTrigger value="multi-goal">{t.tabs.multiGoal}</TabsTrigger>
-            <TabsTrigger value="funds">
+        <Tabs defaultValue="goal-planner" className="w-full">
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="goal-planner">{t.tabs.goalPlanner}</TabsTrigger>
+            <TabsTrigger value="investments">
               {t.tabs.investments}
               <Badge variant="outline" className="ml-2 bg-accent text-accent-foreground">New</Badge>
             </TabsTrigger>
@@ -103,23 +93,16 @@ export function FinancialPlanner({ categories, onCategoriesChange, language = 'e
               {t.tabs.categories}
               <Badge variant="outline" className="ml-2 bg-accent text-accent-foreground">New</Badge>
             </TabsTrigger>
-            {/* <TabsTrigger value="experts">{t.tabs.experts}</TabsTrigger> */}
           </TabsList>
-          <TabsContent value="single-goal">
-            <SingleGoalPlanner />
-          </TabsContent>
-          <TabsContent value="multi-goal">
+          <TabsContent value="goal-planner">
             <MultiGoalPlanner />
           </TabsContent>
-          <TabsContent value="funds">
+          <TabsContent value="investments">
             <FundsRecommendation />
           </TabsContent>
           <TabsContent value="categories">
             <CategoryManager categories={categories} onCategoriesChange={onCategoriesChange} />
           </TabsContent>
-          {/* <TabsContent value="experts">
-            <FinancialExperts />
-          </TabsContent> */}
         </Tabs>
       </CardContent>
     </Card>
@@ -133,11 +116,9 @@ const translations = {
       description: 'Plan your financial goals, get investment recommendations, and manage your budget categories.'
     },
     tabs: {
-      singleGoal: 'Single Goal',
-      multiGoal: 'Multi-Goal',
+      goalPlanner: 'Goal Planner',
       investments: 'Investments',
       categories: 'Categories',
-      experts: 'Financial Experts',
     }
   },
   hi: {
@@ -146,162 +127,12 @@ const translations = {
       description: 'अपने वित्तीय लक्ष्यों की योजना बनाएं, निवेश सिफारिशें प्राप्त करें और अपनी बजट श्रेणियां प्रबंधित करें।'
     },
     tabs: {
-      singleGoal: 'एकल लक्ष्य',
-      multiGoal: 'बहु-लक्ष्य',
+      goalPlanner: 'लक्ष्य योजनाकार',
       investments: 'निवेश',
       categories: 'श्रेणियाँ',
-      experts: 'वित्तीय विशेषज्ञ',
     }
   }
 };
-
-
-function SingleGoalPlanner() {
-  const [result, setResult] = useState<string | null>(null);
-  const form = useForm<z.infer<typeof singleGoalSchema>>({
-    resolver: zodResolver(singleGoalSchema),
-    defaultValues: {
-      goalName: "New Tractor",
-      goalCost: 10000,
-      currentSavings: 1000,
-      monthlySalary: 5000,
-      monthlyExpenses: 3000,
-      tenure: 12,
-    },
-  });
-
-  function onSubmit(values: z.infer<typeof singleGoalSchema>) {
-    const monthlySavingsAvailable = values.monthlySalary - values.monthlyExpenses;
-    const remainingGoal = values.goalCost - values.currentSavings;
-    if (remainingGoal <= 0) {
-      setResult("Congratulations! You have already achieved this goal.");
-      return;
-    }
-    const requiredMonthlySavings = remainingGoal / values.tenure;
-
-    if (monthlySavingsAvailable >= requiredMonthlySavings) {
-      setResult(
-        `Yes, this goal is achievable! You need to save ${formatCurrency(
-          requiredMonthlySavings
-        )} per month. Your available monthly savings are ${formatCurrency(
-          monthlySavingsAvailable
-        )}.`
-      );
-    } else {
-      const suggestedTenure = Math.ceil(remainingGoal / monthlySavingsAvailable);
-      const suggestedSavings = remainingGoal / values.tenure;
-      setResult(
-        `This goal is not achievable with your current savings plan. You need to save ${formatCurrency(
-          requiredMonthlySavings
-        )} per month, but you only have ${formatCurrency(
-          monthlySavingsAvailable
-        )} available.
-        
-Suggestions:
-- Increase your tenure to ${suggestedTenure} months.
-- Increase your monthly savings to ${formatCurrency(suggestedSavings)}.`
-      );
-    }
-  }
-
-  return (
-    <div className="p-4">
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <FormField
-              control={form.control}
-              name="goalName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Goal Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="e.g., Buy a new tractor" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="goalCost"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Goal Cost (Target Amount)</FormLabel>
-                  <FormControl>
-                    <Input type="number" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="currentSavings"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Current Savings for this Goal</FormLabel>
-                  <FormControl>
-                    <Input type="number" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="monthlySalary"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Monthly Income</FormLabel>
-                  <FormControl>
-                    <Input type="number" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="monthlyExpenses"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Monthly Expenses</FormLabel>
-                  <FormControl>
-                    <Input type="number" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="tenure"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Tenure (in months)</FormLabel>
-                  <FormControl>
-                    <Input type="number" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-          <Button type="submit">Calculate</Button>
-        </form>
-      </Form>
-      {result && (
-        <Alert className="mt-6">
-          <AlertTitle>Calculation Result</AlertTitle>
-          <AlertDescription className="whitespace-pre-wrap">
-            {result}
-          </AlertDescription>
-        </Alert>
-      )}
-    </div>
-  );
-}
 
 function MultiGoalPlanner() {
     const [result, setResult] = useState<string | null>(null);
@@ -335,6 +166,11 @@ function MultiGoalPlanner() {
     });
   
     function onSubmit(values: z.infer<typeof multiGoalSchema>) {
+        if (values.goals.length === 0) {
+            setResult("Please add at least one goal to generate a plan.");
+            return;
+        }
+
         let plan = '';
         if (values.planningMode === 'sequential') {
             plan = 'Sequential Plan:\n';
@@ -367,7 +203,6 @@ function MultiGoalPlanner() {
     }
 
     const handleAddGoal = () => {
-        // Using a more reliable way to generate unique IDs on the client
         append({ id: crypto.randomUUID(), name: "", cost: 1000, priority: 3 });
     };
   
@@ -435,7 +270,7 @@ function MultiGoalPlanner() {
                     name="monthlySavings"
                     render={({ field }) => (
                         <FormItem>
-                        <FormLabel>Total Monthly Savings</FormLabel>
+                        <FormLabel>Total Monthly Savings Available</FormLabel>
                         <FormControl><Input type="number" {...field} /></FormControl>
                         <FormMessage />
                         </FormItem>
@@ -758,3 +593,4 @@ function CategoryManager({ categories, onCategoriesChange }: { categories: Categ
     </div>
   );
 }
+

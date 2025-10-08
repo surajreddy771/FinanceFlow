@@ -159,19 +159,30 @@ export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
   
   return (
     <div className="flex flex-col gap-8">
-       <FinancialOverviewCard
-        totalIncome={totalIncome}
-        totalExpenses={totalExpenses}
-        balance={balance}
-        categories={categories}
-        onAddTransaction={(t) => setTransactions((prev) => [...prev, { ...t, id: crypto.randomUUID() }])}
-        onAddCategory={(c) => setCategories((prev) => [...prev, c])}
-        onAddGoal={(g) => setGoals(prev => [...prev, { ...g, id: crypto.randomUUID() }])}
-        currentSavings={balance}
-      />
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2">
+          <FinancialOverviewCard
+            totalIncome={totalIncome}
+            totalExpenses={totalExpenses}
+            balance={balance}
+            categories={categories}
+            onAddTransaction={(t) => setTransactions((prev) => [...prev, { ...t, id: crypto.randomUUID() }])}
+            onAddCategory={(c) => setCategories((prev) => [...prev, c])}
+            onAddGoal={(g) => setGoals(prev => [...prev, { ...g, id: crypto.randomUUID() }])}
+            currentSavings={balance}
+          />
+        </div>
+        <div className="lg:col-span-1 grid gap-8">
+            <BudgetCard budget={budget} totalExpenses={totalExpenses} onSetBudget={setBudget} />
+            <SpendingChartCard transactions={transactions} />
+        </div>
+      </div>
+      
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
         <div className="lg:col-span-2 grid gap-8">
             <RecentTransactionsCard transactions={transactions} />
+        </div>
+        <div className="lg:col-span-1 grid gap-8">
             <FinancialAdviceCard
               transactions={transactions}
               goals={goals}
@@ -179,12 +190,10 @@ export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
               totalIncome={totalIncome}
             />
         </div>
-        <div className="lg:col-span-1 grid gap-8">
-            <SpendingChartCard transactions={transactions} />
-            <BudgetCard budget={budget} totalExpenses={totalExpenses} onSetBudget={setBudget} />
-        </div>
       </div>
-      
+
+      <LearnSection language={language} />
+
       <FinancialPlanner 
         categories={categories}
         onCategoriesChange={setCategories}
@@ -192,8 +201,6 @@ export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
         onGoalsChange={setGoals}
         language={language}
       />
-       <LearnSection language={language} />
-
   </div>
   );
 }
@@ -201,14 +208,14 @@ export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
 function FinancialOverviewCard({ totalIncome, totalExpenses, balance, categories, onAddTransaction, onAddCategory, onAddGoal, currentSavings }: { totalIncome: number; totalExpenses: number; balance: number; categories: Category[]; onAddTransaction: (t: Transaction) => void; onAddCategory: (c: Category) => void; onAddGoal: (g: SavingsGoal) => void; currentSavings: number; }) {
   return (
     <Card>
-      <CardContent className="p-4 grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
-        <div className="md:col-span-1 text-center md:text-left">
+      <CardContent className="p-4 grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+        <div className="text-center md:text-left">
           <CardDescription>Total Balance</CardDescription>
           <CardTitle className="text-3xl font-bold text-primary">{formatCurrency(balance)}</CardTitle>
           <p className="text-xs text-muted-foreground">Your current available funds</p>
         </div>
         
-        <div className="md:col-span-2 grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-4">
             <div className="flex items-center gap-3 p-3 rounded-lg bg-background">
                 <ArrowUpCircle className="h-8 w-8 text-green-500 flex-shrink-0" />
                 <div>
@@ -225,7 +232,7 @@ function FinancialOverviewCard({ totalIncome, totalExpenses, balance, categories
             </div>
         </div>
         
-        <div className="md:col-span-1 flex flex-col gap-2 justify-center">
+        <div className="md:col-span-2 flex flex-col sm:flex-row gap-2 justify-center">
             <AddTransactionDialog categories={categories} onAddTransaction={onAddTransaction} onAddCategory={onAddCategory}>
               <Button size="sm" className="w-full">
                   <PlusCircle className="mr-2 h-4 w-4" /> Transaction
@@ -762,5 +769,6 @@ function AddCategoryDialog({ onAddCategory, type, children }: { onAddCategory: (
     
 
     
+
 
 

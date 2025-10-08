@@ -32,10 +32,11 @@ import {
 } from "@/components/ui/select";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { PlusCircle, Trash2, Video, BookOpen, Newspaper } from "lucide-react";
+import { PlusCircle, Trash2, Video, BookOpen, Newspaper, LifeBuoy, Users, Tractor, Briefcase } from "lucide-react";
 import { Separator } from "./ui/separator";
 import type { Category } from "@/lib/types";
 import Image from "next/image";
+import { Badge } from "./ui/badge";
 
 const formatCurrency = (amount: number) =>
   new Intl.NumberFormat("en-US", {
@@ -95,9 +96,18 @@ export function FinancialPlanner({ categories, onCategoriesChange, language = 'e
           <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="single-goal">{t.tabs.singleGoal}</TabsTrigger>
             <TabsTrigger value="multi-goal">{t.tabs.multiGoal}</TabsTrigger>
-            <TabsTrigger value="funds">{t.tabs.investments}</TabsTrigger>
-            <TabsTrigger value="categories">{t.tabs.categories}</TabsTrigger>
-            <TabsTrigger value="learn">{t.tabs.learn}</TabsTrigger>
+            <TabsTrigger value="funds">
+              {t.tabs.investments}
+              <Badge variant="outline" className="ml-2 bg-accent text-accent-foreground">New</Badge>
+            </TabsTrigger>
+            <TabsTrigger value="categories">
+              {t.tabs.categories}
+              <Badge variant="outline" className="ml-2 bg-accent text-accent-foreground">New</Badge>
+            </TabsTrigger>
+            <TabsTrigger value="learn">
+              {t.tabs.learn}
+              <Badge variant="outline" className="ml-2 bg-accent text-accent-foreground">New</Badge>
+            </TabsTrigger>
             {/* <TabsTrigger value="experts">{t.tabs.experts}</TabsTrigger> */}
           </TabsList>
           <TabsContent value="single-goal">
@@ -357,7 +367,8 @@ function MultiGoalPlanner() {
     }
 
     const handleAddGoal = () => {
-        append({ id: crypto.randomUUID(), name: "", cost: 1000, priority: 3 });
+        // Using a more reliable way to generate unique IDs on the client
+        append({ id: `goal-${Date.now()}-${Math.random()}`, name: "", cost: 1000, priority: 3 });
     };
   
     return (
@@ -525,7 +536,7 @@ function FundsRecommendation() {
                 } else if (values.riskAppetite === 'medium') {
                     recommendation += "- **Balanced Advantage Funds:** Dynamically allocate between equity and debt.\n- **Large-Cap Equity Funds:** Investing in top, stable blue-chip companies.";
                 } else {
-                    recommendation += "- **Flexi-Cap/Multi-Cap Funds:** Diversified across market capitalizations.\n- **Real Estate Investment Trusts (REITs):** Invest in a portfolio of income-generating real estate.";
+                    recommendation += "- **Real Estate Investment Trusts (REITs):** Invest in a portfolio of income-generating real estate.";
                 }
             } else { // long-term
                 recommendation += "### For Long-Term Growth (5+ Years):\n";
@@ -887,5 +898,7 @@ function LearnTab({ language = 'en' }: { language?: 'en' | 'hi' }) {
     </div>
   );
 }
+
+    
 
     

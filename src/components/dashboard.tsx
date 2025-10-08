@@ -136,12 +136,15 @@ export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
   const [goals, setGoals] = useState<SavingsGoal[]>([]);
   const [budget, setBudget] = useState<number>(3000);
   const [categories, setCategories] = useState<Category[]>([]);
-
+  
+  const [isMounted, setIsMounted] = useState(false);
   useEffect(() => {
+    setIsMounted(true);
     setTransactions(initialTransactions);
     setGoals(initialGoals);
     setCategories(initialCategories);
   }, []);
+
 
   const { totalIncome, totalExpenses, balance } = useMemo(() => {
     const income = transactions
@@ -158,16 +161,22 @@ export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
   }, [transactions]);
   
   const handleAddTransaction = (transaction: Omit<Transaction, 'id'>) => {
-    setTransactions(prev => [...prev, { ...transaction, id: crypto.randomUUID() }]);
+    const newId = isMounted ? crypto.randomUUID() : String(Date.now());
+    setTransactions(prev => [...prev, { ...transaction, id: newId }]);
   };
   
   const handleAddGoal = (goal: Omit<SavingsGoal, 'id'>) => {
-    setGoals(prev => [...prev, { ...goal, id: crypto.randomUUID() }]);
+    const newId = isMounted ? crypto.randomUUID() : String(Date.now());
+    setGoals(prev => [...prev, { ...goal, id: newId }]);
   };
   
   const handleAddCategory = (category: Category) => {
     setCategories(prev => [...prev, category]);
   };
+
+  if (!isMounted) {
+    return null;
+  }
   
   return (
     <div className="flex flex-col gap-8">
@@ -181,20 +190,19 @@ export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
               onAddTransaction={handleAddTransaction}
               onAddCategory={handleAddCategory}
               onAddGoal={handleAddGoal}
+              budget={budget}
             />
-             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-               <FinancialPlanner 
-                  categories={categories}
-                  onCategoriesChange={setCategories}
-                  goals={goals}
-                  onGoalsChange={setGoals}
-                  language={language}
-                />
-                <SpendingChartCard transactions={transactions} />
-            </div>
+            <FinancialPlanner 
+              categories={categories}
+              onCategoriesChange={setCategories}
+              goals={goals}
+              onGoalsChange={setGoals}
+              language={language}
+            />
           </div>
           <div className="lg:col-span-1 grid grid-cols-1 gap-8 content-start">
               <BudgetCard budget={budget} totalExpenses={totalExpenses} onSetBudget={setBudget} />
+              <SpendingChartCard transactions={transactions} />
               <RecentTransactionsCard transactions={transactions} />
               <FinancialAdviceCard
                 transactions={transactions}
@@ -211,17 +219,19 @@ export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
   );
 }
 
-function FinancialOverviewCard({ totalIncome, totalExpenses, balance, categories, onAddTransaction, onAddCategory, onAddGoal }: { totalIncome: number; totalExpenses: number; balance: number; categories: Category[]; onAddTransaction: (t: Omit<Transaction, 'id'>) => void; onAddCategory: (c: Category) => void; onAddGoal: (g: Omit<SavingsGoal, 'id'>) => void; }) {
+function FinancialOverviewCard({ totalIncome, totalExpenses, balance, categories, onAddTransaction, onAddCategory, onAddGoal, budget }: { totalIncome: number; totalExpenses: number; balance: number; categories: Category[]; onAddTransaction: (t: Omit<Transaction, 'id'>) => void; onAddCategory: (c: Category) => void; onAddGoal: (g: Omit<SavingsGoal, 'id'>) => void; budget: number; }) {
+  const percentageSpent = budget > 0 ? (totalExpenses / budget) * 100 : 0;
+  
   return (
-     <Card className="lg:col-span-2">
+     <Card className="lg:col-span-3">
         <CardContent className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-center">
             <div className="lg:col-span-1 text-center md:text-left">
               <CardDescription>Total Balance</CardDescription>
-              <CardTitle className="text-3xl font-bold text-primary">{formatCurrency(balance)}</CardTitle>
+              <CardTitle className="text-4xl font-bold text-primary">{formatCurrency(balance)}</CardTitle>
               <p className="text-xs text-muted-foreground">Your current available funds</p>
             </div>
             
-            <div className="lg:col-span-2 grid grid-cols-2 gap-4">
+            <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div className="flex items-center gap-3 p-3 rounded-lg bg-background">
                     <ArrowUpCircle className="h-8 w-8 text-green-500 flex-shrink-0" />
                     <div>
@@ -236,16 +246,24 @@ function FinancialOverviewCard({ totalIncome, totalExpenses, balance, categories
                         <p className="text-lg font-semibold">{formatCurrency(totalExpenses)}</p>
                     </div>
                 </div>
+                <div className="p-3 rounded-lg bg-background space-y-1">
+                  <div className="flex justify-between items-baseline">
+                    <p className="text-sm text-muted-foreground">Budget</p>
+                    <p className="text-sm font-semibold">{formatCurrency(totalExpenses)} / {formatCurrency(budget)}</p>
+                  </div>
+                  <Progress value={percentageSpent} />
+                  <p className="text-xs text-muted-foreground">{percentageSpent.toFixed(0)}% of budget spent</p>
+              </div>
             </div>
             
-            <div className="lg:col-span-1 flex flex-col sm:flex-row md:flex-col gap-2 justify-center">
+            <div className="lg:col-span-1 flex flex-col sm:flex-row md:flex-col lg:flex-row gap-2 justify-center">
               <AddTransactionDialog categories={categories} onAddTransaction={onAddTransaction} onAddCategory={onAddCategory}>
-                <Button size="sm" className="w-full">
+                <Button className="w-full">
                     <PlusCircle className="mr-2 h-4 w-4" /> Transaction
                 </Button>
               </AddTransactionDialog>
               <AddGoalDialog onAddGoal={onAddGoal}>
-                <Button size="sm" variant="outline" className="w-full">
+                <Button variant="outline" className="w-full">
                     <Target className="mr-2 h-4 w-4" /> Add Goal
                 </Button>
               </AddGoalDialog>
@@ -433,7 +451,7 @@ function SpendingChartCard({ transactions }: { transactions: Transaction[] }) {
       </CardHeader>
       <CardContent>
         {expenseData.length > 0 ? (
-          <ResponsiveContainer width="100%" height={300}>
+          <ResponsiveContainer width="100%" height={350}>
             <PieChart>
               <RechartsTooltip
                 cursor={false}
@@ -445,7 +463,7 @@ function SpendingChartCard({ transactions }: { transactions: Transaction[] }) {
                 formatter={(value: number) => formatCurrency(value)}
               />
                <Legend/>
-              <Pie data={expenseData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={110} fill="hsl(var(--primary))" labelLine={false} label={({ percent }) => `${(percent * 100).toFixed(0)}%`}>
+              <Pie data={expenseData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={120} fill="hsl(var(--primary))" labelLine={false} label={({ percent }) => `${(percent * 100).toFixed(0)}%`}>
                 {expenseData.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={`hsl(var(--chart-${index % 5 + 1}))`} />
                 ))}
@@ -453,7 +471,7 @@ function SpendingChartCard({ transactions }: { transactions: Transaction[] }) {
             </PieChart>
           </ResponsiveContainer>
         ) : (
-          <div className="flex h-[300px] items-center justify-center text-muted-foreground">
+          <div className="flex h-[350px] items-center justify-center text-muted-foreground">
             No expense data to display.
           </div>
         )}

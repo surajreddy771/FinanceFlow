@@ -137,12 +137,14 @@ export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
   const [goals, setGoals] = useState<SavingsGoal[]>([]);
   const [budget, setBudget] = useState<number>(3000);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [nextId, setNextId] = useState(0);
 
   useEffect(() => {
     setIsMounted(true);
     setTransactions(initialTransactions);
     setGoals(initialGoals);
     setCategories(initialCategories);
+    setNextId(initialTransactions.length + initialGoals.length + 1);
   }, []);
 
   const { totalIncome, totalExpenses, balance } = useMemo(() => {
@@ -160,11 +162,13 @@ export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
   }, [transactions]);
   
   const handleAddTransaction = (transaction: Omit<Transaction, 'id'>) => {
-    setTransactions(prev => [...prev, { ...transaction, id: crypto.randomUUID() }]);
+    setTransactions(prev => [...prev, { ...transaction, id: `tx-${nextId}` }]);
+    setNextId(prev => prev + 1);
   };
 
   const handleAddGoal = (goal: Omit<SavingsGoal, 'id'>) => {
-    setGoals(prev => [...prev, { ...goal, id: crypto.randomUUID() }]);
+    setGoals(prev => [...prev, { ...goal, id: `goal-${nextId}` }]);
+    setNextId(prev => prev + 1);
   };
   
   const handleAddCategory = (category: Category) => {

@@ -140,11 +140,11 @@ export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
   const [nextId, setNextId] = useState(0);
 
   useEffect(() => {
-    setIsMounted(true);
     setTransactions(initialTransactions);
     setGoals(initialGoals);
     setCategories(initialCategories);
     setNextId(initialTransactions.length + initialGoals.length + 1);
+    setIsMounted(true);
   }, []);
 
   const { totalIncome, totalExpenses, balance } = useMemo(() => {
@@ -787,3 +787,4 @@ function AddCategoryDialog({ onAddCategory, type, children }: { onAddCategory: (
     
 
     
+

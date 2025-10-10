@@ -132,12 +132,11 @@ const initialCategories: Category[] = [
 ];
 
 export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
+  const [isMounted, setIsMounted] = useState(false);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [goals, setGoals] = useState<SavingsGoal[]>([]);
   const [budget, setBudget] = useState<number>(3000);
   const [categories, setCategories] = useState<Category[]>([]);
-  
-  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
@@ -145,7 +144,6 @@ export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
     setGoals(initialGoals);
     setCategories(initialCategories);
   }, []);
-
 
   const { totalIncome, totalExpenses, balance } = useMemo(() => {
     const income = transactions
@@ -784,3 +782,4 @@ function AddCategoryDialog({ onAddCategory, type, children }: { onAddCategory: (
 
     
 
+    

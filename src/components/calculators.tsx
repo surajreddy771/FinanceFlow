@@ -69,6 +69,24 @@ const translations = {
       dueDate: "Due Date",
       amountDue: "Amount Due",
     },
+    livestock: {
+      title: "Livestock Investment Return Calculator",
+      description: "Helps farmers decide on goat/cow/poultry investments.",
+      purchaseCost: "Purchase Cost per Animal",
+      numberOfAnimals: "Number of Animals",
+      feedCost: "Monthly Feed Cost per Animal",
+      duration: "Investment Duration (months)",
+      saleValue: "Expected Sale Value per Animal",
+      totalPurchaseCost: "Total Purchase Cost",
+      totalFeedCost: "Total Feed Cost",
+      totalInvestment: "Total Investment",
+      totalSaleValue: "Total Sale Value",
+      estimatedProfitLoss: "Estimated Profit / Loss",
+      breakEven: "Break-Even Point",
+      breakEvenDescription: "You need to sell approximately {count} animals to cover your costs.",
+      profit: "Profit",
+      loss: "Loss",
+    }
   },
   hi: {
     emiCalculator: {
@@ -99,6 +117,24 @@ const translations = {
       dueDate: "देय तिथि",
       amountDue: "देय राशि",
     },
+     livestock: {
+      title: "पशुधन निवेश रिटर्न कैलकुलेटर",
+      description: "किसानों को बकरी/गाय/मुर्गी पालन निवेश पर निर्णय लेने में मदद करता है।",
+      purchaseCost: "प्रति पशु खरीद लागत",
+      numberOfAnimals: "पशुओं की संख्या",
+      feedCost: "प्रति पशु मासिक चारा लागत",
+      duration: "निवेश अवधि (महीने)",
+      saleValue: "प्रति पशु अपेक्षित बिक्री मूल्य",
+      totalPurchaseCost: "कुल खरीद लागत",
+      totalFeedCost: "कुल चारा लागत",
+      totalInvestment: "कुल निवेश",
+      totalSaleValue: "कुल बिक्री मूल्य",
+      estimatedProfitLoss: "अनुमानित लाभ / हानि",
+      breakEven: "ब्रेक-ईवन पॉइंट",
+      breakEvenDescription: "अपनी लागतों को कवर करने के लिए आपको लगभग {count} जानवरों को बेचने की आवश्यकता है।",
+      profit: "लाभ",
+      loss: "हानि",
+    }
   },
 };
 
@@ -110,6 +146,15 @@ const emiSchema = z.object({
   repaymentFrequency: z.enum(['monthly', 'weekly']),
   gracePeriod: z.coerce.number().min(0).optional(),
 });
+
+const livestockSchema = z.object({
+    purchaseCost: z.coerce.number().positive(),
+    numberOfAnimals: z.coerce.number().int().positive(),
+    feedCost: z.coerce.number().positive(),
+    duration: z.coerce.number().int().positive(),
+    saleValue: z.coerce.number().positive(),
+});
+
 
 export function Calculators({ language = 'en' }: { language?: 'en' | 'hi' }) {
     const t = translations[language];
@@ -129,9 +174,9 @@ export function Calculators({ language = 'en' }: { language?: 'en' | 'hi' }) {
                     </AccordionContent>
                 </AccordionItem>
                  <AccordionItem value="item-3">
-                    <AccordionTrigger>Livestock Investment Return Calculator</AccordionTrigger>
+                    <AccordionTrigger>{t.livestock.title}</AccordionTrigger>
                     <AccordionContent>
-                        <p className="p-4 text-muted-foreground">Coming soon...</p>
+                        <LivestockInvestmentCalculator language={language} />
                     </AccordionContent>
                 </AccordionItem>
                  <AccordionItem value="item-4">
@@ -153,7 +198,7 @@ export function Calculators({ language = 'en' }: { language?: 'en' | 'hi' }) {
                     </AccordionContent>
                 </AccordionItem>
                  <AccordionItem value="item-7">
-                    <AccordionTrigger>Subsidy & Scheme Estimator</AccordionTrigger>
+                    <AccordionTrigger>Subsidy &amp; Scheme Estimator</AccordionTrigger>
                     <AccordionContent>
                          <p className="p-4 text-muted-foreground">Coming soon...</p>
                     </AccordionContent>
@@ -514,5 +559,126 @@ function CropLoanCalculator({ language = 'en' }: { language?: 'en' | 'hi' }) {
     );
 }
 
+function LivestockInvestmentCalculator({ language = 'en' }: { language?: 'en' | 'hi' }) {
+    const t = translations[language].livestock;
+    const emiT = translations[language].emiCalculator;
+    const [results, setResults] = useState<{
+        totalPurchaseCost: number;
+        totalFeedCost: number;
+        totalInvestment: number;
+        totalSaleValue: number;
+        estimatedProfitLoss: number;
+        breakEven: number;
+    } | null>(null);
+
+    const form = useForm<z.infer<typeof livestockSchema>>({
+        resolver: zodResolver(livestockSchema),
+        defaultValues: {
+            purchaseCost: 500,
+            numberOfAnimals: 10,
+            feedCost: 50,
+            duration: 12,
+            saleValue: 1200,
+        },
+    });
+
+    const onSubmit = (data: z.infer<typeof livestockSchema>) => {
+        const { purchaseCost, numberOfAnimals, feedCost, duration, saleValue } = data;
+        const totalPurchaseCost = purchaseCost * numberOfAnimals;
+        const totalFeedCost = feedCost * numberOfAnimals * duration;
+        const totalInvestment = totalPurchaseCost + totalFeedCost;
+        const totalSaleValue = saleValue * numberOfAnimals;
+        const estimatedProfitLoss = totalSaleValue - totalInvestment;
+        const breakEven = totalInvestment / saleValue;
+
+        setResults({
+            totalPurchaseCost,
+            totalFeedCost,
+            totalInvestment,
+            totalSaleValue,
+            estimatedProfitLoss,
+            breakEven: isFinite(breakEven) ? breakEven : 0,
+        });
+    };
+
+    const chartData = useMemo(() => {
+        if (!results) return [];
+        return [
+            { name: t.totalPurchaseCost, value: results.totalPurchaseCost },
+            { name: t.totalFeedCost, value: results.totalFeedCost },
+        ];
+    }, [results, t]);
+
+    return (
+        <Card className="border-none shadow-none">
+            <CardHeader>
+                <CardDescription>{t.description}</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <FormField control={form.control} name="purchaseCost" render={({ field }) => (
+                                <FormItem><FormLabel>{t.purchaseCost}</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>
+                            )} />
+                            <FormField control={form.control} name="numberOfAnimals" render={({ field }) => (
+                                <FormItem><FormLabel>{t.numberOfAnimals}</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>
+                            )} />
+                            <FormField control={form.control} name="feedCost" render={({ field }) => (
+                                <FormItem><FormLabel>{t.feedCost}</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>
+                            )} />
+                             <FormField control={form.control} name="duration" render={({ field }) => (
+                                <FormItem><FormLabel>{t.duration}</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>
+                            )} />
+                            <FormField control={form.control} name="saleValue" render={({ field }) => (
+                                <FormItem><FormLabel>{t.saleValue}</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>
+                            )} />
+                        </div>
+                        <Button type="submit">{emiT.calculate}</Button>
+                    </form>
+                </Form>
+                {results && (
+                    <div className="mt-8">
+                        <h3 className="text-lg font-semibold mb-4">{emiT.results}</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                            <div className="space-y-4">
+                                <div className={`flex justify-between items-center p-3 rounded-md ${results.estimatedProfitLoss >= 0 ? 'bg-green-100' : 'bg-red-100'}`}>
+                                    <span className="font-medium">{t.estimatedProfitLoss}</span>
+                                    <span className={`font-bold text-lg ${results.estimatedProfitLoss >= 0 ? 'text-green-600' : 'text-red-600'}`}>{formatCurrency(results.estimatedProfitLoss)} ({results.estimatedProfitLoss >= 0 ? t.profit : t.loss})</span>
+                                </div>
+                                 <div className="flex justify-between items-center p-3 bg-muted rounded-md">
+                                    <span className="font-medium">{t.totalInvestment}</span>
+                                    <span className="font-semibold">{formatCurrency(results.totalInvestment)}</span>
+                                </div>
+                                <div className="flex justify-between items-center p-3 bg-muted rounded-md">
+                                    <span className="font-medium">{t.totalSaleValue}</span>
+                                    <span className="font-semibold">{formatCurrency(results.totalSaleValue)}</span>
+                                </div>
+                                <div className="p-3 bg-muted rounded-md">
+                                    <p className="font-medium">{t.breakEven}</p>
+                                    <p className="text-sm">{t.breakEvenDescription.replace('{count}', Math.ceil(results.breakEven).toString())}</p>
+                                </div>
+                            </div>
+                            <div>
+                                <ResponsiveContainer width="100%" height={250}>
+                                    <PieChart>
+                                        <RechartsTooltip formatter={(value: number) => formatCurrency(value)} />
+                                        <Legend />
+                                        <Pie data={chartData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} label>
+                                            <Cell key="cell-0" fill="hsl(var(--chart-4))" />
+                                            <Cell key="cell-1" fill="hsl(var(--chart-5))" />
+                                        </Pie>
+                                    </PieChart>
+                                </ResponsiveContainer>
+                            </div>
+                        </div>
+                    </div>
+                )}
+            </CardContent>
+        </Card>
+    );
+}
 
     
+
+  

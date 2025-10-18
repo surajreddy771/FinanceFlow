@@ -32,11 +32,12 @@ import {
 } from "@/components/ui/select";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { PlusCircle, Trash2, Video, Edit } from "lucide-react";
+import { PlusCircle, Trash2, Video, Edit, Calculator } from "lucide-react";
 import type { Category, SavingsGoal } from "@/lib/types";
 import { useToast } from "@/hooks/use-toast";
 import { Progress } from "./ui/progress";
 import { Label } from "./ui/label";
+import { Calculators } from "./calculators";
 
 const formatCurrency = (amount: number) =>
   new Intl.NumberFormat("en-US", {
@@ -77,10 +78,14 @@ export function FinancialPlanner({ categories, onCategoriesChange, goals, onGoal
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="goal-planner" className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="goal-planner">{t.tabs.goalPlanner}</TabsTrigger>
             <TabsTrigger value="investments">
               {t.tabs.investments}
+            </TabsTrigger>
+             <TabsTrigger value="calculators">
+                <Calculator className="mr-2 h-4 w-4" />
+              {t.tabs.calculators}
             </TabsTrigger>
             <TabsTrigger value="categories">
               {t.tabs.categories}
@@ -91,6 +96,9 @@ export function FinancialPlanner({ categories, onCategoriesChange, goals, onGoal
           </TabsContent>
           <TabsContent value="investments">
             <FundsRecommendation />
+          </TabsContent>
+           <TabsContent value="calculators">
+            <Calculators language={language}/>
           </TabsContent>
           <TabsContent value="categories">
             <CategoryManager categories={categories} onCategoriesChange={onCategoriesChange} />
@@ -111,6 +119,7 @@ const translations = {
       goalPlanner: 'Goal Planner',
       investments: 'Investments',
       categories: 'Expenditure Categories',
+      calculators: 'Calculators',
     }
   },
   hi: {
@@ -122,6 +131,7 @@ const translations = {
       goalPlanner: 'लक्ष्य योजनाकार',
       investments: 'निवेश',
       categories: 'खर्च श्रेणियाँ',
+      calculators: 'कैलकुलेटर',
     }
   }
 };
@@ -464,3 +474,5 @@ function CategoryManager({ categories, onCategoriesChange }: { categories: Categ
     </div>
   );
 }
+
+    

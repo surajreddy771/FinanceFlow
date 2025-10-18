@@ -25,7 +25,7 @@ const learnContent = {
         icon: Newspaper,
         image: ImageData.articles.mutualFunds.src,
         aiHint: ImageData.articles.mutualFunds.aiHint,
-        link: "https://www.investopedia.com/insights/what-are-mutual-funds/"
+        link: "https://www.schwab.com/mutual-funds/understand-mutual-funds"
       },
       {
         title: "Basics of Kisan Credit Card (KCC)",
@@ -33,7 +33,7 @@ const learnContent = {
         icon: Newspaper,
         image: ImageData.articles.kisanCreditCard.src,
         aiHint: ImageData.articles.kisanCreditCard.aiHint,
-        link: "https://www.sbi.co.in/web/agri-rural/agriculture-banking/crop-finance/kisan-credit-card-kcc"
+        link: "https://www.myscheme.gov.in/schemes/kcc"
       },
        {
         title: "The Power of Compounding",
@@ -41,7 +41,7 @@ const learnContent = {
         icon: Newspaper,
         image: ImageData.articles.powerOfCompounding.src,
         aiHint: ImageData.articles.powerOfCompounding.aiHint,
-        link: "https://www.investopedia.com/terms/c/compounding.asp"
+        link: "https://www.investopedia.com/terms/c/compoundinterest.asp"
       },
       {
         title: "Credit Score 101",
@@ -49,7 +49,7 @@ const learnContent = {
         icon: Newspaper,
         image: ImageData.articles.creditScore.src,
         aiHint: ImageData.articles.creditScore.aiHint,
-        link: "https://www.nerdwallet.com/article/finance/what-is-a-credit-score"
+        link: "https://www.morganstanley.com/atwork/employees/learning-center/articles/credit-101"
       },
       {
         title: "What is a Demat Account?",
@@ -57,7 +57,7 @@ const learnContent = {
         icon: Newspaper,
         image: ImageData.articles.dematAccount.src,
         aiHint: ImageData.articles.dematAccount.aiHint,
-        link: "https://www.forbes.com/advisor/in/investing/what-is-a-demat-account/"
+        link: "https://www.hdfcbank.com/personal/resources/learning-centre/invest/know-what-demat-account-and-its-types"
       },
       {
         title: "All about Public Provident Fund (PPF)",
@@ -65,7 +65,7 @@ const learnContent = {
         icon: Newspaper,
         image: ImageData.articles.ppf.src,
         aiHint: ImageData.articles.ppf.aiHint,
-        link: "https://www.bankbazaar.com/saving-schemes/ppf-scheme.html"
+        link: "https://www.nsiindia.gov.in/(S(1lsuwl550yol12r5u2lmvlit))/InternalPage.aspx?Id_Pk=55"
       },
     ],
     videos: [
@@ -75,7 +75,7 @@ const learnContent = {
         icon: Video,
         image: ImageData.videos.budgeting.src,
         aiHint: ImageData.videos.budgeting.aiHint,
-        link: "https://www.youtube.com/watch?v=sVKQn2I4xSM"
+        link: "https://www.youtube.com/watch?v=8-dN4f6jpRE"
       },
       {
         title: "Video: Crop Insurance Explained",
@@ -83,7 +83,7 @@ const learnContent = {
         icon: Video,
         image: ImageData.videos.cropInsurance.src,
         aiHint: ImageData.videos.cropInsurance.aiHint,
-        link: "https://www.youtube.com/watch?v=bh9g331a_4s"
+        link: "https://www.youtube.com/watch?v=iAzhH0W-0LA"
       },
       {
         title: "Video: Stock Market for Beginners",
@@ -91,7 +91,7 @@ const learnContent = {
         icon: Video,
         image: ImageData.videos.stockMarket.src,
         aiHint: ImageData.videos.stockMarket.aiHint,
-        link: "https://www.youtube.com/watch?v=ZCFkWDdmXG8"
+        link: "https://www.youtube.com/watch?v=b0_CsTFjtus"
       },
       {
         title: "Video: Why You Need an Emergency Fund",
@@ -99,7 +99,7 @@ const learnContent = {
         icon: Video,
         image: ImageData.videos.emergencyFund.src,
         aiHint: ImageData.videos.emergencyFund.aiHint,
-        link: "https://www.youtube.com/watch?v=C2gO4_2hI2w"
+        link: "https://www.youtube.com/watch?v=quyxhddcfjw"
       },
       {
         title: "Video: Introduction to SIPs",
@@ -107,7 +107,7 @@ const learnContent = {
         icon: Video,
         image: ImageData.videos.sip.src,
         aiHint: ImageData.videos.sip.aiHint,
-        link: "https://www.youtube.com/watch?v=d2C4hMMs3e4"
+        link: "https://www.youtube.com/watch?v=ZXLATRO3Ifw"
       },
       {
         title: "Video: Understanding Inflation",
@@ -115,7 +115,7 @@ const learnContent = {
         icon: Video,
         image: ImageData.videos.inflation.src,
         aiHint: ImageData.videos.inflation.aiHint,
-        link: "https://www.youtube.com/watch?v=hK226V5yQ-I"
+        link: "https://www.youtube.com/watch?v=zIbNJCSCEjk"
       }
     ]
   },
@@ -129,7 +129,7 @@ const learnContent = {
         icon: Newspaper,
         image: ImageData.articles.mutualFunds.src,
         aiHint: ImageData.articles.mutualFunds.aiHint,
-        link: "https://www.investopedia.com/insights/what-are-mutual-funds/"
+        link: "https://www.schwab.com/mutual-funds/understand-mutual-funds"
       },
       {
         title: "किसान क्रेडिट कार्ड (KCC) की मूल बातें",
@@ -137,7 +137,7 @@ const learnContent = {
         icon: Newspaper,
         image: ImageData.articles.kisanCreditCard.src,
         aiHint: ImageData.articles.kisanCreditCard.aiHint,
-        link: "https://www.sbi.co.in/web/agri-rural/agriculture-banking/crop-finance/kisan-credit-card-kcc"
+        link: "https://www.myscheme.gov.in/schemes/kcc"
       },
       {
         title: "चक्रवृद्धि की शक्ति",
@@ -145,7 +145,7 @@ const learnContent = {
         icon: Newspaper,
         image: ImageData.articles.powerOfCompounding.src,
         aiHint: ImageData.articles.powerOfCompounding.aiHint,
-        link: "https://www.investopedia.com/terms/c/compounding.asp"
+        link: "https://www.investopedia.com/terms/c/compoundinterest.asp"
       },
       {
         title: "क्रेडिट स्कोर 101",
@@ -153,7 +153,7 @@ const learnContent = {
         icon: Newspaper,
         image: ImageData.articles.creditScore.src,
         aiHint: ImageData.articles.creditScore.aiHint,
-        link: "https://www.nerdwallet.com/article/finance/what-is-a-credit-score"
+        link: "https://www.morganstanley.com/atwork/employees/learning-center/articles/credit-101"
       },
        {
         title: "डीमैट खाता क्या है?",
@@ -161,15 +161,15 @@ const learnContent = {
         icon: Newspaper,
         image: ImageData.articles.dematAccount.src,
         aiHint: ImageData.articles.dematAccount.aiHint,
-        link: "https://www.forbes.com/advisor/in/investing/what-is-a-demat-account/"
+        link: "https://www.hdfcbank.com/personal/resources/learning-centre/invest/know-what-demat-account-and-its-types"
       },
       {
-        title: "सार्वजनिक भविष्य निधि (PPF) के बारे में सब कुछ",
+        title: "सार्वजनिक भविष्य निधि (PPF) के बारे में सब کچھ",
         description: "लोकप्रिय सरकार समर्थित बचत योजना की विशेषताओं, लाभों और नियमों का अन्वेषण करें।",
         icon: Newspaper,
         image: ImageData.articles.ppf.src,
         aiHint: ImageData.articles.ppf.aiHint,
-        link: "https://www.bankbazaar.com/saving-schemes/ppf-scheme.html"
+        link: "https://www.nsiindia.gov.in/(S(1lsuwl550yol12r5u2lmvlit))/InternalPage.aspx?Id_Pk=55"
       },
     ],
     videos: [
@@ -179,7 +179,7 @@ const learnContent = {
         icon: Video,
         image: ImageData.videos.budgeting.src,
         aiHint: ImageData.videos.budgeting.aiHint,
-        link: "https://www.youtube.com/watch?v=sVKQn2I4xSM"
+        link: "https://www.youtube.com/watch?v=8-dN4f6jpRE"
       },
       {
         title: "वीडियो: फसल बीमा समझाया गया",
@@ -187,7 +187,7 @@ const learnContent = {
         icon: Video,
         image: ImageData.videos.cropInsurance.src,
         aiHint: ImageData.videos.cropInsurance.aiHint,
-        link: "https://www.youtube.com/watch?v=bh9g331a_4s"
+        link: "https://www.youtube.com/watch?v=iAzhH0W-0LA"
       },
       {
         title: "वीडियो: शुरुआती लोगों के लिए शेयर बाजार",
@@ -195,7 +195,7 @@ const learnContent = {
         icon: Video,
         image: ImageData.videos.stockMarket.src,
         aiHint: ImageData.videos.stockMarket.aiHint,
-        link: "https://www.youtube.com/watch?v=ZCFkWDdmXG8"
+        link: "https://www.youtube.com/watch?v=b0_CsTFjtus"
       },
       {
         title: "वीडियो: आपको आपातकालीन निधि की आवश्यकता क्यों है",
@@ -203,7 +203,7 @@ const learnContent = {
         icon: Video,
         image: ImageData.videos.emergencyFund.src,
         aiHint: ImageData.videos.emergencyFund.aiHint,
-        link: "https://www.youtube.com/watch?v=C2gO4_2hI2w"
+        link: "https://www.youtube.com/watch?v=quyxhddcfjw"
       },
        {
         title: "वीडियो: एसआईपी का परिचय",
@@ -211,7 +211,7 @@ const learnContent = {
         icon: Video,
         image: ImageData.videos.sip.src,
         aiHint: ImageData.videos.sip.aiHint,
-        link: "https://www.youtube.com/watch?v=d2C4hMMs3e4"
+        link: "https://www.youtube.com/watch?v=ZXLATRO3Ifw"
       },
       {
         title: "वीडियो: मुद्रास्फीति को समझना",
@@ -219,7 +219,7 @@ const learnContent = {
         icon: Video,
         image: ImageData.videos.inflation.src,
         aiHint: ImageData.videos.inflation.aiHint,
-        link: "https://www.youtube.com/watch?v=hK226V5yQ-I"
+        link: "https://www.youtube.com/watch?v=zIbNJCSCEjk"
       }
     ]
   }

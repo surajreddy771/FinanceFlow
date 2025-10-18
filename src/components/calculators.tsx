@@ -2,7 +2,7 @@
 "use client";
 
 import { useState, useMemo } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import {
@@ -32,6 +32,8 @@ import {
 } from '@/components/ui/select';
 import { Calendar } from "@/components/ui/calendar"
 import { addMonths, format } from 'date-fns';
+import { PlusCircle, Trash2 } from 'lucide-react';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, TableCaption } from './ui/table';
 
 const formatCurrency = (amount: number) =>
   new Intl.NumberFormat('en-US', {
@@ -86,6 +88,15 @@ const translations = {
       breakEvenDescription: "You need to sell approximately {count} animals to cover your costs.",
       profit: "Profit",
       loss: "Loss",
+    },
+    loanComparer: {
+        title: "Multi-Loan Comparison Calculator",
+        description: "Compare EMI, interest, and total payments for different loan scenarios.",
+        addLoan: "Add Another Loan",
+        removeLoan: "Remove Loan",
+        compareLoans: "Compare Loans",
+        comparisonResults: "Loan Comparison Results",
+        loan: "Loan",
     }
   },
   hi: {
@@ -134,6 +145,15 @@ const translations = {
       breakEvenDescription: "अपनी लागतों को कवर करने के लिए आपको लगभग {count} जानवरों को बेचने की आवश्यकता है।",
       profit: "लाभ",
       loss: "हानि",
+    },
+    loanComparer: {
+        title: "बहु-ऋण तुलना कैलकुलेटर",
+        description: "विभिन्न ऋण परिदृश्यों के लिए ईएमआई, ब्याज और कुल भुगतान की तुलना करें।",
+        addLoan: "एक और ऋण जोड़ें",
+        removeLoan: "ऋण हटाएं",
+        compareLoans: "ऋणों की तुलना करें",
+        comparisonResults: "ऋण तुलना परिणाम",
+        loan: "ऋण",
     }
   },
 };
@@ -155,6 +175,14 @@ const livestockSchema = z.object({
     saleValue: z.coerce.number().positive(),
 });
 
+const loanComparerSchema = z.object({
+    loans: z.array(z.object({
+        loanAmount: z.coerce.number().positive(),
+        interestRate: z.coerce.number().positive(),
+        tenure: z.coerce.number().positive(),
+        tenureType: z.enum(['years', 'months']),
+    }))
+});
 
 export function Calculators({ language = 'en' }: { language?: 'en' | 'hi' }) {
     const t = translations[language];
@@ -179,25 +207,31 @@ export function Calculators({ language = 'en' }: { language?: 'en' | 'hi' }) {
                         <LivestockInvestmentCalculator language={language} />
                     </AccordionContent>
                 </AccordionItem>
-                 <AccordionItem value="item-4">
+                <AccordionItem value="item-4">
+                    <AccordionTrigger>{t.loanComparer.title}</AccordionTrigger>
+                    <AccordionContent>
+                        <MultiLoanComparer language={language} />
+                    </AccordionContent>
+                </AccordionItem>
+                 <AccordionItem value="item-5">
                     <AccordionTrigger>Fertilizer / Seed Purchase Planning Calculator</AccordionTrigger>
                     <AccordionContent>
                         <p className="p-4 text-muted-foreground">Coming soon...</p>
                     </AccordionContent>
                 </AccordionItem>
-                 <AccordionItem value="item-5">
+                 <AccordionItem value="item-6">
                     <AccordionTrigger>Debt Repayment Calculator</AccordionTrigger>
                     <AccordionContent>
                         <p className="p-4 text-muted-foreground">Coming soon...</p>
                     </AccordionContent>
                 </AccordionItem>
-                 <AccordionItem value="item-6">
+                 <AccordionItem value="item-7">
                     <AccordionTrigger>"Can I Afford This Loan?" Checker</AccordionTrigger>
                     <AccordionContent>
                         <p className="p-4 text-muted-foreground">Coming soon...</p>
                     </AccordionContent>
                 </AccordionItem>
-                 <AccordionItem value="item-7">
+                 <AccordionItem value="item-8">
                     <AccordionTrigger>Subsidy &amp; Scheme Estimator</AccordionTrigger>
                     <AccordionContent>
                          <p className="p-4 text-muted-foreground">Coming soon...</p>
@@ -211,7 +245,7 @@ export function Calculators({ language = 'en' }: { language?: 'en' | 'hi' }) {
 
 function EMICalculator({ language = 'en' }: { language?: 'en' | 'hi' }) {
   const t = translations[language].emiCalculator;
-  const [results, setResults] = useState<{ emi: number; totalInterest: number; totalPayment: number; principal: number } | null>(null);
+  const [results, setResults] = useState<{ emi: number; totalInterest: number; totalPayment: number; principal: number, repaymentFrequency: 'monthly' | 'weekly' } | null>(null);
 
   const form = useForm<z.infer<typeof emiSchema>>({
     resolver: zodResolver(emiSchema),
@@ -250,6 +284,7 @@ function EMICalculator({ language = 'en' }: { language?: 'en' | 'hi' }) {
       totalInterest: isFinite(totalInterest) ? totalInterest : 0,
       totalPayment: isFinite(totalPayment) ? totalPayment : 0,
       principal,
+      repaymentFrequency: data.repaymentFrequency,
     });
   };
 
@@ -679,6 +714,139 @@ function LivestockInvestmentCalculator({ language = 'en' }: { language?: 'en' | 
     );
 }
 
+type LoanResult = {
+    loanAmount: number;
+    interestRate: number;
+    tenure: number;
+    tenureType: 'years' | 'months';
+    monthlyEMI: number;
+    totalInterest: number;
+    totalPayment: number;
+};
+
+function MultiLoanComparer({ language = 'en' }: { language?: 'en' | 'hi' }) {
+    const t = translations[language];
+    const emiT = t.emiCalculator;
+    const comparerT = t.loanComparer;
+    const [results, setResults] = useState<LoanResult[] | null>(null);
+
+    const form = useForm<z.infer<typeof loanComparerSchema>>({
+        resolver: zodResolver(loanComparerSchema),
+        defaultValues: {
+            loans: [
+                { loanAmount: 100000, interestRate: 10, tenure: 5, tenureType: 'years' },
+                { loanAmount: 100000, interestRate: 12, tenure: 4, tenureType: 'years' }
+            ]
+        }
+    });
+
+    const { fields, append, remove } = useFieldArray({
+        control: form.control,
+        name: "loans"
+    });
+
+    const onSubmit = (data: z.infer<typeof loanComparerSchema>) => {
+        const calculatedResults = data.loans.map(loan => {
+            const principal = loan.loanAmount;
+            const annualRate = loan.interestRate / 100;
+            const tenureInMonths = loan.tenureType === 'years' ? loan.tenure * 12 : loan.tenure;
+            const monthlyRate = annualRate / 12;
+
+            const emi = (principal * monthlyRate * Math.pow(1 + monthlyRate, tenureInMonths)) / (Math.pow(1 + monthlyRate, tenureInMonths) - 1);
+            const totalPayment = emi * tenureInMonths;
+            const totalInterest = totalPayment - principal;
+
+            return {
+                ...loan,
+                monthlyEMI: isFinite(emi) ? emi : 0,
+                totalInterest: isFinite(totalInterest) ? totalInterest : 0,
+                totalPayment: isFinite(totalPayment) ? totalPayment : 0,
+            };
+        });
+        setResults(calculatedResults);
+    };
+
+    return (
+        <Card className="border-none shadow-none">
+            <CardHeader>
+                <CardDescription>{comparerT.description}</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                        {fields.map((field, index) => (
+                            <div key={field.id} className="p-4 border rounded-lg relative">
+                                <h4 className="font-semibold mb-4">{comparerT.loan} {index + 1}</h4>
+                                {fields.length > 1 && (
+                                  <Button type="button" variant="ghost" size="icon" className="absolute top-2 right-2" onClick={() => remove(index)}>
+                                    <Trash2 className="h-4 w-4 text-destructive" />
+                                  </Button>
+                                )}
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <FormField control={form.control} name={`loans.${index}.loanAmount`} render={({ field }) => (
+                                        <FormItem><FormLabel>{emiT.loanAmount}</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>
+                                    )} />
+                                    <FormField control={form.control} name={`loans.${index}.interestRate`} render={({ field }) => (
+                                        <FormItem><FormLabel>{emiT.interestRate}</FormLabel><FormControl><Input type="number" step="0.1" {...field} /></FormControl><FormMessage /></FormItem>
+                                    )} />
+                                    <div className="grid grid-cols-2 gap-2">
+                                        <FormField control={form.control} name={`loans.${index}.tenure`} render={({ field }) => (
+                                            <FormItem><FormLabel>{emiT.tenure}</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>
+                                        )} />
+                                        <FormField control={form.control} name={`loans.${index}.tenureType`} render={({ field }) => (
+                                            <FormItem className="self-end"><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl><SelectContent><SelectItem value="years">{emiT.years}</SelectItem><SelectItem value="months">{emiT.months}</SelectItem></SelectContent></Select><FormMessage /></FormItem>
+                                        )} />
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                        <div className="flex gap-4">
+                            <Button type="button" variant="outline" onClick={() => append({ loanAmount: 100000, interestRate: 10, tenure: 5, tenureType: 'years' })}>
+                                <PlusCircle className="mr-2 h-4 w-4" /> {comparerT.addLoan}
+                            </Button>
+                            <Button type="submit">{comparerT.compareLoans}</Button>
+                        </div>
+                    </form>
+                </Form>
+                 {results && (
+                    <div className="mt-8">
+                        <h3 className="text-lg font-semibold mb-4">{comparerT.comparisonResults}</h3>
+                        <Table>
+                            <TableCaption>{comparerT.description}</TableCaption>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead>{comparerT.loan}</TableHead>
+                                    <TableHead>{emiT.loanAmount}</TableHead>
+                                    <TableHead>{emiT.interestRate}</TableHead>
+                                    <TableHead>{emiT.tenure}</TableHead>
+                                    <TableHead className="text-right font-semibold text-primary">{emiT.emi}</TableHead>
+                                    <TableHead className="text-right">{emiT.totalInterest}</TableHead>
+                                    <TableHead className="text-right">{emiT.totalPayment}</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {results.map((res, index) => (
+                                    <TableRow key={index} className={res.monthlyEMI === Math.min(...results.map(r => r.monthlyEMI)) ? 'bg-green-100' : ''}>
+                                        <TableCell className="font-medium">{comparerT.loan} {index + 1}</TableCell>
+                                        <TableCell>{formatCurrency(res.loanAmount)}</TableCell>
+                                        <TableCell>{res.interestRate}%</TableCell>
+                                        <TableCell>{res.tenure} {res.tenureType === 'years' ? emiT.years : emiT.months}</TableCell>
+                                        <TableCell className="text-right font-semibold text-primary">{formatCurrency(res.monthlyEMI)}</TableCell>
+                                        <TableCell className="text-right">{formatCurrency(res.totalInterest)}</TableCell>
+                                        <TableCell className="text-right">{formatCurrency(res.totalPayment)}</TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </div>
+                )}
+            </CardContent>
+        </Card>
+    );
+}
+
     
 
   
+
+    

@@ -2,56 +2,54 @@
 {
     "articles": {
         "mutualFunds": {
-            "src": "/images/articles/mutual-funds.jpg",
+            "src": "/images/1.png",
             "aiHint": "stock market chart"
         },
         "kisanCreditCard": {
-            "src": "/images/articles/kisan-credit-card.jpg",
+            "src": "/images/2.png",
             "aiHint": "farmer credit card"
         },
         "powerOfCompounding": {
-            "src": "/images/articles/power-of-compounding.jpg",
+            "src": "/images/3.png",
             "aiHint": "growing money"
         },
         "creditScore": {
-            "src": "/images/articles/credit-score.jpg",
+            "src": "/images/4.png",
             "aiHint": "credit report"
         },
         "dematAccount": {
-            "src": "/images/articles/demat-account.jpg",
+            "src": "/images/5.png",
             "aiHint": "online trading"
         },
         "ppf": {
-            "src": "/images/articles/ppf.jpg",
+            "src": "/images/6.png",
             "aiHint": "savings scheme"
         }
     },
     "videos": {
         "budgeting": {
-            "src": "/images/videos/budgeting.jpg",
+            "src": "/images/a.png",
             "aiHint": "family budget"
         },
         "cropInsurance": {
-            "src": "/images/videos/crop-insurance.jpg",
+            "src": "/images/b.png",
             "aiHint": "farmer insurance"
         },
         "stockMarket": {
-            "src": "/images/videos/stock-market.jpg",
+            "src": "/images/c.png",
             "aiHint": "stock exchange"
         },
         "emergencyFund": {
-            "src": "/images/videos/emergency-fund.jpg",
+            "src": "/images/d.png",
             "aiHint": "savings jar"
         },
         "sip": {
-            "src": "/images/videos/sip.jpg",
+            "src": "/images/e.png",
             "aiHint": "investment plan"
         },
         "inflation": {
-            "src": "/images/videos/inflation.jpg",
+            "src": "/images/f.png",
             "aiHint": "rising prices"
         }
     }
 }
-
-    

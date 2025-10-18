@@ -164,7 +164,7 @@ const learnContent = {
         link: "https://www.hdfcbank.com/personal/resources/learning-centre/invest/know-what-demat-account-and-its-types"
       },
       {
-        title: "सार्वजनिक भविष्य निधि (PPF) के बारे में सब کچھ",
+        title: "सार्वजनिक भविष्य निधि (PPF) के बारे में सब कुछ",
         description: "लोकप्रिय सरकार समर्थित बचत योजना की विशेषताओं, लाभों और नियमों का अन्वेषण करें।",
         icon: Newspaper,
         image: ImageData.articles.ppf.src,
@@ -264,7 +264,7 @@ export function LearnSection({ language = 'en' }: { language?: 'en' | 'hi' }) {
                     <Card key={item.title} className="overflow-hidden">
                     <Image src={item.image} alt={item.title} width={600} height={400} className="w-full h-48 object-cover" data-ai-hint={item.aiHint}/>
                     <CardHeader>
-                        <CardTitle className="flex items-center gap-2 text-base"><item.icon className="h-5 w-5"/> {item.title}</CardTitle>
+                        <CardTitle className="flex items-center gap-2 text-base"><item.icon className="h-5 w-5"/> {itemtitle}</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <p className="text-sm text-muted-foreground">{item.description}</p>
@@ -282,6 +282,5 @@ export function LearnSection({ language = 'en' }: { language?: 'en' | 'hi' }) {
     </Card>
   );
 }
-
 
     

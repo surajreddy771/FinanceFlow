@@ -264,7 +264,7 @@ export function LearnSection({ language = 'en' }: { language?: 'en' | 'hi' }) {
                     <Card key={item.title} className="overflow-hidden">
                     <Image src={item.image} alt={item.title} width={600} height={400} className="w-full h-48 object-cover" data-ai-hint={item.aiHint}/>
                     <CardHeader>
-                        <CardTitle className="flex items-center gap-2 text-base"><item.icon className="h-5 w-5"/> {itemtitle}</CardTitle>
+                        <CardTitle className="flex items-center gap-2 text-base"><item.icon className="h-5 w-5"/> {item.title}</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <p className="text-sm text-muted-foreground">{item.description}</p>

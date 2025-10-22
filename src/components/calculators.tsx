@@ -36,9 +36,9 @@ import { PlusCircle, Trash2 } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, TableCaption } from './ui/table';
 
 const formatCurrency = (amount: number) =>
-  new Intl.NumberFormat('en-US', {
+  new Intl.NumberFormat('en-IN', {
     style: 'currency',
-    currency: 'USD',
+    currency: 'INR',
   }).format(amount);
 
 const translations = {
@@ -642,11 +642,11 @@ function LivestockInvestmentCalculator({ language = 'en' }: { language?: 'en' | 
     const form = useForm<z.infer<typeof livestockSchema>>({
         resolver: zodResolver(livestockSchema),
         defaultValues: {
-            purchaseCost: 500,
+            purchaseCost: 5000,
             numberOfAnimals: 10,
-            feedCost: 50,
+            feedCost: 1500,
             duration: 12,
-            saleValue: 1200,
+            saleValue: 12000,
         },
     });
 
@@ -890,11 +890,3 @@ function MultiLoanComparer({ language = 'en' }: { language?: 'en' | 'hi' }) {
         </Card>
     );
 }
-
-    
-
-  
-
-    
-
-

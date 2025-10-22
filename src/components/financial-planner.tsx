@@ -40,9 +40,9 @@ import { Label } from "./ui/label";
 import { Calculators } from "./calculators";
 
 const formatCurrency = (amount: number) =>
-  new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
+  new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: 'INR',
   }).format(amount);
 
 // Schemas
@@ -554,5 +554,3 @@ function CategoryManager({ categories, onCategoriesChange, language = 'en' }: { 
     </div>
   );
 }
-
-    

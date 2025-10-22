@@ -1,5 +1,4 @@
 
-
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
@@ -101,34 +100,35 @@ const categorySchema = z.object({
 
 
 const formatCurrency = (amount: number) =>
-  new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
+  new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: 'INR',
   }).format(amount);
 
 const initialTransactions: Transaction[] = [
-  { id: '1', type: 'income', category: 'Salary', amount: 4500, date: new Date(2023, 11, 1), description: 'Monthly Salary' },
-  { id: '2', type: 'expense', category: 'Groceries', amount: 350, date: new Date(2023, 11, 5), description: 'Weekly grocery shopping' },
-  { id: '3', type: 'expense', category: 'Rent', amount: 1500, date: new Date(2023, 11, 1), description: 'Monthly rent' },
-  { id: '4', type: 'expense', category: 'Utilities', amount: 150, date: new Date(2023, 11, 10), description: 'Electricity and water bill' },
-  { id: '5', type: 'expense', category: 'Entertainment', amount: 80, date: new Date(2023, 11, 15), description: 'Movie tickets' },
-  { id: '6', type: 'expense', category: 'Transport', amount: 100, date: new Date(2023, 11, 1), description: 'Monthly bus pass' },
+    { id: '1', type: 'income', category: 'Crop Sale', amount: 75000, date: new Date(2023, 10, 15), description: 'Wheat harvest sale' },
+    { id: '2', type: 'income', category: 'Livestock Sale', amount: 15000, date: new Date(2023, 10, 20), description: 'Sale of two goats' },
+    { id: '3', type: 'expense', category: 'Fertilizer', amount: 10000, date: new Date(2023, 11, 5), description: 'Fertilizer for next season' },
+    { id: '4', type: 'expense', category: 'Household', amount: 5000, date: new Date(2023, 11, 2), description: 'Monthly household supplies' },
+    { id: '5', type: 'expense', category: 'Loan Repayment', amount: 8000, date: new Date(2023, 11, 10), description: 'KCC loan installment' },
+    { id: '6', type: 'expense', category: 'Education', amount: 3000, date: new Date(2023, 11, 1), description: 'Children\'s school fees' },
 ];
 
 const initialGoals: SavingsGoal[] = [
-    { id: '1', name: 'Vacation to Hawaii', targetAmount: 3000 },
-    { id: '2', name: 'New Laptop', targetAmount: 1800 },
+    { id: '1', name: 'Buy a Tractor', targetAmount: 500000 },
+    { id: '2', name: 'Daughter\'s Wedding', targetAmount: 200000 },
 ];
 
 const initialCategories: Category[] = [
-    { name: 'Salary', type: 'income' },
-    { name: 'Freelance', type: 'income' },
-    { name: 'Groceries', type: 'expense' },
-    { name: 'Rent', type: 'expense' },
-    { name: 'Utilities', type: 'expense' },
-    { name: 'Entertainment', type: 'expense' },
-    { name: 'Transport', type: 'expense' },
-    { name: 'Dining Out', type: 'expense' },
+    { name: 'Crop Sale', type: 'income' },
+    { name: 'Livestock Sale', type: 'income' },
+    { name: 'Govt. Scheme', type: 'income' },
+    { name: 'Fertilizer', type: 'expense' },
+    { name: 'Seeds', type: 'expense' },
+    { name: 'Loan Repayment', type: 'expense' },
+    { name: 'Household', type: 'expense' },
+    { name: 'Education', type: 'expense' },
+    { name: 'Health', type: 'expense' },
 ];
 
 const translations = {
@@ -257,7 +257,7 @@ export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
   const [isMounted, setIsMounted] = useState(false);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [goals, setGoals] = useState<SavingsGoal[]>([]);
-  const [budget, setBudget] = useState<number>(3000);
+  const [budget, setBudget] = useState<number>(25000);
   const [categories, setCategories] = useState<Category[]>([]);
   const [nextId, setNextId] = useState(0);
 

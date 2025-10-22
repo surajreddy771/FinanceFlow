@@ -257,7 +257,7 @@ export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
   const [isMounted, setIsMounted] = useState(false);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [goals, setGoals] = useState<SavingsGoal[]>([]);
-  const [budget, setBudget] = useState<number>(20000);
+  const [budget, setBudget] = useState<number>(35000);
   const [categories, setCategories] = useState<Category[]>([]);
   const [nextId, setNextId] = useState(0);
 
@@ -916,6 +916,8 @@ function AddCategoryDialog({ onAddCategory, type, children, language = 'en' }: {
       </Dialog>
     );
   }
+
+    
 
     
 

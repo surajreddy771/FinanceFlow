@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -246,6 +246,7 @@ export function Calculators({ language = 'en' }: { language?: 'en' | 'hi' }) {
 function EMICalculator({ language = 'en' }: { language?: 'en' | 'hi' }) {
   const t = translations[language].emiCalculator;
   const [results, setResults] = useState<{ emi: number; totalInterest: number; totalPayment: number; principal: number, repaymentFrequency: 'monthly' | 'weekly' } | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
 
   const form = useForm<z.infer<typeof emiSchema>>({
     resolver: zodResolver(emiSchema),
@@ -257,6 +258,10 @@ function EMICalculator({ language = 'en' }: { language?: 'en' | 'hi' }) {
       repaymentFrequency: 'monthly',
     },
   });
+  
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const onSubmit = (data: z.infer<typeof emiSchema>) => {
     const principal = data.loanAmount;
@@ -295,6 +300,8 @@ function EMICalculator({ language = 'en' }: { language?: 'en' | 'hi' }) {
       { name: t.interest, value: results.totalInterest },
     ];
   }, [results, t]);
+
+  if (!isMounted) return null;
 
   return (
     <Card className="border-none shadow-none">
@@ -430,9 +437,13 @@ function CropLoanCalculator({ language = 'en' }: { language?: 'en' | 'hi' }) {
     const t = translations[language];
     const emiT = t.emiCalculator;
     const cropT = t.cropLoan;
-
     const [schedule, setSchedule] = useState<{ date: Date; amount: number }[] | null>(null);
     const [repaymentStartDate, setRepaymentStartDate] = useState<Date | null>(null);
+    const [isMounted, setIsMounted] = useState(false);
+    
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
 
     const form = useForm<z.infer<typeof emiSchema>>({
         resolver: zodResolver(emiSchema),
@@ -479,6 +490,8 @@ function CropLoanCalculator({ language = 'en' }: { language?: 'en' | 'hi' }) {
         }));
         setSchedule(newSchedule);
     };
+
+    if (!isMounted) return null;
 
     return (
         <Card className="border-none shadow-none">
@@ -605,6 +618,7 @@ function LivestockInvestmentCalculator({ language = 'en' }: { language?: 'en' | 
         estimatedProfitLoss: number;
         breakEven: number;
     } | null>(null);
+    const [isMounted, setIsMounted] = useState(false);
 
     const form = useForm<z.infer<typeof livestockSchema>>({
         resolver: zodResolver(livestockSchema),
@@ -616,6 +630,10 @@ function LivestockInvestmentCalculator({ language = 'en' }: { language?: 'en' | 
             saleValue: 1200,
         },
     });
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
 
     const onSubmit = (data: z.infer<typeof livestockSchema>) => {
         const { purchaseCost, numberOfAnimals, feedCost, duration, saleValue } = data;
@@ -643,6 +661,8 @@ function LivestockInvestmentCalculator({ language = 'en' }: { language?: 'en' | 
             { name: t.totalFeedCost, value: results.totalFeedCost },
         ];
     }, [results, t]);
+
+    if (!isMounted) return null;
 
     return (
         <Card className="border-none shadow-none">
@@ -729,6 +749,7 @@ function MultiLoanComparer({ language = 'en' }: { language?: 'en' | 'hi' }) {
     const emiT = t.emiCalculator;
     const comparerT = t.loanComparer;
     const [results, setResults] = useState<LoanResult[] | null>(null);
+    const [isMounted, setIsMounted] = useState(false);
 
     const form = useForm<z.infer<typeof loanComparerSchema>>({
         resolver: zodResolver(loanComparerSchema),
@@ -739,6 +760,10 @@ function MultiLoanComparer({ language = 'en' }: { language?: 'en' | 'hi' }) {
             ]
         }
     });
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
 
     const { fields, append, remove } = useFieldArray({
         control: form.control,
@@ -765,6 +790,8 @@ function MultiLoanComparer({ language = 'en' }: { language?: 'en' | 'hi' }) {
         });
         setResults(calculatedResults);
     };
+
+    if (!isMounted) return null;
 
     return (
         <Card className="border-none shadow-none">
@@ -850,3 +877,4 @@ function MultiLoanComparer({ language = 'en' }: { language?: 'en' | 'hi' }) {
   
 
     
+

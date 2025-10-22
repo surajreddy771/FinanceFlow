@@ -61,6 +61,7 @@ import {
   DialogTitle,
   DialogFooter,
   DialogDescription,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -194,7 +195,7 @@ const translations = {
     totalBalance: "कुल शेष",
     totalIncome: "कुल आय",
     totalExpenses: "कुल खर्च",
-    addTransaction: "लेन-देन",
+    addTransaction: "लेन-देन जोड़ें",
     addGoal: "लक्ष्य जोड़ें",
     newTransaction: "नया लेन-देन",
     expense: "खर्च",

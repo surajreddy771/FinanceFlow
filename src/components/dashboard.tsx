@@ -136,7 +136,7 @@ const translations = {
     totalBalance: "Total Balance",
     totalIncome: "Total Income",
     totalExpenses: "Total Expenses",
-    addTransaction: "Transaction",
+    addTransaction: "Add Transaction",
     addGoal: "Add Goal",
     newTransaction: "New Transaction",
     expense: "Expense",
@@ -146,7 +146,7 @@ const translations = {
     selectCategory: "Select a category",
     addNewCategory: "Add New Category",
     description: "Description",
-    descriptionPlaceholder: "e.g., Coffee with friends",
+    descriptionPlaceholder: "e.g., Sale of produce",
     date: "Date",
     pickDate: "Pick a date",
     transactionAdded: "Transaction Added",
@@ -157,15 +157,15 @@ const translations = {
     editBudget: "Edit Budget",
     setYourBudget: "Set Your Budget",
     monthlyBudget: "Monthly Budget",
-    budgetPlaceholder: "e.g., 3000",
+    budgetPlaceholder: "e.g., 20000",
     setBudget: "Set Budget",
     budgetUpdated: "Budget Updated",
     newMonthlyBudget: "Your new monthly budget is",
     newSavingsGoal: "New Savings Goal",
     goalName: "Goal Name",
-    goalNamePlaceholder: "e.g., New car",
+    goalNamePlaceholder: "e.g., New Tractor",
     targetAmount: "Target Amount",
-    targetAmountPlaceholder: "e.g., 20000",
+    targetAmountPlaceholder: "e.g., 500000",
     goalAdded: "Goal Added",
     nowSavingFor: "You're now saving for",
     aiAdvisor: "AI Financial Advisor",
@@ -182,7 +182,7 @@ const translations = {
     noTransactions: "No transactions yet.",
     addNewCategoryTitle: "Add New Category",
     categoryName: "Category Name",
-    categoryNamePlaceholder: "e.g., Side Hustle",
+    categoryNamePlaceholder: "e.g., Dairy Sales",
     type: "Type",
     addCategory: "Add Category",
     categoryAdded: "Category Added",
@@ -205,7 +205,7 @@ const translations = {
     selectCategory: "एक श्रेणी चुनें",
     addNewCategory: "नई श्रेणी जोड़ें",
     description: "विवरण",
-    descriptionPlaceholder: "उदा., दोस्तों के साथ कॉफी",
+    descriptionPlaceholder: "उदा., उपज की बिक्री",
     date: "तारीख",
     pickDate: "एक तारीख चुनें",
     transactionAdded: "लेन-देन जोड़ा गया",
@@ -216,15 +216,15 @@ const translations = {
     editBudget: "बजट संपादित करें",
     setYourBudget: "अपना बजट निर्धारित करें",
     monthlyBudget: "मासिक बजट",
-    budgetPlaceholder: "उदा., 3000",
+    budgetPlaceholder: "उदा., 20000",
     setBudget: "बजट निर्धारित करें",
     budgetUpdated: "बजट अपडेट किया गया",
     newMonthlyBudget: "आपका नया मासिक बजट है",
     newSavingsGoal: "नया बचत लक्ष्य",
     goalName: "लक्ष्य का नाम",
-    goalNamePlaceholder: "उदा., नई कार",
+    goalNamePlaceholder: "उदा., नया ट्रैक्टर",
     targetAmount: "लक्ष्य राशि",
-    targetAmountPlaceholder: "उदा., 20000",
+    targetAmountPlaceholder: "उदा., 500000",
     goalAdded: "लक्ष्य जोड़ा गया",
     nowSavingFor: "अब आप इसके लिए बचत कर रहे हैं",
     aiAdvisor: "एआई वित्तीय सलाहकार",
@@ -241,7 +241,7 @@ const translations = {
     noTransactions: "अभी तक कोई लेन-देन नहीं।",
     addNewCategoryTitle: "नई श्रेणी जोड़ें",
     categoryName: "श्रेणी का नाम",
-    categoryNamePlaceholder: "उदा., साइड हसल",
+    categoryNamePlaceholder: "उदा., डेयरी बिक्री",
     type: "प्रकार",
     addCategory: "श्रेणी जोड़ें",
     categoryAdded: "श्रेणी जोड़ी गई",
@@ -313,7 +313,7 @@ export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
               balance={balance}
               categories={categories}
               onAddTransaction={handleAddTransaction}
-              onAddCategory={onAddCategory}
+              onAddCategory={handleAddCategory}
               onAddGoal={handleAddGoal}
               language={language}
             />
@@ -916,5 +916,7 @@ function AddCategoryDialog({ onAddCategory, type, children, language = 'en' }: {
       </Dialog>
     );
   }
+
+    
 
     

@@ -61,6 +61,8 @@ const translations = {
       weekly: "Weekly",
       years: "Years",
       months: "Months",
+      monthlyEMI: "Monthly EMI",
+      weeklyPayment: "Weekly Payment",
     },
     cropLoan: {
       title: "Crop Loan / Seasonal Loan Planner",
@@ -97,6 +99,13 @@ const translations = {
         compareLoans: "Compare Loans",
         comparisonResults: "Loan Comparison Results",
         loan: "Loan",
+    },
+    comingSoon: {
+        fertilizer: "Fertilizer / Seed Purchase Planning Calculator",
+        debt: "Debt Repayment Calculator",
+        afford: "'Can I Afford This Loan?' Checker",
+        subsidy: "Subsidy & Scheme Estimator",
+        comingSoon: "Coming soon..."
     }
   },
   hi: {
@@ -118,6 +127,8 @@ const translations = {
       weekly: "साप्ताहिक",
       years: "वर्ष",
       months: "महीने",
+      monthlyEMI: "मासिक ईएमआई",
+      weeklyPayment: "साप्ताहिक भुगतान",
     },
     cropLoan: {
       title: "फसल ऋण / मौसमी ऋण योजनाकार",
@@ -154,6 +165,13 @@ const translations = {
         compareLoans: "ऋणों की तुलना करें",
         comparisonResults: "ऋण तुलना परिणाम",
         loan: "ऋण",
+    },
+    comingSoon: {
+        fertilizer: "उर्वरक / बीज खरीद योजना कैलकुलेटर",
+        debt: "ऋण चुकौती कैलकुलेटर",
+        afford: "'क्या मैं यह ऋण ले सकता हूँ?' परीक्षक",
+        subsidy: "सब्सिडी और योजना अनुमानक",
+        comingSoon: "जल्द आ रहा है..."
     }
   },
 };
@@ -186,6 +204,7 @@ const loanComparerSchema = z.object({
 
 export function Calculators({ language = 'en' }: { language?: 'en' | 'hi' }) {
     const t = translations[language];
+    const cs = t.comingSoon;
     return (
         <div className="p-4">
             <Accordion type="single" collapsible className="w-full" defaultValue="item-1">
@@ -214,27 +233,27 @@ export function Calculators({ language = 'en' }: { language?: 'en' | 'hi' }) {
                     </AccordionContent>
                 </AccordionItem>
                  <AccordionItem value="item-5">
-                    <AccordionTrigger>Fertilizer / Seed Purchase Planning Calculator</AccordionTrigger>
+                    <AccordionTrigger>{cs.fertilizer}</AccordionTrigger>
                     <AccordionContent>
-                        <p className="p-4 text-muted-foreground">Coming soon...</p>
+                        <p className="p-4 text-muted-foreground">{cs.comingSoon}</p>
                     </AccordionContent>
                 </AccordionItem>
                  <AccordionItem value="item-6">
-                    <AccordionTrigger>Debt Repayment Calculator</AccordionTrigger>
+                    <AccordionTrigger>{cs.debt}</AccordionTrigger>
                     <AccordionContent>
-                        <p className="p-4 text-muted-foreground">Coming soon...</p>
+                        <p className="p-4 text-muted-foreground">{cs.comingSoon}</p>
                     </AccordionContent>
                 </AccordionItem>
                  <AccordionItem value="item-7">
-                    <AccordionTrigger>"Can I Afford This Loan?" Checker</AccordionTrigger>
+                    <AccordionTrigger>{cs.afford}</AccordionTrigger>
                     <AccordionContent>
-                        <p className="p-4 text-muted-foreground">Coming soon...</p>
+                        <p className="p-4 text-muted-foreground">{cs.comingSoon}</p>
                     </AccordionContent>
                 </AccordionItem>
                  <AccordionItem value="item-8">
-                    <AccordionTrigger>Subsidy &amp; Scheme Estimator</AccordionTrigger>
+                    <AccordionTrigger>{cs.subsidy}</AccordionTrigger>
                     <AccordionContent>
-                         <p className="p-4 text-muted-foreground">Coming soon...</p>
+                         <p className="p-4 text-muted-foreground">{cs.comingSoon}</p>
                     </AccordionContent>
                 </AccordionItem>
             </Accordion>
@@ -401,7 +420,7 @@ function EMICalculator({ language = 'en' }: { language?: 'en' | 'hi' }) {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
               <div className="space-y-4">
                 <div className="flex justify-between items-center p-3 bg-muted rounded-md">
-                  <span className="font-medium">{results.repaymentFrequency === 'monthly' ? "Monthly EMI" : "Weekly Payment"}</span>
+                  <span className="font-medium">{results.repaymentFrequency === 'monthly' ? t.monthlyEMI : t.weeklyPayment}</span>
                   <span className="font-bold text-primary text-lg">{formatCurrency(results.emi)}</span>
                 </div>
                 <div className="flex justify-between items-center p-3 bg-muted rounded-md">
@@ -846,7 +865,7 @@ function MultiLoanComparer({ language = 'en' }: { language?: 'en' | 'hi' }) {
                                     <TableHead>{emiT.loanAmount}</TableHead>
                                     <TableHead>{emiT.interestRate}</TableHead>
                                     <TableHead>{emiT.tenure}</TableHead>
-                                    <TableHead className="text-right font-semibold text-primary">{emiT.emi}</TableHead>
+                                    <TableHead className="text-right font-semibold text-primary">{emiT.monthlyEMI}</TableHead>
                                     <TableHead className="text-right">{emiT.totalInterest}</TableHead>
                                     <TableHead className="text-right">{emiT.totalPayment}</TableHead>
                                 </TableRow>
@@ -877,4 +896,5 @@ function MultiLoanComparer({ language = 'en' }: { language?: 'en' | 'hi' }) {
   
 
     
+
 

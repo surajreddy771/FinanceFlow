@@ -63,6 +63,107 @@ const newCategorySchema = z.object({
   type: z.enum(['income', 'expense']),
 });
 
+const translations = {
+  en: {
+    planner: {
+      title: 'Financial Goal Planner',
+      description: 'Plan your financial goals, get investment recommendations, and manage your budget categories.'
+    },
+    tabs: {
+      goalPlanner: 'Goal Planner',
+      investments: 'Investments',
+      categories: 'Expenditure Categories',
+      calculators: 'Calculators',
+    },
+    goal: {
+      newGoal: "New Goal",
+      addGoal: "Add Goal",
+      goalName: "Goal Name",
+      target: "Target",
+      save: "Save",
+      cancel: "Cancel",
+      edit: "Edit",
+    },
+    funds: {
+      investmentCategory: "Investment Category",
+      equity: "Equity (Stocks)",
+      debt: "Debt (Bonds, FDs)",
+      hybrid: "Hybrid (Mix of Equity & Debt)",
+      commodities: "Commodities (Gold, Silver)",
+      timeHorizon: "Time Horizon",
+      shortTerm: "Short-Term (1-3 years)",
+      mediumTerm: "Medium-Term (3-5 years)",
+      longTerm: "Long-Term (5+ years)",
+      riskAppetite: "Risk Appetite",
+      low: "Low",
+      medium: "Medium",
+      high: "High",
+      getRecommendation: "Get Recommendation",
+      recommendations: "Investment Recommendations",
+      disclaimer: "Disclaimer: This is not real financial advice. Please consult with a certified financial advisor before making any investment decisions."
+    },
+    category: {
+      newCategoryName: "New Category Name",
+      categoryNamePlaceholder: "e.g., Crop Sales",
+      type: "Type",
+      income: "Income",
+      expense: "Expense",
+      addCategory: "Add Category",
+      categoryAdded: "Category Added",
+      newCategoryCreated: "New {type} category '{name}' created."
+    }
+  },
+  hi: {
+    planner: {
+      title: 'वित्तीय लक्ष्य योजनाकार',
+      description: 'अपने वित्तीय लक्ष्यों की योजना बनाएं, निवेश सिफारिशें प्राप्त करें और अपनी बजट श्रेणियां प्रबंधित करें।'
+    },
+    tabs: {
+      goalPlanner: 'लक्ष्य योजनाकार',
+      investments: 'निवेश',
+      categories: 'खर्च श्रेणियाँ',
+      calculators: 'कैलकुलेटर',
+    },
+    goal: {
+      newGoal: "नया लक्ष्य",
+      addGoal: "लक्ष्य जोड़ें",
+      goalName: "लक्ष्य का नाम",
+      target: "लक्ष्य",
+      save: "सहेजें",
+      cancel: "रद्द करें",
+      edit: "संपादित करें",
+    },
+    funds: {
+      investmentCategory: "निवेश श्रेणी",
+      equity: "इक्विटी (स्टॉक)",
+      debt: "ऋण (बॉन्ड, एफडी)",
+      hybrid: "हाइब्रिड (इक्विटी और ऋण का मिश्रण)",
+      commodities: "कमोडिटीज (सोना, चांदी)",
+      timeHorizon: "समय सीमा",
+      shortTerm: "अल्पावधि (1-3 वर्ष)",
+      mediumTerm: "मध्यावधि (3-5 वर्ष)",
+      longTerm: "दीर्घावधि (5+ वर्ष)",
+      riskAppetite: "जोखिम उठाने की क्षमता",
+      low: "कम",
+      medium: "मध्यम",
+      high: "उच्च",
+      getRecommendation: "सिफारिश प्राप्त करें",
+      recommendations: "निवेश सिफारिशें",
+      disclaimer: "अस्वीकरण: यह वास्तविक वित्तीय सलाह नहीं है। कृपया कोई भी निवेश निर्णय लेने से पहले एक प्रमाणित वित्तीय सलाहकार से परामर्श लें।"
+    },
+    category: {
+      newCategoryName: "नई श्रेणी का नाम",
+      categoryNamePlaceholder: "उदा., फसल बिक्री",
+      type: "प्रकार",
+      income: "आय",
+      expense: "खर्च",
+      addCategory: "श्रेणी जोड़ें",
+      categoryAdded: "श्रेणी जोड़ी गई",
+      newCategoryCreated: "नई {type} श्रेणी '{name}' बनाई गई।"
+    }
+  }
+};
+
 
 export function FinancialPlanner({ categories, onCategoriesChange, goals, onGoalsChange, language = 'en' }: { categories: Category[], onCategoriesChange: (cats: Category[]) => void, goals: SavingsGoal[], onGoalsChange: (goals: SavingsGoal[]) => void, language?: 'en' | 'hi' }) {
 
@@ -92,16 +193,16 @@ export function FinancialPlanner({ categories, onCategoriesChange, goals, onGoal
             </TabsTrigger>
           </TabsList>
           <TabsContent value="goal-planner">
-            <GoalPlanner goals={goals} onGoalsChange={onGoalsChange} />
+            <GoalPlanner goals={goals} onGoalsChange={onGoalsChange} language={language} />
           </TabsContent>
           <TabsContent value="investments">
-            <FundsRecommendation />
+            <FundsRecommendation language={language} />
           </TabsContent>
            <TabsContent value="calculators">
             <Calculators language={language}/>
           </TabsContent>
           <TabsContent value="categories">
-            <CategoryManager categories={categories} onCategoriesChange={onCategoriesChange} />
+            <CategoryManager categories={categories} onCategoriesChange={onCategoriesChange} language={language} />
           </TabsContent>
         </Tabs>
       </CardContent>
@@ -109,38 +210,13 @@ export function FinancialPlanner({ categories, onCategoriesChange, goals, onGoal
   );
 }
 
-const translations = {
-  en: {
-    planner: {
-      title: 'Financial Goal Planner',
-      description: 'Plan your financial goals, get investment recommendations, and manage your budget categories.'
-    },
-    tabs: {
-      goalPlanner: 'Goal Planner',
-      investments: 'Investments',
-      categories: 'Expenditure Categories',
-      calculators: 'Calculators',
-    }
-  },
-  hi: {
-    planner: {
-      title: 'वित्तीय लक्ष्य योजनाकार',
-      description: 'अपने वित्तीय लक्ष्यों की योजना बनाएं, निवेश सिफारिशें प्राप्त करें और अपनी बजट श्रेणियां प्रबंधित करें।'
-    },
-    tabs: {
-      goalPlanner: 'लक्ष्य योजनाकार',
-      investments: 'निवेश',
-      categories: 'खर्च श्रेणियाँ',
-      calculators: 'कैलकुलेटर',
-    }
-  }
-};
 
-function GoalPlanner({ goals, onGoalsChange }: { goals: SavingsGoal[], onGoalsChange: (goals: SavingsGoal[]) => void }) {
-  
+
+function GoalPlanner({ goals, onGoalsChange, language = 'en' }: { goals: SavingsGoal[], onGoalsChange: (goals: SavingsGoal[]) => void, language?: 'en' | 'hi' }) {
+  const t = translations[language].goal;
   const handleAddGoal = () => {
     const newId = `goal-${Date.now()}-${Math.random()}`;
-    onGoalsChange([...goals, { id: newId, name: "New Goal", targetAmount: 1000 }]);
+    onGoalsChange([...goals, { id: newId, name: t.newGoal, targetAmount: 1000 }]);
   };
 
   const handleUpdateGoal = (id: string, updatedGoal: Partial<Omit<SavingsGoal, 'id'>>) => {
@@ -160,6 +236,7 @@ function GoalPlanner({ goals, onGoalsChange }: { goals: SavingsGoal[], onGoalsCh
             goal={goal}
             onUpdate={handleUpdateGoal}
             onDelete={handleDeleteGoal}
+            language={language}
           />
         ))}
       </div>
@@ -169,16 +246,17 @@ function GoalPlanner({ goals, onGoalsChange }: { goals: SavingsGoal[], onGoalsCh
         size="sm"
         onClick={handleAddGoal}
       >
-        <PlusCircle className="mr-2 h-4 w-4" /> Add Goal
+        <PlusCircle className="mr-2 h-4 w-4" /> {t.addGoal}
       </Button>
     </div>
   );
 }
 
-function GoalItem({ goal, onUpdate, onDelete }: { goal: SavingsGoal, onUpdate: (id: string, data: Partial<Omit<SavingsGoal, 'id'>>) => void, onDelete: (id: string) => void }) {
+function GoalItem({ goal, onUpdate, onDelete, language = 'en' }: { goal: SavingsGoal, onUpdate: (id: string, data: Partial<Omit<SavingsGoal, 'id'>>) => void, onDelete: (id: string) => void, language?: 'en' | 'hi' }) {
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState(goal.name);
   const [targetAmount, setTargetAmount] = useState(goal.targetAmount);
+  const t = translations[language].goal;
   
   const savedAmount = 0; // This would come from transactions in a real app
   const progress = (savedAmount / goal.targetAmount) * 100;
@@ -194,15 +272,15 @@ function GoalItem({ goal, onUpdate, onDelete }: { goal: SavingsGoal, onUpdate: (
         {isEditing ? (
           <div className="flex items-end gap-2">
             <div className="flex-1">
-              <Label htmlFor={`name-${goal.id}`}>Goal Name</Label>
+              <Label htmlFor={`name-${goal.id}`}>{t.goalName}</Label>
               <Input id={`name-${goal.id}`} value={name} onChange={(e) => setName(e.target.value)} />
             </div>
             <div className="w-32">
-              <Label htmlFor={`target-${goal.id}`}>Target</Label>
+              <Label htmlFor={`target-${goal.id}`}>{t.target}</Label>
               <Input id={`target-${goal.id}`} type="number" value={targetAmount} onChange={(e) => setTargetAmount(Number(e.target.value))} />
             </div>
-            <Button size="sm" onClick={handleSave}>Save</Button>
-            <Button size="sm" variant="ghost" onClick={() => setIsEditing(false)}>Cancel</Button>
+            <Button size="sm" onClick={handleSave}>{t.save}</Button>
+            <Button size="sm" variant="ghost" onClick={() => setIsEditing(false)}>{t.cancel}</Button>
           </div>
         ) : (
           <div className="flex items-center justify-between">
@@ -213,7 +291,7 @@ function GoalItem({ goal, onUpdate, onDelete }: { goal: SavingsGoal, onUpdate: (
               </p>
             </div>
             <div className="flex items-center gap-2">
-              <Button size="sm" variant="outline" onClick={() => setIsEditing(true)}><Edit className="h-4 w-4 mr-2" />Edit</Button>
+              <Button size="sm" variant="outline" onClick={() => setIsEditing(true)}><Edit className="h-4 w-4 mr-2" />{t.edit}</Button>
               <Button size="sm" variant="destructive" onClick={() => onDelete(goal.id)}><Trash2 className="h-4 w-4" /></Button>
             </div>
           </div>
@@ -225,7 +303,8 @@ function GoalItem({ goal, onUpdate, onDelete }: { goal: SavingsGoal, onUpdate: (
 }
 
 
-function FundsRecommendation() {
+function FundsRecommendation({ language = 'en' }: { language?: 'en' | 'hi' }) {
+    const t = translations[language].funds;
     const [result, setResult] = useState<string | null>(null);
     const form = useForm<z.infer<typeof fundsSchema>>({
         resolver: zodResolver(fundsSchema),
@@ -267,7 +346,7 @@ function FundsRecommendation() {
              recommendation += "Commodities (Generally High Risk):\n- Gold ETFs / Gold Savings Funds: Invest in gold electronically without holding it physically. Acts as a hedge against inflation.\n- Silver ETFs: Similar to Gold ETFs but for silver, which can be more volatile.\n- Global Commodity Funds: Mutual funds that invest in a basket of commodities. High risk and complex.";
         }
         
-        recommendation += "\n\nDisclaimer: This is not real financial advice. Please consult with a certified financial advisor before making any investment decisions."
+        recommendation += `\n\n${t.disclaimer}`
         setResult(recommendation);
     }
     
@@ -281,14 +360,14 @@ function FundsRecommendation() {
                         name="investmentCategory"
                         render={({ field }) => (
                             <FormItem>
-                            <FormLabel>Investment Category</FormLabel>
+                            <FormLabel>{t.investmentCategory}</FormLabel>
                             <Select onValueChange={field.onChange} defaultValue={field.value}>
                                 <FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl>
                                 <SelectContent>
-                                    <SelectItem value="equity">Equity (Stocks)</SelectItem>
-                                    <SelectItem value="debt">Debt (Bonds, FDs)</SelectItem>
-                                    <SelectItem value="hybrid">Hybrid (Mix of Equity & Debt)</SelectItem>
-                                    <SelectItem value="commodities">Commodities (Gold, Silver)</SelectItem>
+                                    <SelectItem value="equity">{t.equity}</SelectItem>
+                                    <SelectItem value="debt">{t.debt}</SelectItem>
+                                    <SelectItem value="hybrid">{t.hybrid}</SelectItem>
+                                    <SelectItem value="commodities">{t.commodities}</SelectItem>
                                 </SelectContent>
                             </Select>
                             <FormMessage />
@@ -300,13 +379,13 @@ function FundsRecommendation() {
                         name="timeHorizon"
                         render={({ field }) => (
                             <FormItem>
-                            <FormLabel>Time Horizon</FormLabel>
+                            <FormLabel>{t.timeHorizon}</FormLabel>
                             <Select onValueChange={field.onChange} defaultValue={field.value}>
                                 <FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl>
                                 <SelectContent>
-                                    <SelectItem value="short-term">Short-Term (1-3 years)</SelectItem>
-                                    <SelectItem value="medium-term">Medium-Term (3-5 years)</SelectItem>
-                                    <SelectItem value="long-term">Long-Term (5+ years)</SelectItem>
+                                    <SelectItem value="short-term">{t.shortTerm}</SelectItem>
+                                    <SelectItem value="medium-term">{t.mediumTerm}</SelectItem>
+                                    <SelectItem value="long-term">{t.longTerm}</SelectItem>
                                 </SelectContent>
                             </Select>
                             <FormMessage />
@@ -318,13 +397,13 @@ function FundsRecommendation() {
                         name="riskAppetite"
                         render={({ field }) => (
                             <FormItem>
-                            <FormLabel>Risk Appetite</FormLabel>
+                            <FormLabel>{t.riskAppetite}</FormLabel>
                             <Select onValueChange={field.onChange} defaultValue={field.value}>
                                 <FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl>
                                 <SelectContent>
-                                    <SelectItem value="low">Low</SelectItem>
-                                    <SelectItem value="medium">Medium</SelectItem>
-                                    <SelectItem value="high">High</SelectItem>
+                                    <SelectItem value="low">{t.low}</SelectItem>
+                                    <SelectItem value="medium">{t.medium}</SelectItem>
+                                    <SelectItem value="high">{t.high}</SelectItem>
                                 </SelectContent>
                             </Select>
                             <FormMessage />
@@ -332,12 +411,12 @@ function FundsRecommendation() {
                         )}
                         />
                     </div>
-                    <Button type="submit">Get Recommendation</Button>
+                    <Button type="submit">{t.getRecommendation}</Button>
                 </form>
             </Form>
             {result && (
                 <Alert className="mt-6">
-                    <AlertTitle>Investment Recommendations</AlertTitle>
+                    <AlertTitle>{t.recommendations}</AlertTitle>
                     <AlertDescription className="whitespace-pre-wrap">{result}</AlertDescription>
                 </Alert>
             )}
@@ -387,8 +466,9 @@ function FinancialExperts() {
     )
 }
 
-function CategoryManager({ categories, onCategoriesChange }: { categories: Category[], onCategoriesChange: (cats: Category[]) => void }) {
+function CategoryManager({ categories, onCategoriesChange, language = 'en' }: { categories: Category[], onCategoriesChange: (cats: Category[]) => void, language?: 'en' | 'hi' }) {
   const { toast } = useToast();
+  const t = translations[language].category;
   const form = useForm<z.infer<typeof newCategorySchema>>({
     resolver: zodResolver(newCategorySchema),
     defaultValues: {
@@ -402,7 +482,7 @@ function CategoryManager({ categories, onCategoriesChange }: { categories: Categ
 
   function onSubmit(values: z.infer<typeof newCategorySchema>) {
     onCategoriesChange([...categories, values]);
-    toast({ title: 'Category Added', description: `New ${values.type} category "${values.name}" created.` });
+    toast({ title: t.categoryAdded, description: t.newCategoryCreated.replace('{type}', values.type).replace('{name}', values.name) });
     form.reset();
   }
   
@@ -419,9 +499,9 @@ function CategoryManager({ categories, onCategoriesChange }: { categories: Categ
             name="name"
             render={({ field }) => (
               <FormItem className="flex-1">
-                <FormLabel>New Category Name</FormLabel>
+                <FormLabel>{t.newCategoryName}</FormLabel>
                 <FormControl>
-                  <Input placeholder="e.g., Crop Sales" {...field} />
+                  <Input placeholder={t.categoryNamePlaceholder} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -432,24 +512,24 @@ function CategoryManager({ categories, onCategoriesChange }: { categories: Categ
             name="type"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Type</FormLabel>
+                <FormLabel>{t.type}</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl>
                     <SelectContent>
-                        <SelectItem value="income">Income</SelectItem>
-                        <SelectItem value="expense">Expense</SelectItem>
+                        <SelectItem value="income">{t.income}</SelectItem>
+                        <SelectItem value="expense">{t.expense}</SelectItem>
                     </SelectContent>
                 </Select>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <Button type="submit"><PlusCircle className="mr-2 h-4 w-4"/>Add Category</Button>
+          <Button type="submit"><PlusCircle className="mr-2 h-4 w-4"/>{t.addCategory}</Button>
         </form>
       </Form>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>
-          <h3 className="text-lg font-medium mb-2">Income</h3>
+          <h3 className="text-lg font-medium mb-2">{t.income}</h3>
           <ul className="space-y-2">
             {incomeCategories.map(cat => (
               <li key={cat.name} className="flex items-center justify-between p-2 border rounded-md">
@@ -460,7 +540,7 @@ function CategoryManager({ categories, onCategoriesChange }: { categories: Categ
           </ul>
         </div>
         <div>
-          <h3 className="text-lg font-medium mb-2">Expense</h3>
+          <h3 className="text-lg font-medium mb-2">{t.expense}</h3>
            <ul className="space-y-2">
             {expenseCategories.map(cat => (
               <li key={cat.name} className="flex items-center justify-between p-2 border rounded-md">

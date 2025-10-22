@@ -59,7 +59,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
   DialogFooter,
   DialogDescription,
 } from "@/components/ui/dialog";
@@ -131,6 +130,128 @@ const initialCategories: Category[] = [
     { name: 'Dining Out', type: 'expense' },
 ];
 
+const translations = {
+  en: {
+    totalBalance: "Total Balance",
+    totalIncome: "Total Income",
+    totalExpenses: "Total Expenses",
+    addTransaction: "Transaction",
+    addGoal: "Add Goal",
+    newTransaction: "New Transaction",
+    expense: "Expense",
+    income: "Income",
+    amount: "Amount",
+    category: "Category",
+    selectCategory: "Select a category",
+    addNewCategory: "Add New Category",
+    description: "Description",
+    descriptionPlaceholder: "e.g., Coffee with friends",
+    date: "Date",
+    pickDate: "Pick a date",
+    transactionAdded: "Transaction Added",
+    budget: "Budget",
+    monthlySpendingLimit: "Your monthly spending limit.",
+    remaining: "remaining",
+    overBudget: "over budget",
+    editBudget: "Edit Budget",
+    setYourBudget: "Set Your Budget",
+    monthlyBudget: "Monthly Budget",
+    budgetPlaceholder: "e.g., 3000",
+    setBudget: "Set Budget",
+    budgetUpdated: "Budget Updated",
+    newMonthlyBudget: "Your new monthly budget is",
+    newSavingsGoal: "New Savings Goal",
+    goalName: "Goal Name",
+    goalNamePlaceholder: "e.g., New car",
+    targetAmount: "Target Amount",
+    targetAmountPlaceholder: "e.g., 20000",
+    goalAdded: "Goal Added",
+    nowSavingFor: "You're now saving for",
+    aiAdvisor: "AI Financial Advisor",
+    getAdvice: "Get personalized advice based on your financial data.",
+    generateAdvice: "Generate Advice",
+    generating: "Generating...",
+    yourAdvice: "Your Personalized Advice",
+    adviceDescription: "Here are some recommendations based on your financial data.",
+    close: "Close",
+    error: "Error",
+    errorAdvice: "Could not generate financial advice. Please try again later.",
+    recentTransactions: "Recent Transactions",
+    last5: "Your last 5 transactions.",
+    noTransactions: "No transactions yet.",
+    addNewCategoryTitle: "Add New Category",
+    categoryName: "Category Name",
+    categoryNamePlaceholder: "e.g., Side Hustle",
+    type: "Type",
+    addCategory: "Add Category",
+    categoryAdded: "Category Added",
+    newCategoryCreated: "New {type} category '{name}' created.",
+    spendingBreakdown: "Spending Breakdown",
+    expensesByCategory: "Your expenses by category.",
+    noExpenseData: "No expense data to display.",
+  },
+  hi: {
+    totalBalance: "कुल शेष",
+    totalIncome: "कुल आय",
+    totalExpenses: "कुल खर्च",
+    addTransaction: "लेन-देन",
+    addGoal: "लक्ष्य जोड़ें",
+    newTransaction: "नया लेन-देन",
+    expense: "खर्च",
+    income: "आय",
+    amount: "रकम",
+    category: "श्रेणी",
+    selectCategory: "एक श्रेणी चुनें",
+    addNewCategory: "नई श्रेणी जोड़ें",
+    description: "विवरण",
+    descriptionPlaceholder: "उदा., दोस्तों के साथ कॉफी",
+    date: "तारीख",
+    pickDate: "एक तारीख चुनें",
+    transactionAdded: "लेन-देन जोड़ा गया",
+    budget: "बजट",
+    monthlySpendingLimit: "आपकी मासिक खर्च सीमा।",
+    remaining: "शेष",
+    overBudget: "बजट से अधिक",
+    editBudget: "बजट संपादित करें",
+    setYourBudget: "अपना बजट निर्धारित करें",
+    monthlyBudget: "मासिक बजट",
+    budgetPlaceholder: "उदा., 3000",
+    setBudget: "बजट निर्धारित करें",
+    budgetUpdated: "बजट अपडेट किया गया",
+    newMonthlyBudget: "आपका नया मासिक बजट है",
+    newSavingsGoal: "नया बचत लक्ष्य",
+    goalName: "लक्ष्य का नाम",
+    goalNamePlaceholder: "उदा., नई कार",
+    targetAmount: "लक्ष्य राशि",
+    targetAmountPlaceholder: "उदा., 20000",
+    goalAdded: "लक्ष्य जोड़ा गया",
+    nowSavingFor: "अब आप इसके लिए बचत कर रहे हैं",
+    aiAdvisor: "एआई वित्तीय सलाहकार",
+    getAdvice: "अपने वित्तीय डेटा के आधार पर व्यक्तिगत सलाह प्राप्त करें।",
+    generateAdvice: "सलाह उत्पन्न करें",
+    generating: "उत्पन्न हो रहा है...",
+    yourAdvice: "आपकी व्यक्तिगत सलाह",
+    adviceDescription: "आपके वित्तीय डेटा के आधार पर यहां कुछ सिफारिशें दी गई हैं।",
+    close: "बंद करें",
+    error: "त्रुटि",
+    errorAdvice: "वित्तीय सलाह उत्पन्न नहीं की जा सकी। कृपया बाद में पुनः प्रयास करें।",
+    recentTransactions: "हाल के लेन-देन",
+    last5: "आपके अंतिम 5 लेन-देन।",
+    noTransactions: "अभी तक कोई लेन-देन नहीं।",
+    addNewCategoryTitle: "नई श्रेणी जोड़ें",
+    categoryName: "श्रेणी का नाम",
+    categoryNamePlaceholder: "उदा., साइड हसल",
+    type: "प्रकार",
+    addCategory: "श्रेणी जोड़ें",
+    categoryAdded: "श्रेणी जोड़ी गई",
+    newCategoryCreated: "नई {type} श्रेणी '{name}' बनाई गई।",
+    spendingBreakdown: "खर्च का विवरण",
+    expensesByCategory: "श्रेणी के अनुसार आपके खर्च।",
+    noExpenseData: "प्रदर्शित करने के लिए कोई खर्च डेटा नहीं।",
+  },
+};
+
+
 export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
   const [isMounted, setIsMounted] = useState(false);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -138,6 +259,8 @@ export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
   const [budget, setBudget] = useState<number>(3000);
   const [categories, setCategories] = useState<Category[]>([]);
   const [nextId, setNextId] = useState(0);
+
+  const t = translations[language];
 
   useEffect(() => {
     setTransactions(initialTransactions);
@@ -191,6 +314,7 @@ export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
               onAddTransaction={handleAddTransaction}
               onAddCategory={handleAddCategory}
               onAddGoal={handleAddGoal}
+              language={language}
             />
         </div>
         <div className="lg:col-span-2 grid gap-8 content-start">
@@ -201,16 +325,17 @@ export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
             onGoalsChange={setGoals}
             language={language}
           />
-          <SpendingChartCard transactions={transactions} />
+          <SpendingChartCard transactions={transactions} language={language} />
         </div>
         <div className="lg:col-span-1 grid grid-cols-1 gap-8 content-start">
-          <BudgetCard budget={budget} totalExpenses={totalExpenses} onSetBudget={setBudget} />
-          <RecentTransactionsCard transactions={transactions} />
+          <BudgetCard budget={budget} totalExpenses={totalExpenses} onSetBudget={setBudget} language={language}/>
+          <RecentTransactionsCard transactions={transactions} language={language} />
           <FinancialAdviceCard
             transactions={transactions}
             goals={goals}
             budget={budget}
             totalIncome={totalIncome}
+            language={language}
           />
         </div>
       </div>
@@ -219,12 +344,13 @@ export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
   );
 }
 
-function FinancialOverviewCard({ totalIncome, totalExpenses, balance, categories, onAddTransaction, onAddCategory, onAddGoal }: { totalIncome: number; totalExpenses: number; balance: number; categories: Category[]; onAddTransaction: (t: Omit<Transaction, 'id'>) => void; onAddCategory: (c: Category) => void; onAddGoal: (g: Omit<SavingsGoal, 'id'>) => void;}) {
+function FinancialOverviewCard({ totalIncome, totalExpenses, balance, categories, onAddTransaction, onAddCategory, onAddGoal, language = 'en' }: { totalIncome: number; totalExpenses: number; balance: number; categories: Category[]; onAddTransaction: (t: Omit<Transaction, 'id'>) => void; onAddCategory: (c: Category) => void; onAddGoal: (g: Omit<SavingsGoal, 'id'>) => void; language?: 'en' | 'hi';}) {
+  const t = translations[language];
   return (
      <Card>
         <CardContent className="p-4 grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
             <div className="md:col-span-1">
-              <CardDescription>Total Balance</CardDescription>
+              <CardDescription>{t.totalBalance}</CardDescription>
               <CardTitle className="text-4xl font-bold text-primary">{formatCurrency(balance)}</CardTitle>
             </div>
             
@@ -232,28 +358,28 @@ function FinancialOverviewCard({ totalIncome, totalExpenses, balance, categories
                 <div className="flex items-center gap-3 p-4 rounded-lg bg-secondary">
                     <ArrowUpCircle className="h-8 w-8 text-green-500 flex-shrink-0" />
                     <div>
-                        <p className="text-sm text-muted-foreground">Total Income</p>
+                        <p className="text-sm text-muted-foreground">{t.totalIncome}</p>
                         <p className="text-lg font-semibold">{formatCurrency(totalIncome)}</p>
                     </div>
                 </div>
                 <div className="flex items-center gap-3 p-4 rounded-lg bg-secondary">
                     <ArrowDownCircle className="h-8 w-8 text-red-500 flex-shrink-0" />
                     <div>
-                        <p className="text-sm text-muted-foreground">Total Expenses</p>
+                        <p className="text-sm text-muted-foreground">{t.totalExpenses}</p>
                         <p className="text-lg font-semibold">{formatCurrency(totalExpenses)}</p>
                     </div>
                 </div>
             </div>
             
             <div className="md:col-span-1 flex flex-col gap-2 justify-center">
-              <AddTransactionDialog categories={categories} onAddTransaction={onAddTransaction} onAddCategory={onAddCategory}>
+              <AddTransactionDialog categories={categories} onAddTransaction={onAddTransaction} onAddCategory={onAddCategory} language={language}>
                 <Button className="w-full">
-                    <PlusCircle className="mr-2 h-4 w-4" /> Transaction
+                    <PlusCircle className="mr-2 h-4 w-4" /> {t.addTransaction}
                 </Button>
               </AddTransactionDialog>
-              <AddGoalDialog onAddGoal={onAddGoal}>
+              <AddGoalDialog onAddGoal={onAddGoal} language={language}>
                 <Button variant="outline" className="w-full bg-secondary">
-                    <Target className="mr-2 h-4 w-4" /> Add Goal
+                    <Target className="mr-2 h-4 w-4" /> {t.addGoal}
                 </Button>
               </AddGoalDialog>
             </div>
@@ -263,9 +389,10 @@ function FinancialOverviewCard({ totalIncome, totalExpenses, balance, categories
 }
 
 
-function AddTransactionDialog({ categories, onAddTransaction, onAddCategory, children }: { categories: Category[], onAddTransaction: (t: Omit<Transaction, 'id'>) => void, onAddCategory: (c: Category) => void, children: React.ReactNode }) {
+function AddTransactionDialog({ categories, onAddTransaction, onAddCategory, children, language = 'en' }: { categories: Category[], onAddTransaction: (t: Omit<Transaction, 'id'>) => void, onAddCategory: (c: Category) => void, children: React.ReactNode, language?: 'en' | 'hi' }) {
   const [open, setOpen] = useState(false);
   const { toast } = useToast();
+  const t = translations[language];
 
   const form = useForm<z.infer<typeof transactionSchema>>({
     resolver: zodResolver(transactionSchema),
@@ -293,7 +420,7 @@ function AddTransactionDialog({ categories, onAddTransaction, onAddCategory, chi
   const onSubmit = (values: z.infer<typeof transactionSchema>) => {
     onAddTransaction(values);
     toast({
-      title: "Transaction Added",
+      title: t.transactionAdded,
       description: `${formatCurrency(values.amount)} ${values.type} for ${values.category}.`,
     });
     form.reset();
@@ -307,7 +434,7 @@ function AddTransactionDialog({ categories, onAddTransaction, onAddCategory, chi
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>New Transaction</DialogTitle>
+            <DialogTitle>{t.newTransaction}</DialogTitle>
           </DialogHeader>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -317,8 +444,8 @@ function AddTransactionDialog({ categories, onAddTransaction, onAddCategory, chi
                 render={({ field }) => (
                   <Tabs defaultValue={field.value} onValueChange={field.onChange} className="w-full">
                     <TabsList className="grid w-full grid-cols-2">
-                      <TabsTrigger value="expense">Expense</TabsTrigger>
-                      <TabsTrigger value="income">Income</TabsTrigger>
+                      <TabsTrigger value="expense">{t.expense}</TabsTrigger>
+                      <TabsTrigger value="income">{t.income}</TabsTrigger>
                     </TabsList>
                   </Tabs>
                 )}
@@ -329,7 +456,7 @@ function AddTransactionDialog({ categories, onAddTransaction, onAddCategory, chi
                 name="amount"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Amount</FormLabel>
+                    <FormLabel>{t.amount}</FormLabel>
                     <FormControl>
                       <Input type="number" placeholder="0.00" {...field} />
                     </FormControl>
@@ -343,20 +470,20 @@ function AddTransactionDialog({ categories, onAddTransaction, onAddCategory, chi
                 name="category"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Category</FormLabel>
+                    <FormLabel>{t.category}</FormLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select a category" />
+                          <SelectValue placeholder={t.selectCategory} />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
                         {categories.filter(c => c.type === form.watch('type')).map(cat => (
                           <SelectItem key={cat.name} value={cat.name}>{cat.name}</SelectItem>
                         ))}
-                         <AddCategoryDialog onAddCategory={onAddCategory} type={form.watch('type')} >
+                         <AddCategoryDialog onAddCategory={onAddCategory} type={form.watch('type')} language={language} >
                             <div className="flex w-full items-center p-2 text-sm text-primary cursor-pointer hover:bg-muted rounded-sm">
-                                <PlusCircle className="mr-2 h-4 w-4" /> Add New Category
+                                <PlusCircle className="mr-2 h-4 w-4" /> {t.addNewCategory}
                             </div>
                         </AddCategoryDialog>
                       </SelectContent>
@@ -371,9 +498,9 @@ function AddTransactionDialog({ categories, onAddTransaction, onAddCategory, chi
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Description</FormLabel>
+                    <FormLabel>{t.description}</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g., Coffee with friends" {...field} />
+                      <Input placeholder={t.descriptionPlaceholder} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -385,7 +512,7 @@ function AddTransactionDialog({ categories, onAddTransaction, onAddCategory, chi
                 name="date"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
-                    <FormLabel>Date</FormLabel>
+                    <FormLabel>{t.date}</FormLabel>
                     <Popover>
                       <PopoverTrigger asChild>
                         <FormControl>
@@ -396,7 +523,7 @@ function AddTransactionDialog({ categories, onAddTransaction, onAddCategory, chi
                               !field.value && "text-muted-foreground"
                             )}
                           >
-                            {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
+                            {field.value ? format(field.value, "PPP") : <span>{t.pickDate}</span>}
                             <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                           </Button>
                         </FormControl>
@@ -417,7 +544,7 @@ function AddTransactionDialog({ categories, onAddTransaction, onAddCategory, chi
               />
               
               <DialogFooter>
-                <Button type="submit">Add Transaction</Button>
+                <Button type="submit">{t.addTransaction}</Button>
               </DialogFooter>
             </form>
           </Form>
@@ -426,7 +553,8 @@ function AddTransactionDialog({ categories, onAddTransaction, onAddCategory, chi
   );
 }
 
-function SpendingChartCard({ transactions }: { transactions: Transaction[] }) {
+function SpendingChartCard({ transactions, language = 'en' }: { transactions: Transaction[], language?: 'en' | 'hi' }) {
+  const t = translations[language];
   const expenseData = useMemo(() => {
     const categoryTotals = transactions
       .filter((t) => t.type === "expense")
@@ -447,8 +575,8 @@ function SpendingChartCard({ transactions }: { transactions: Transaction[] }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Spending Breakdown</CardTitle>
-        <CardDescription>Your expenses by category.</CardDescription>
+        <CardTitle>{t.spendingBreakdown}</CardTitle>
+        <CardDescription>{t.expensesByCategory}</CardDescription>
       </CardHeader>
       <CardContent>
         {expenseData.length > 0 ? (
@@ -473,7 +601,7 @@ function SpendingChartCard({ transactions }: { transactions: Transaction[] }) {
           </ResponsiveContainer>
         ) : (
           <div className="flex h-[350px] items-center justify-center text-muted-foreground">
-            No expense data to display.
+            {t.noExpenseData}
           </div>
         )}
       </CardContent>
@@ -481,9 +609,11 @@ function SpendingChartCard({ transactions }: { transactions: Transaction[] }) {
   );
 }
 
-function BudgetCard({ budget, totalExpenses, onSetBudget }: { budget: number, totalExpenses: number, onSetBudget: (b: number) => void }) {
+function BudgetCard({ budget, totalExpenses, onSetBudget, language = 'en' }: { budget: number, totalExpenses: number, onSetBudget: (b: number) => void, language?: 'en' | 'hi' }) {
   const [open, setOpen] = useState(false);
   const { toast } = useToast();
+  const t = translations[language];
+
   const form = useForm<z.infer<typeof budgetSchema>>({
     resolver: zodResolver(budgetSchema),
     defaultValues: { amount: budget },
@@ -495,7 +625,7 @@ function BudgetCard({ budget, totalExpenses, onSetBudget }: { budget: number, to
 
   const onSubmit = (values: z.infer<typeof budgetSchema>) => {
     onSetBudget(values.amount);
-    toast({ title: "Budget Updated", description: `Your new monthly budget is ${formatCurrency(values.amount)}.` });
+    toast({ title: t.budgetUpdated, description: `${t.newMonthlyBudget} ${formatCurrency(values.amount)}.` });
     setOpen(false);
   };
 
@@ -505,8 +635,8 @@ function BudgetCard({ budget, totalExpenses, onSetBudget }: { budget: number, to
   return (
     <Card>
       <CardHeader className="p-4">
-        <CardTitle>Budget</CardTitle>
-        <CardDescription className="text-xs">Your monthly spending limit.</CardDescription>
+        <CardTitle>{t.budget}</CardTitle>
+        <CardDescription className="text-xs">{t.monthlySpendingLimit}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-2 p-4 pt-0">
         <div className="flex justify-between items-baseline">
@@ -515,18 +645,18 @@ function BudgetCard({ budget, totalExpenses, onSetBudget }: { budget: number, to
         </div>
         <Progress value={percentageSpent} />
         <div className="text-xs text-muted-foreground">
-          {remainingBudget >= 0 ? `${formatCurrency(remainingBudget)} remaining` : `${formatCurrency(Math.abs(remainingBudget))} over budget`}
+          {remainingBudget >= 0 ? `${formatCurrency(remainingBudget)} ${t.remaining}` : `${formatCurrency(Math.abs(remainingBudget))} ${t.overBudget}`}
         </div>
       </CardContent>
       <CardFooter className="p-4 pt-0">
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
               <Button variant="outline" size="sm" className="w-full">
-                <Edit className="mr-2 h-4 w-4" /> Edit Budget
+                <Edit className="mr-2 h-4 w-4" /> {t.editBudget}
               </Button>
             </DialogTrigger>
             <DialogContent>
-              <DialogHeader><DialogTitle>Set Your Budget</DialogTitle></DialogHeader>
+              <DialogHeader><DialogTitle>{t.setYourBudget}</DialogTitle></DialogHeader>
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                   <FormField
@@ -534,16 +664,16 @@ function BudgetCard({ budget, totalExpenses, onSetBudget }: { budget: number, to
                     name="amount"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Monthly Budget</FormLabel>
+                        <FormLabel>{t.monthlyBudget}</FormLabel>
                         <FormControl>
-                          <Input type="number" placeholder="e.g., 3000" {...field} />
+                          <Input type="number" placeholder={t.budgetPlaceholder} {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
                   <DialogFooter>
-                    <Button type="submit">Set Budget</Button>
+                    <Button type="submit">{t.setBudget}</Button>
                   </DialogFooter>
                 </form>
               </Form>
@@ -554,9 +684,11 @@ function BudgetCard({ budget, totalExpenses, onSetBudget }: { budget: number, to
   );
 }
 
-function AddGoalDialog({ onAddGoal, children }: { onAddGoal: (g: Omit<SavingsGoal, 'id'>) => void, children: React.ReactNode }) {
+function AddGoalDialog({ onAddGoal, children, language = 'en' }: { onAddGoal: (g: Omit<SavingsGoal, 'id'>) => void, children: React.ReactNode, language?: 'en' | 'hi' }) {
   const [open, setOpen] = useState(false);
   const { toast } = useToast();
+  const t = translations[language];
+
   const form = useForm<z.infer<typeof savingsGoalSchema>>({
     resolver: zodResolver(savingsGoalSchema),
     defaultValues: { name: "", targetAmount: 0 },
@@ -564,7 +696,7 @@ function AddGoalDialog({ onAddGoal, children }: { onAddGoal: (g: Omit<SavingsGoa
 
   const onSubmit = (values: z.infer<typeof savingsGoalSchema>) => {
     onAddGoal(values);
-    toast({ title: "Goal Added", description: `You're now saving for ${values.name}!` });
+    toast({ title: t.goalAdded, description: `${t.nowSavingFor} ${values.name}!` });
     form.reset();
     setOpen(false);
   };
@@ -573,25 +705,25 @@ function AddGoalDialog({ onAddGoal, children }: { onAddGoal: (g: Omit<SavingsGoa
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
-        <DialogHeader><DialogTitle>New Savings Goal</DialogTitle></DialogHeader>
+        <DialogHeader><DialogTitle>{t.newSavingsGoal}</DialogTitle></DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField control={form.control} name="name" render={({ field }) => (
               <FormItem>
-                <FormLabel>Goal Name</FormLabel>
-                <FormControl><Input placeholder="e.g., New car" {...field} /></FormControl>
+                <FormLabel>{t.goalName}</FormLabel>
+                <FormControl><Input placeholder={t.goalNamePlaceholder} {...field} /></FormControl>
                 <FormMessage />
               </FormItem>
             )} />
             <FormField control={form.control} name="targetAmount" render={({ field }) => (
               <FormItem>
-                <FormLabel>Target Amount</FormLabel>
-                <FormControl><Input type="number" placeholder="e.g., 20000" {...field} /></FormControl>
+                <FormLabel>{t.targetAmount}</FormLabel>
+                <FormControl><Input type="number" placeholder={t.targetAmountPlaceholder} {...field} /></FormControl>
                 <FormMessage />
               </FormItem>
             )} />
             <DialogFooter>
-              <Button type="submit">Add Goal</Button>
+              <Button type="submit">{t.addGoal}</Button>
             </DialogFooter>
           </form>
         </Form>
@@ -601,11 +733,12 @@ function AddGoalDialog({ onAddGoal, children }: { onAddGoal: (g: Omit<SavingsGoa
 }
 
 
-function FinancialAdviceCard({ transactions, goals, budget, totalIncome }: { transactions: Transaction[], goals: SavingsGoal[], budget: number, totalIncome: number }) {
+function FinancialAdviceCard({ transactions, goals, budget, totalIncome, language = 'en' }: { transactions: Transaction[], goals: SavingsGoal[], budget: number, totalIncome: number, language?: 'en' | 'hi' }) {
   const [advice, setAdvice] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showAdviceDialog, setShowAdviceDialog] = useState(false);
   const { toast } = useToast();
+  const t = translations[language];
 
   const handleGenerateAdvice = async () => {
     setIsLoading(true);
@@ -633,8 +766,8 @@ function FinancialAdviceCard({ transactions, goals, budget, totalIncome }: { tra
       console.error("Failed to generate advice:", error);
       toast({
         variant: "destructive",
-        title: "Error",
-        description: "Could not generate financial advice. Please try again later.",
+        title: t.error,
+        description: t.errorAdvice,
       });
     }
     setIsLoading(false);
@@ -643,27 +776,27 @@ function FinancialAdviceCard({ transactions, goals, budget, totalIncome }: { tra
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2"><Bot /> AI Financial Advisor</CardTitle>
-        <CardDescription>Get personalized advice based on your financial data.</CardDescription>
+        <CardTitle className="flex items-center gap-2"><Bot /> {t.aiAdvisor}</CardTitle>
+        <CardDescription>{t.getAdvice}</CardDescription>
       </CardHeader>
       <CardFooter>
         <Button onClick={handleGenerateAdvice} disabled={isLoading} className="w-full">
-          {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin"/> Generating...</> : "Generate Advice"}
+          {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin"/> {t.generating}</> : t.generateAdvice}
         </Button>
       </CardFooter>
       <Dialog open={showAdviceDialog} onOpenChange={setShowAdviceDialog}>
         <DialogContent className="sm:max-w-[625px]">
           <DialogHeader>
-            <DialogTitle>Your Personalized Advice</DialogTitle>
+            <DialogTitle>{t.yourAdvice}</DialogTitle>
             <DialogDescription>
-              Here are some recommendations based on your financial data.
+              {t.adviceDescription}
             </DialogDescription>
           </DialogHeader>
           <div className="prose prose-sm max-h-[60vh] overflow-y-auto p-4 border rounded-lg">
             <p className="whitespace-pre-wrap">{advice}</p>
           </div>
           <DialogFooter>
-            <Button onClick={() => setShowAdviceDialog(false)}>Close</Button>
+            <Button onClick={() => setShowAdviceDialog(false)}>{t.close}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -671,14 +804,15 @@ function FinancialAdviceCard({ transactions, goals, budget, totalIncome }: { tra
   );
 }
 
-function RecentTransactionsCard({ transactions }: { transactions: Transaction[]}) {
+function RecentTransactionsCard({ transactions, language = 'en' }: { transactions: Transaction[], language?: 'en' | 'hi' }) {
+  const t = translations[language];
   const recentTransactions = [...transactions].sort((a, b) => b.date.getTime() - a.date.getTime()).slice(0, 5);
 
   return (
     <Card>
        <CardHeader>
-        <CardTitle>Recent Transactions</CardTitle>
-        <CardDescription>Your last 5 transactions.</CardDescription>
+        <CardTitle>{t.recentTransactions}</CardTitle>
+        <CardDescription>{t.last5}</CardDescription>
       </CardHeader>
       <CardContent>
         {recentTransactions.length > 0 ? (
@@ -700,7 +834,7 @@ function RecentTransactionsCard({ transactions }: { transactions: Transaction[]}
           </ul>
         ) : (
           <div className="flex items-center justify-center p-8 text-muted-foreground">
-            No transactions yet.
+            {t.noTransactions}
           </div>
         )}
       </CardContent>
@@ -708,9 +842,11 @@ function RecentTransactionsCard({ transactions }: { transactions: Transaction[]}
   )
 }
 
-function AddCategoryDialog({ onAddCategory, type, children }: { onAddCategory: (c: Category) => void; type: 'income' | 'expense', children: React.ReactNode }) {
+function AddCategoryDialog({ onAddCategory, type, children, language = 'en' }: { onAddCategory: (c: Category) => void; type: 'income' | 'expense', children: React.ReactNode, language?: 'en' | 'hi' }) {
     const [open, setOpen] = useState(false);
     const { toast } = useToast();
+    const t = translations[language];
+
     const form = useForm<z.infer<typeof categorySchema>>({
       resolver: zodResolver(categorySchema),
       defaultValues: { name: "", type },
@@ -722,7 +858,7 @@ function AddCategoryDialog({ onAddCategory, type, children }: { onAddCategory: (
   
     const onSubmit = (values: z.infer<typeof categorySchema>) => {
       onAddCategory(values);
-      toast({ title: 'Category Added', description: `New ${values.type} category "${values.name}" created.` });
+      toast({ title: t.categoryAdded, description: t.newCategoryCreated.replace('{type}', values.type).replace('{name}', values.name) });
       form.reset();
       setOpen(false);
     };
@@ -732,7 +868,7 @@ function AddCategoryDialog({ onAddCategory, type, children }: { onAddCategory: (
         <DialogTrigger asChild>{children}</DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Add New Category</DialogTitle>
+            <DialogTitle>{t.addNewCategoryTitle}</DialogTitle>
           </DialogHeader>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -741,9 +877,9 @@ function AddCategoryDialog({ onAddCategory, type, children }: { onAddCategory: (
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Category Name</FormLabel>
+                    <FormLabel>{t.categoryName}</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g., Side Hustle" {...field} />
+                      <Input placeholder={t.categoryNamePlaceholder} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -754,7 +890,7 @@ function AddCategoryDialog({ onAddCategory, type, children }: { onAddCategory: (
                 name="type"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Type</FormLabel>
+                    <FormLabel>{t.type}</FormLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value} disabled>
                       <FormControl>
                         <SelectTrigger>
@@ -762,8 +898,8 @@ function AddCategoryDialog({ onAddCategory, type, children }: { onAddCategory: (
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="income">Income</SelectItem>
-                        <SelectItem value="expense">Expense</SelectItem>
+                        <SelectItem value="income">{t.income}</SelectItem>
+                        <SelectItem value="expense">{t.expense}</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -771,7 +907,7 @@ function AddCategoryDialog({ onAddCategory, type, children }: { onAddCategory: (
                 )}
               />
               <DialogFooter>
-                <Button type="submit">Add Category</Button>
+                <Button type="submit">{t.addCategory}</Button>
               </DialogFooter>
             </form>
           </Form>
@@ -779,13 +915,3 @@ function AddCategoryDialog({ onAddCategory, type, children }: { onAddCategory: (
       </Dialog>
     );
   }
-
-      
-
-    
-
-    
-
-    
-
-

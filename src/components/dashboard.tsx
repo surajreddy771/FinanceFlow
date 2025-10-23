@@ -105,31 +105,58 @@ const formatCurrency = (amount: number) =>
     currency: 'INR',
   }).format(amount);
 
-const initialTransactions: Transaction[] = [
-    { id: '1', type: 'income', category: 'Crop Sale', amount: 75000, date: new Date(2023, 10, 15), description: 'Wheat harvest sale' },
-    { id: '2', type: 'income', category: 'Livestock Sale', amount: 15000, date: new Date(2023, 10, 20), description: 'Sale of two goats' },
-    { id: '3', type: 'expense', category: 'Fertilizer', amount: 10000, date: new Date(2023, 11, 5), description: 'Fertilizer for next season' },
-    { id: '4', type: 'expense', category: 'Household', amount: 5000, date: new Date(2023, 11, 2), description: 'Monthly household supplies' },
-    { id: '5', type: 'expense', category: 'Loan Repayment', amount: 8000, date: new Date(2023, 11, 10), description: 'KCC loan installment' },
-    { id: '6', type: 'expense', category: 'Education', amount: 3000, date: new Date(2023, 11, 1), description: 'Children\'s school fees' },
-];
-
-const initialGoals: SavingsGoal[] = [
-    { id: '1', name: 'Buy a Tractor', targetAmount: 500000 },
-    { id: '2', name: 'Daughter\'s Wedding', targetAmount: 200000 },
-];
-
-const initialCategories: Category[] = [
-    { name: 'Crop Sale', type: 'income' },
-    { name: 'Livestock Sale', type: 'income' },
-    { name: 'Govt. Scheme', type: 'income' },
-    { name: 'Fertilizer', type: 'expense' },
-    { name: 'Seeds', type: 'expense' },
-    { name: 'Loan Repayment', type: 'expense' },
-    { name: 'Household', type: 'expense' },
-    { name: 'Education', type: 'expense' },
-    { name: 'Health', type: 'expense' },
-];
+const initialData = {
+    en: {
+        transactions: [
+            { id: '1', type: 'income', category: 'Crop Sale', amount: 75000, date: new Date(2023, 10, 15), description: 'Wheat harvest sale' },
+            { id: '2', type: 'income', category: 'Livestock Sale', amount: 15000, date: new Date(2023, 10, 20), description: 'Sale of two goats' },
+            { id: '3', type: 'expense', category: 'Fertilizer', amount: 10000, date: new Date(2023, 11, 5), description: 'Fertilizer for next season' },
+            { id: '4', type: 'expense', category: 'Household', amount: 5000, date: new Date(2023, 11, 2), description: 'Monthly household supplies' },
+            { id: '5', type: 'expense', category: 'Loan Repayment', amount: 8000, date: new Date(2023, 11, 10), description: 'KCC loan installment' },
+            { id: '6', type: 'expense', category: 'Education', amount: 3000, date: new Date(2023, 11, 1), description: 'Children\'s school fees' },
+        ],
+        goals: [
+            { id: '1', name: 'Buy a Tractor', targetAmount: 500000 },
+            { id: '2', name: 'Daughter\'s Wedding', targetAmount: 200000 },
+        ],
+        categories: [
+            { name: 'Crop Sale', type: 'income' },
+            { name: 'Livestock Sale', type: 'income' },
+            { name: 'Govt. Scheme', type: 'income' },
+            { name: 'Fertilizer', type: 'expense' },
+            { name: 'Seeds', type: 'expense' },
+            { name: 'Loan Repayment', type: 'expense' },
+            { name: 'Household', type: 'expense' },
+            { name: 'Education', type: 'expense' },
+            { name: 'Health', type: 'expense' },
+        ]
+    },
+    hi: {
+        transactions: [
+            { id: '1', type: 'income', category: 'फसल बिक्री', amount: 75000, date: new Date(2023, 10, 15), description: 'गेहूं की फसल की बिक्री' },
+            { id: '2', type: 'income', category: 'पशुधन बिक्री', amount: 15000, date: new Date(2023, 10, 20), description: 'दो बकरियों की बिक्री' },
+            { id: '3', type: 'expense', category: 'उर्वरक', amount: 10000, date: new Date(2023, 11, 5), description: 'अगले सीजन के लिए उर्वरक' },
+            { id: '4', type: 'expense', category: 'घरेलू', amount: 5000, date: new Date(2023, 11, 2), description: 'मासिक घरेलू आपूर्ति' },
+            { id: '5', type: 'expense', category: 'ऋण चुकौती', amount: 8000, date: new Date(2023, 11, 10), description: 'केसीसी ऋण किस्त' },
+            { id: '6', type: 'expense', category: 'शिक्षा', amount: 3000, date: new Date(2023, 11, 1), description: 'बच्चों की स्कूल फीस' },
+        ],
+        goals: [
+            { id: '1', name: 'ट्रैक्टर खरीदें', targetAmount: 500000 },
+            { id: '2', name: 'बेटी की शादी', targetAmount: 200000 },
+        ],
+        categories: [
+            { name: 'फसल बिक्री', type: 'income' },
+            { name: 'पशुधन बिक्री', type: 'income' },
+            { name: 'सरकारी योजना', type: 'income' },
+            { name: 'उर्वरक', type: 'expense' },
+            { name: 'बीज', type: 'expense' },
+            { name: 'ऋण चुकौती', type: 'expense' },
+            { name: 'घरेलू', type: 'expense' },
+            { name: 'शिक्षा', type: 'expense' },
+            { name: 'स्वास्थ्य', type: 'expense' },
+        ]
+    }
+}
 
 const translations = {
   en: {
@@ -190,6 +217,7 @@ const translations = {
     spendingBreakdown: "Spending Breakdown",
     expensesByCategory: "Your expenses by category.",
     noExpenseData: "No expense data to display.",
+    transactionDetails: "{amount} {type} for {category}.",
   },
   hi: {
     totalBalance: "कुल शेष",
@@ -249,6 +277,7 @@ const translations = {
     spendingBreakdown: "खर्च का विवरण",
     expensesByCategory: "श्रेणी के अनुसार आपके खर्च।",
     noExpenseData: "प्रदर्शित करने के लिए कोई खर्च डेटा नहीं।",
+    transactionDetails: "{category} के लिए {amount} {type}।",
   },
 };
 
@@ -264,12 +293,13 @@ export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
   const t = translations[language];
 
   useEffect(() => {
-    setTransactions(initialTransactions);
-    setGoals(initialGoals);
-    setCategories(initialCategories);
-    setNextId(initialTransactions.length + initialGoals.length + 1);
+    const data = initialData[language];
+    setTransactions(data.transactions);
+    setGoals(data.goals);
+    setCategories(data.categories);
+    setNextId(data.transactions.length + data.goals.length + 1);
     setIsMounted(true);
-  }, []);
+  }, [language]);
 
   const { totalIncome, totalExpenses, balance } = useMemo(() => {
     const income = transactions
@@ -422,7 +452,7 @@ function AddTransactionDialog({ categories, onAddTransaction, onAddCategory, chi
     onAddTransaction(values);
     toast({
       title: t.transactionAdded,
-      description: `${formatCurrency(values.amount)} ${values.type} for ${values.category}.`,
+      description: t.transactionDetails.replace('{amount}', formatCurrency(values.amount)).replace('{type}', values.type === 'income' ? t.income : t.expense).replace('{category}', values.category),
     });
     form.reset();
     setOpen(false);
@@ -621,7 +651,7 @@ function BudgetCard({ budget, totalExpenses, onSetBudget, language = 'en' }: { b
   });
 
   useEffect(() => {
-    form.reset({ amount: budget });
+    form.setValue('amount', budget);
   }, [budget, form]);
 
   const onSubmit = (values: z.infer<typeof budgetSchema>) => {
@@ -859,7 +889,7 @@ function AddCategoryDialog({ onAddCategory, type, children, language = 'en' }: {
   
     const onSubmit = (values: z.infer<typeof categorySchema>) => {
       onAddCategory(values);
-      toast({ title: t.categoryAdded, description: t.newCategoryCreated.replace('{type}', values.type).replace('{name}', values.name) });
+      toast({ title: t.categoryAdded, description: t.newCategoryCreated.replace('{type}', values.type === 'income' ? t.income : t.expense).replace('{name}', values.name) });
       form.reset();
       setOpen(false);
     };
@@ -922,3 +952,4 @@ function AddCategoryDialog({ onAddCategory, type, children, language = 'en' }: {
     
 
     
+

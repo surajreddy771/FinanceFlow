@@ -21,12 +21,10 @@ export default function Home() {
   const translations = {
     en: {
       title: 'FinanceFlow',
-      builtBy: 'Built by your AI assistant.',
       language: 'Language',
     },
     hi: {
       title: 'फाइनेंसफ्लो',
-      builtBy: 'आपके AI सहायक द्वारा निर्मित।',
       language: 'भाषा',
     }
   }
@@ -66,9 +64,6 @@ export default function Home() {
       </main>
       <footer className="py-6 md:py-0">
         <div className="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
-          <p className="text-balance text-center text-sm leading-loose text-muted-foreground md:text-left">
-            {t.builtBy}
-          </p>
         </div>
       </footer>
     </div>

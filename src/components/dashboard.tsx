@@ -105,7 +105,13 @@ const formatCurrency = (amount: number) =>
     currency: 'INR',
   }).format(amount);
 
-const initialData = {
+type InitialData = {
+    transactions: Transaction[];
+    goals: SavingsGoal[];
+    categories: Category[];
+}
+
+const initialData: { en: InitialData; hi: InitialData } = {
     en: {
         transactions: [
             { id: '1', type: 'income', category: 'Crop Sale', amount: 75000, date: new Date(2023, 10, 15), description: 'Wheat harvest sale' },
@@ -293,7 +299,7 @@ export function Dashboard({ language = 'en' }: { language?: 'en' | 'hi' }) {
   const t = translations[language];
 
   useEffect(() => {
-    const data = initialData[language];
+    const data: InitialData = initialData[language];
     setTransactions(data.transactions);
     setGoals(data.goals);
     setCategories(data.categories);
@@ -953,3 +959,6 @@ function AddCategoryDialog({ onAddCategory, type, children, language = 'en' }: {
 
     
 
+
+
+    

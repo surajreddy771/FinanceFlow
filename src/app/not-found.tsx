@@ -1,4 +1,5 @@
 
+export const dynamic = 'force-dynamic';
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 
